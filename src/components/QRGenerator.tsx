@@ -74,19 +74,36 @@ export default function QRGenerator() {
             className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-col-blue"
             placeholder="https://polla.guaicaramo.com"
           />
-          <div className="flex gap-2 mt-3">
-            <button
-              onClick={downloadPng}
-              className="flex-1 bg-col-blue text-white text-sm font-semibold py-2 rounded-lg hover:bg-col-blue-light transition"
-            >
-              Descargar PNG
-            </button>
-            <button
-              onClick={downloadSvg}
-              className="flex-1 border border-col-blue text-col-blue text-sm font-semibold py-2 rounded-lg hover:bg-col-blue/5 transition"
-            >
-              Descargar SVG
-            </button>
+          <div className="mt-4">
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+              Descargar como
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={downloadPng}
+                className="flex-1 flex flex-col items-center gap-1 bg-col-blue text-white rounded-xl py-3 px-2 hover:opacity-90 active:scale-95 transition-all shadow-sm"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span className="text-sm font-bold leading-none">PNG</span>
+                <span className="text-[10px] opacity-75 leading-none">512 × 512 px</span>
+              </button>
+              <button
+                onClick={downloadSvg}
+                className="flex-1 flex flex-col items-center gap-1 border-2 border-col-blue text-col-blue rounded-xl py-3 px-2 hover:bg-col-blue/5 active:scale-95 transition-all"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span className="text-sm font-bold leading-none">SVG</span>
+                <span className="text-[10px] opacity-75 leading-none">Vectorial</span>
+              </button>
+            </div>
           </div>
         </div>
 
