@@ -1,7 +1,9 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  experimental: {
+    // Habilitar server-only package enforcement
+  },
+}
 
-export default nextConfig;
+export default nextConfig
