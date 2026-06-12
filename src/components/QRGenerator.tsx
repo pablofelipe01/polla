@@ -8,6 +8,59 @@ const DEFAULT_URL =
     ? window.location.origin
     : process.env.NEXT_PUBLIC_APP_URL ?? ""
 
+const W = 512
+const H = 660
+const CARD_X = 76
+const CARD_Y = 110
+const CARD_SIZE = 360
+const QR_PAD = 24
+const QR_SIZE = CARD_SIZE - QR_PAD * 2
+
+function buildBrandedSvgString(qrSvgEl: SVGElement, url: string): string {
+  const serializer = new XMLSerializer()
+  const qrStr = serializer.serializeToString(qrSvgEl)
+  const qrDataUri = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(qrStr)))}`
+  const safeUrl = url.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  <!-- Fondo azul -->
+  <rect width="${W}" height="${H}" fill="#00205B"/>
+
+  <!-- Barra tricolor superior -->
+  <rect x="0"         y="0" width="${W / 3}"       height="10" fill="#FFCD00"/>
+  <rect x="${W / 3}"  y="0" width="${W / 3}"       height="10" fill="#0a3aa8"/>
+  <rect x="${(W * 2) / 3}" y="0" width="${W / 3}"  height="10" fill="#CE1126"/>
+
+  <!-- Tarjeta blanca -->
+  <rect x="${CARD_X}" y="${CARD_Y}" width="${CARD_SIZE}" height="${CARD_SIZE}" rx="20" ry="20" fill="white"/>
+
+  <!-- QR code -->
+  <image href="${qrDataUri}" x="${CARD_X + QR_PAD}" y="${CARD_Y + QR_PAD}" width="${QR_SIZE}" height="${QR_SIZE}"/>
+
+  <!-- Título -->
+  <text x="${W / 2}" y="${CARD_Y + CARD_SIZE + 52}"
+    text-anchor="middle"
+    font-family="Anton, Impact, sans-serif"
+    font-size="28"
+    font-weight="bold"
+    fill="#FFCD00"
+    letter-spacing="1">POLLA MUNDIALISTA</text>
+
+  <!-- URL -->
+  <text x="${W / 2}" y="${CARD_Y + CARD_SIZE + 82}"
+    text-anchor="middle"
+    font-family="Inter, system-ui, sans-serif"
+    font-size="13"
+    fill="#a0b4d6">${safeUrl}</text>
+
+  <!-- Barra tricolor inferior -->
+  <rect x="0"         y="${H - 14}" width="${W / 3}"       height="14" fill="#FFCD00"/>
+  <rect x="${W / 3}"  y="${H - 14}" width="${W / 3}"       height="14" fill="#0a3aa8"/>
+  <rect x="${(W * 2) / 3}" y="${H - 14}" width="${W / 3}"  height="14" fill="#CE1126"/>
+</svg>`
+}
+
 export default function QRGenerator() {
   const [url, setUrl] = useState(
     process.env.NEXT_PUBLIC_APP_URL || DEFAULT_URL || "https://tu-app.vercel.app"
@@ -17,9 +70,8 @@ export default function QRGenerator() {
   function downloadSvg() {
     const svgEl = svgRef.current?.querySelector("svg")
     if (!svgEl) return
-    const serializer = new XMLSerializer()
-    const svgStr = serializer.serializeToString(svgEl)
-    const blob = new Blob([svgStr], { type: "image/svg+xml" })
+    const branded = buildBrandedSvgString(svgEl, url)
+    const blob = new Blob([branded], { type: "image/svg+xml" })
     const link = document.createElement("a")
     link.href = URL.createObjectURL(blob)
     link.download = "polla-tricolor-qr.svg"
@@ -30,19 +82,62 @@ export default function QRGenerator() {
   function downloadPng() {
     const svgEl = svgRef.current?.querySelector("svg")
     if (!svgEl) return
+
     const canvas = document.createElement("canvas")
-    const size = 512
-    canvas.width = size
-    canvas.height = size
+    canvas.width = W
+    canvas.height = H
     const ctx = canvas.getContext("2d")!
-    const img = new Image()
+
+    // Fondo azul
+    ctx.fillStyle = "#00205B"
+    ctx.fillRect(0, 0, W, H)
+
+    // Barra tricolor superior
+    ctx.fillStyle = "#FFCD00";       ctx.fillRect(0,         0, W / 3,  10)
+    ctx.fillStyle = "#0a3aa8";       ctx.fillRect(W / 3,     0, W / 3,  10)
+    ctx.fillStyle = "#CE1126";       ctx.fillRect((W * 2) / 3, 0, W / 3, 10)
+
+    // Tarjeta blanca con esquinas redondeadas
+    const r = 20
+    ctx.fillStyle = "#FFFFFF"
+    ctx.beginPath()
+    ctx.moveTo(CARD_X + r, CARD_Y)
+    ctx.lineTo(CARD_X + CARD_SIZE - r, CARD_Y)
+    ctx.quadraticCurveTo(CARD_X + CARD_SIZE, CARD_Y, CARD_X + CARD_SIZE, CARD_Y + r)
+    ctx.lineTo(CARD_X + CARD_SIZE, CARD_Y + CARD_SIZE - r)
+    ctx.quadraticCurveTo(CARD_X + CARD_SIZE, CARD_Y + CARD_SIZE, CARD_X + CARD_SIZE - r, CARD_Y + CARD_SIZE)
+    ctx.lineTo(CARD_X + r, CARD_Y + CARD_SIZE)
+    ctx.quadraticCurveTo(CARD_X, CARD_Y + CARD_SIZE, CARD_X, CARD_Y + CARD_SIZE - r)
+    ctx.lineTo(CARD_X, CARD_Y + r)
+    ctx.quadraticCurveTo(CARD_X, CARD_Y, CARD_X + r, CARD_Y)
+    ctx.closePath()
+    ctx.fill()
+
+    // QR sobre la tarjeta
     const serializer = new XMLSerializer()
     const svgStr = serializer.serializeToString(svgEl)
     const svgBlob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" })
+    const img = new Image()
     img.onload = () => {
-      ctx.fillStyle = "white"
-      ctx.fillRect(0, 0, size, size)
-      ctx.drawImage(img, 0, 0, size, size)
+      ctx.drawImage(img, CARD_X + QR_PAD, CARD_Y + QR_PAD, QR_SIZE, QR_SIZE)
+      URL.revokeObjectURL(img.src)
+
+      // Título
+      ctx.fillStyle = "#FFCD00"
+      ctx.font = "bold 28px Anton, Impact, sans-serif"
+      ctx.textAlign = "center"
+      ctx.fillText("POLLA MUNDIALISTA", W / 2, CARD_Y + CARD_SIZE + 52)
+
+      // URL
+      ctx.fillStyle = "#a0b4d6"
+      ctx.font = "13px Inter, system-ui, sans-serif"
+      ctx.fillText(url, W / 2, CARD_Y + CARD_SIZE + 80)
+
+      // Barra tricolor inferior
+      ctx.fillStyle = "#FFCD00";       ctx.fillRect(0,           H - 14, W / 3,  14)
+      ctx.fillStyle = "#0a3aa8";       ctx.fillRect(W / 3,       H - 14, W / 3,  14)
+      ctx.fillStyle = "#CE1126";       ctx.fillRect((W * 2) / 3, H - 14, W / 3,  14)
+
       const link = document.createElement("a")
       link.download = "polla-tricolor-qr.png"
       link.href = canvas.toDataURL("image/png")
@@ -53,12 +148,11 @@ export default function QRGenerator() {
 
   return (
     <section className="bg-white rounded-2xl border border-slate-100 p-5">
-      <h2 className="font-display font-bold text-lg text-col-blue uppercase mb-4">
+      <h2 className="font-display font-bold text-lg uppercase mb-4" style={{ color: "#00205B" }}>
         Generar código QR
       </h2>
 
       <div className="flex flex-col sm:flex-row gap-4 items-start">
-        {/* Input URL */}
         <div className="flex-1">
           <label
             htmlFor="qr-url"
@@ -71,7 +165,8 @@ export default function QRGenerator() {
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-col-blue"
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2"
+            style={{ "--tw-ring-color": "#00205B" } as React.CSSProperties}
             placeholder="https://polla.guaicaramo.com"
           />
           <div className="mt-4">
@@ -81,7 +176,8 @@ export default function QRGenerator() {
             <div className="flex gap-3">
               <button
                 onClick={downloadPng}
-                className="flex-1 flex flex-col items-center gap-1 bg-col-blue text-white rounded-xl py-3 px-2 hover:opacity-90 active:scale-95 transition-all shadow-sm"
+                style={{ background: "#00205B", color: "#fff" }}
+                className="flex-1 flex flex-col items-center gap-1 rounded-xl py-3 px-2 hover:opacity-90 active:scale-95 transition-all shadow-md"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -89,11 +185,12 @@ export default function QRGenerator() {
                   <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
                 <span className="text-sm font-bold leading-none">PNG</span>
-                <span className="text-[10px] opacity-75 leading-none">512 × 512 px</span>
+                <span className="text-[10px] leading-none" style={{ opacity: 0.7 }}>512 × 660 px</span>
               </button>
               <button
                 onClick={downloadSvg}
-                className="flex-1 flex flex-col items-center gap-1 border-2 border-col-blue text-col-blue rounded-xl py-3 px-2 hover:bg-col-blue/5 active:scale-95 transition-all"
+                style={{ background: "#FFCD00", color: "#0a0e1a" }}
+                className="flex-1 flex flex-col items-center gap-1 rounded-xl py-3 px-2 hover:opacity-90 active:scale-95 transition-all shadow-md"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -101,16 +198,17 @@ export default function QRGenerator() {
                   <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
                 <span className="text-sm font-bold leading-none">SVG</span>
-                <span className="text-[10px] opacity-75 leading-none">Vectorial</span>
+                <span className="text-[10px] leading-none" style={{ opacity: 0.6 }}>Vectorial</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* QR preview */}
+        {/* Vista previa del QR */}
         <div
           ref={svgRef}
-          className="bg-white p-3 rounded-xl border-2 border-col-yellow shadow-sm mx-auto"
+          className="bg-white p-3 rounded-xl shadow-sm mx-auto"
+          style={{ border: "2px solid #FFCD00" }}
         >
           <QRCodeSVG
             value={url || "https://example.com"}
