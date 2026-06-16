@@ -10,6 +10,7 @@ import {
   createMatch,
   updateMatch,
   deleteMatch,
+  getMatch,
   updateMatch as updateMatchResult,
   listPredictions,
   listAllPredictions,
@@ -188,6 +189,17 @@ export async function setResultAction(
   })
   if (!parsed.success) {
     return { error: parsed.error.issues[0].message }
+  }
+
+  // Verificar que el partido ya haya comenzado
+  const match = await getMatch(id)
+  if (!match) return { error: "Partido no encontrado" }
+
+  const kickoff = DateTime.fromISO(match.FechaHoraUtc, { zone: "utc" })
+  if (kickoff.isValid && DateTime.utc() < kickoff) {
+    return {
+      error: `El partido aún no ha comenzado (${formatBogota(match.FechaHoraUtc)}). Registra el resultado cuando termine.`,
+    }
   }
 
   try {

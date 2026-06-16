@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useActionState, useTransition, useMemo } from "react"
+import { useState, useActionState, useTransition, useEffect, useRef } from "react"
+import { useRouter } from "next/navigation"
 import { DateTime } from "luxon"
 import type { AdminMatch } from "@/app/actions/admin"
 import type { PredictionRecord } from "@/lib/airtable"
@@ -67,6 +68,7 @@ export default function AdminDashboard({ matches: initialMatches }: Props) {
   const [predictions,       setPredictions]       = useState<PredictionRecord[]>([])
   const [loadingPreds,      setLoadingPreds]      = useState(false)
   const [csvPending, startCsvTransition]          = useTransition()
+  const router = useRouter()
 
   async function viewPredictions(matchId: string) {
     setPredictionsMatchId(matchId)
@@ -185,7 +187,7 @@ export default function AdminDashboard({ matches: initialMatches }: Props) {
               title="Nuevo partido"
               onCancel={() => setShowCreateForm(false)}
               action={createMatchAction}
-              onSuccess={() => { setShowCreateForm(false); window.location.reload() }}
+              onSuccess={() => { setShowCreateForm(false); router.refresh() }}
             />
           )}
 
@@ -195,7 +197,7 @@ export default function AdminDashboard({ matches: initialMatches }: Props) {
               initial={currentMatch}
               onCancel={() => setEditingId(null)}
               action={(prev, fd) => updateMatchAction(editingId, prev, fd)}
-              onSuccess={() => { setEditingId(null); window.location.reload() }}
+              onSuccess={() => { setEditingId(null); router.refresh() }}
             />
           )}
 
@@ -203,7 +205,7 @@ export default function AdminDashboard({ matches: initialMatches }: Props) {
             <ResultForm
               match={currentMatch}
               onCancel={() => setResultMatchId(null)}
-              onSuccess={() => { setResultMatchId(null); window.location.reload() }}
+              onSuccess={() => { setResultMatchId(null); router.refresh() }}
             />
           )}
 
@@ -470,12 +472,13 @@ function Btn({ onClick, bg, fg, children }: { onClick: () => void; bg: string; f
 
 function DelBtn({ matchId }: { matchId: string }) {
   const [pending, start] = useTransition()
+  const router = useRouter()
   return (
     <button
       disabled={pending}
       onClick={() => {
         if (!confirm("¿Eliminar este partido y todos sus pronósticos?")) return
-        start(async () => { await deleteMatchAction(matchId); window.location.reload() })
+        start(async () => { await deleteMatchAction(matchId); router.refresh() })
       }}
       style={{
         background: "#fdeaec", color: "var(--rojo)",
@@ -502,7 +505,10 @@ interface MatchFormProps {
 
 function MatchForm({ title, initial, onCancel, action, onSuccess }: MatchFormProps) {
   const [state, formAction, pending] = useActionState(action, {})
-  if (state?.success) { onSuccess(); return null }
+  const onSuccessRef = useRef(onSuccess)
+  onSuccessRef.current = onSuccess
+  useEffect(() => { if (state?.success) onSuccessRef.current() }, [state?.success])
+  if (state?.success) return null
 
   // Mostrar en hora Colombia para que el admin ingrese en hora local
   const defaultKickoff = initial?.FechaHoraUtc
@@ -560,17 +566,9 @@ function MatchForm({ title, initial, onCancel, action, onSuccess }: MatchFormPro
           </p>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 10, paddingTop: 18 }}>
-          <input type="checkbox" id="f-local" name="EsLocal" value="true"
-            defaultChecked={initial?.EsLocal ?? true}
-            style={{ width: 17, height: 17, accentColor: "var(--azul)", cursor: "pointer" }} />
-          <label htmlFor="f-local" style={{ fontSize: 13, fontWeight: 600, color: "var(--tinta)", cursor: "pointer" }}>
-            Colombia juega de local
-          </label>
-          <input type="hidden" name="EsLocal" value="false" />
-        </div>
+        <input type="hidden" name="EsLocal" value="true" />
 
-        {state?.error && (
+{state?.error && (
           <p style={{
             gridColumn: "1 / -1",
             fontSize: 12, fontWeight: 600, color: "var(--rojo)",
@@ -608,7 +606,10 @@ function MatchForm({ title, initial, onCancel, action, onSuccess }: MatchFormPro
 function ResultForm({ match, onCancel, onSuccess }: { match: AdminMatch; onCancel: () => void; onSuccess: () => void }) {
   const boundAction = setResultAction.bind(null, match.id)
   const [state, formAction, pending] = useActionState(boundAction, {})
-  if (state?.success) { onSuccess(); return null }
+  const onSuccessRef = useRef(onSuccess)
+  onSuccessRef.current = onSuccess
+  useEffect(() => { if (state?.success) onSuccessRef.current() }, [state?.success])
+  if (state?.success) return null
 
   return (
     <div style={{
@@ -632,6 +633,7 @@ function ResultForm({ match, onCancel, onSuccess }: { match: AdminMatch; onCance
       </div>
 
       <form action={formAction} style={{ display: "flex", alignItems: "flex-end", gap: 14, flexWrap: "wrap" }}>
+
         <div style={{ textAlign: "center" }}>
           <label className="polla-label" style={{ textAlign: "center", display: "block" }}>Colombia</label>
           <input name="resultCol" type="number" min={0} max={20}

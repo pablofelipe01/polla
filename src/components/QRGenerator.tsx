@@ -8,6 +8,7 @@ const DEFAULT_URL =
     ? window.location.origin
     : process.env.NEXT_PUBLIC_APP_URL ?? ""
 
+// Coordenadas lógicas del diseño (invariantes)
 const W = 512
 const H = 660
 const CARD_X = 76
@@ -16,14 +17,17 @@ const CARD_SIZE = 360
 const QR_PAD = 24
 const QR_SIZE = CARD_SIZE - QR_PAD * 2
 
+// Escala de salida: 3× → PNG 1536×1980 px (calidad impresión)
+const PNG_SCALE = 3
+
 function buildBrandedSvgString(qrSvgEl: SVGElement, url: string): string {
   const serializer = new XMLSerializer()
   const qrStr = serializer.serializeToString(qrSvgEl)
-  const qrDataUri = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(qrStr)))}`
+  const qrDataUri = `data:image/svg+xml;base64,${btoa(new TextEncoder().encode(qrStr).reduce((s, b) => s + String.fromCharCode(b), ""))}`
   const safeUrl = url.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W * PNG_SCALE}" height="${H * PNG_SCALE}" viewBox="0 0 ${W} ${H}">
   <!-- Fondo azul -->
   <rect width="${W}" height="${H}" fill="#00205B"/>
 
@@ -84,9 +88,12 @@ export default function QRGenerator() {
     if (!svgEl) return
 
     const canvas = document.createElement("canvas")
-    canvas.width = W
-    canvas.height = H
+    canvas.width  = W * PNG_SCALE
+    canvas.height = H * PNG_SCALE
     const ctx = canvas.getContext("2d")!
+
+    // Escalar todos los trazados a PNG_SCALE sin cambiar coordenadas lógicas
+    ctx.scale(PNG_SCALE, PNG_SCALE)
 
     // Fondo azul
     ctx.fillStyle = "#00205B"
@@ -185,7 +192,7 @@ export default function QRGenerator() {
                   <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
                 <span className="text-sm font-bold leading-none">PNG</span>
-                <span className="text-[10px] leading-none" style={{ opacity: 0.7 }}>512 × 660 px</span>
+                <span className="text-[10px] leading-none" style={{ opacity: 0.7 }}>1536 × 1980 px</span>
               </button>
               <button
                 onClick={downloadSvg}

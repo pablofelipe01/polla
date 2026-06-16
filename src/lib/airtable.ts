@@ -154,6 +154,7 @@ export interface PredictionRecord {
   IdPartido: string
   NombreCompleto: string
   Cedula: string
+  Sede: Sede
   GolesCol: number
   GolesRival: number
   ActualizadoEn: string
@@ -179,6 +180,7 @@ type PredictionFields = {
   IdPartido: string
   NombreCompleto: string
   Cedula: string
+  Sede?: string
   GolesCol: number
   GolesRival: number
 }
@@ -288,6 +290,7 @@ function toPrediction(r: ATRecord<PredictionFields>): PredictionRecord {
     IdPartido: r.fields.IdPartido,
     NombreCompleto: r.fields.NombreCompleto,
     Cedula: r.fields.Cedula,
+    Sede: isValidSede(r.fields.Sede) ? r.fields.Sede : "GENERAL",
     GolesCol: r.fields.GolesCol,
     GolesRival: r.fields.GolesRival,
     ActualizadoEn: r.createdTime,
@@ -298,6 +301,7 @@ export async function upsertPrediction(data: {
   matchId: string
   fullName: string
   cedula: string
+  sede: Sede
   scoreCol: number
   scoreOpp: number
 }): Promise<PredictionRecord> {
@@ -308,6 +312,7 @@ export async function upsertPrediction(data: {
   if (existing.length) {
     const r = await updateOne<PredictionFields>("Pronosticos", existing[0].id, {
       NombreCompleto: data.fullName,
+      Sede: data.sede,
       GolesCol: data.scoreCol,
       GolesRival: data.scoreOpp,
     })
@@ -318,6 +323,7 @@ export async function upsertPrediction(data: {
     IdPartido: data.matchId,
     NombreCompleto: data.fullName,
     Cedula: data.cedula,
+    Sede: data.sede,
     GolesCol: data.scoreCol,
     GolesRival: data.scoreOpp,
   })
@@ -339,22 +345,129 @@ export async function listAllPredictions(): Promise<PredictionRecord[]> {
 
 // ─── Roster (opcional, detrás de VALIDATE_ROSTER=true) ───────────────────────
 
-export async function validateCedula(cedula: string): Promise<boolean> {
-  if (process.env.VALIDATE_ROSTER !== "true") return true
+export type Sede = "FORZOSA" | "BRISAS" | "GUADUALITO" | "GENERAL"
+
+function isValidSede(s: unknown): s is Sede {
+  return ["FORZOSA", "BRISAS", "GUADUALITO", "GENERAL"].includes(s as string)
+}
+
+interface ColaboradorFields {
+  NombreCompleto?: string
+  Sede?: string
+}
+
+export async function lookupEmployee(
+  cedula: string
+): Promise<{ fullName: string; sede: Sede } | null> {
   const rosterId = process.env.ROSTER_BASE_ID
-  if (!rosterId) return true
+  if (!rosterId) return null
 
   const safeCedula = cedula.replace(/"/g, "")
   try {
     const q = new URLSearchParams({
-      filterByFormula: `{Cédula}="${safeCedula}"`,
+      filterByFormula: `{Cedula}="${safeCedula}"`,
       pageSize: "1",
     })
-    const res = await at<ATPage<Record<string, unknown>>>(
-      `${rosterId}/Colaboradores?${q}`
+    const res = await at<ATPage<ColaboradorFields>>(
+      `${rosterId}/Colaboradores?${q}&fields[]=NombreCompleto&fields[]=Sede`
     )
-    return res.records.length > 0
+    if (res.records.length === 0) return null
+    const f = res.records[0].fields
+    return {
+      fullName: f.NombreCompleto ?? "",
+      sede: isValidSede(f.Sede) ? f.Sede : "GENERAL",
+    }
   } catch {
-    return true // falla abierta: si no se puede consultar, no bloquear
+    return null
+  }
+}
+
+export async function validateCedula(cedula: string): Promise<boolean> {
+  if (process.env.VALIDATE_ROSTER !== "true") return true
+  const employee = await lookupEmployee(cedula)
+  return employee !== null
+}
+
+// ─── Finalistas ───────────────────────────────────────────────────────────────
+
+export interface FinalistRecord {
+  id: string
+  Cedula: string
+  NombreCompleto: string
+  Sede: Sede
+  Finalista1: string
+  Finalista2: string
+  ActualizadoEn: string
+}
+
+type FinalistFields = {
+  Cedula: string
+  NombreCompleto: string
+  Sede?: string
+  Finalista1: string
+  Finalista2: string
+}
+
+function toFinalist(r: ATRecord<FinalistFields>): FinalistRecord {
+  return {
+    id: r.id,
+    Cedula: r.fields.Cedula,
+    NombreCompleto: r.fields.NombreCompleto,
+    Sede: isValidSede(r.fields.Sede) ? r.fields.Sede : "GENERAL",
+    Finalista1: r.fields.Finalista1,
+    Finalista2: r.fields.Finalista2,
+    ActualizadoEn: r.createdTime,
+  }
+}
+
+export async function upsertFinalistPrediction(data: {
+  cedula: string
+  fullName: string
+  sede: Sede
+  finalist1: string
+  finalist2: string
+}): Promise<FinalistRecord> {
+  const safeCedula = data.cedula.replace(/"/g, "")
+
+  let existing: Awaited<ReturnType<typeof listAll<FinalistFields>>> = []
+  try {
+    existing = await listAll<FinalistFields>(
+      "PronosticosFinalistas",
+      `{Cedula}="${safeCedula}"`
+    )
+  } catch {
+    // Si la tabla no existe el createOne siguiente lanzará un error descriptivo
+  }
+
+  if (existing.length) {
+    const r = await updateOne<FinalistFields>(
+      "PronosticosFinalistas",
+      existing[0].id,
+      { Finalista1: data.finalist1, Finalista2: data.finalist2, Sede: data.sede }
+    )
+    return toFinalist(r)
+  }
+
+  const r = await createOne<FinalistFields>("PronosticosFinalistas", {
+    Cedula: data.cedula,
+    NombreCompleto: data.fullName,
+    Sede: data.sede,
+    Finalista1: data.finalist1,
+    Finalista2: data.finalist2,
+  })
+  return toFinalist(r)
+}
+
+export async function getFinalistPrediction(cedula: string): Promise<FinalistRecord | null> {
+  const safeCedula = cedula.replace(/"/g, "")
+  try {
+    const recs = await listAll<FinalistFields>(
+      "PronosticosFinalistas",
+      `{Cedula}="${safeCedula}"`
+    )
+    return recs.length ? toFinalist(recs[0]) : null
+  } catch {
+    // La tabla aún no existe en Airtable — falla silenciosa hasta que sea creada
+    return null
   }
 }

@@ -1,5 +1,25 @@
 import { getWinners } from "@/app/actions/public"
+import type { WinnerEntry } from "@/app/actions/public"
 import Link from "next/link"
+
+const SEDE_CONFIG = [
+  { sede: "FORZOSA",    label: "Alojamiento Forzosa",    max: 3, color: "#00205B", text: "#FFCD00" },
+  { sede: "BRISAS",     label: "Alojamiento Brisas",     max: 1, color: "#0a3aa8", text: "#ffffff" },
+  { sede: "GUADUALITO", label: "Alojamiento Guadualito", max: 1, color: "#CE1126", text: "#ffffff" },
+] as const
+
+function WinnerList({ entries }: { entries: WinnerEntry[] }) {
+  return (
+    <ul className="space-y-1 mt-2">
+      {entries.map((entry, idx) => (
+        <li key={idx} className="flex items-center gap-2 bg-emerald-50 rounded-lg px-3 py-2 text-sm font-medium text-emerald-800">
+          <span className="text-emerald-500">✓</span>
+          {entry.name}
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 export const dynamic = "force-dynamic"
 
@@ -66,27 +86,57 @@ export default async function GanadoresPage() {
                 </div>
 
                 {/* Ganadores */}
-                <div className="px-4 pb-4">
-                  {w.winners.length === 0 ? (
+                <div className="px-4 pb-4 space-y-4">
+                  {w.generalWinners.length === 0 && w.sedeWinners.length === 0 ? (
                     <p className="text-center text-sm text-slate-400 bg-slate-50 rounded-xl py-3">
                       Nadie acertó el marcador exacto en este partido
                     </p>
                   ) : (
                     <>
-                      <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 mb-2">
-                        🎉 {w.winners.length === 1 ? "Ganador" : `${w.winners.length} ganadores`}
-                      </p>
-                      <ul className="space-y-1">
-                        {w.winners.map((name, idx) => (
-                          <li
-                            key={idx}
-                            className="flex items-center gap-2 bg-emerald-50 rounded-lg px-3 py-2 text-sm font-medium text-emerald-800"
-                          >
-                            <span className="text-emerald-500">✓</span>
-                            {name}
-                          </li>
-                        ))}
-                      </ul>
+                      {/* Premio general */}
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1">
+                          Premio general
+                        </p>
+                        {w.totalCorrect > w.generalWinners.length && (
+                          <p className="text-xs text-slate-400 mb-1">
+                            Sorteo entre {w.totalCorrect} aciertos · {w.generalWinners.length} seleccionados
+                          </p>
+                        )}
+                        {w.generalWinners.length === 0 ? (
+                          <p className="text-xs text-slate-400">Sin ganadores generales</p>
+                        ) : (
+                          <WinnerList entries={w.generalWinners} />
+                        )}
+                      </div>
+
+                      {/* Premios por alojamiento */}
+                      {SEDE_CONFIG.map(({ sede, label, max, color, text }) => {
+                        const sedeEntries = w.sedeWinners.filter((e) => e.sede === sede)
+                        if (sedeEntries.length === 0) return null
+                        const total = w.sedeTotals[sede] ?? sedeEntries.length
+                        return (
+                          <div key={sede}>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span
+                                className="text-xs font-bold uppercase tracking-wide px-2 py-0.5 rounded"
+                                style={{ background: color, color: text }}
+                              >
+                                {label}
+                              </span>
+                              <span className="text-xs text-slate-400">
+                                (hasta {max} {max === 1 ? "ganador" : "ganadores"})
+                              </span>
+                            </div>
+                            {total > sedeEntries.length && (
+                              <p className="text-xs text-slate-400 mb-1">
+                                Sorteo entre {total} aciertos · {sedeEntries.length} seleccionados
+                              </p>
+                            )}
+                            <WinnerList entries={sedeEntries} />
+                          </div>
+                        )
+                      })}
                     </>
                   )}
                 </div>

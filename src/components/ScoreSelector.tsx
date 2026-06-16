@@ -79,6 +79,7 @@ export default function ScoreSelector({
         matchId,
         fullName: participant.fullName,
         cedula: participant.cedula,
+        sede: participant.sede,
         scoreCol,
         scoreOpp,
       })
