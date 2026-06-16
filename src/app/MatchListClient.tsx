@@ -330,13 +330,11 @@ function WinnerCard({
           fontSize: 11, fontWeight: 700, textTransform: "uppercase",
           letterSpacing: "0.6px", color: "var(--gris)", marginBottom: 1,
         }}>
-          {winner.totalCorrect === 0
-            ? "Sin aciertos"
-            : `${winner.totalCorrect} ${winner.totalCorrect === 1 ? "persona acertó" : "personas acertaron"} el marcador exacto`}
+          Ganadores
         </p>
         {hadLottery && (
           <p style={{ fontSize: 10, color: "var(--gris)", marginBottom: 6 }}>
-            Sorteo · {winner.generalWinners.length} seleccionados
+            Sorteo entre {winner.totalCorrect} aciertos · {winner.generalWinners.length} seleccionados
           </p>
         )}
         {winner.generalWinners.length === 0 ? (

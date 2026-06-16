@@ -96,7 +96,7 @@ export default async function GanadoresPage() {
                       {/* Premio general */}
                       <div>
                         <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1">
-                          Premio general
+                          Ganadores
                         </p>
                         {w.totalCorrect > w.generalWinners.length && (
                           <p className="text-xs text-slate-400 mb-1">
