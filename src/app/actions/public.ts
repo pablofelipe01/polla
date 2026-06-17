@@ -37,16 +37,15 @@ export interface Winner {
   kickoffBogota: string
   scoreCol: number
   scoreOpp: number
-  totalCorrect: number                        // candidatos antes del sorteo general
-  generalWinners: WinnerEntry[]               // ≤ 20 (sorteo si hay más)
-  sedeWinners: WinnerEntry[]                  // ≤ 3 Forzosa / ≤ 1 Brisas-Guadualito
+  totalCorrect: number                        // total de aciertos
+  allCorrect: WinnerEntry[]                   // todos los que acertaron
+  sedeWinners: WinnerEntry[]                  // ganadores por sede (≤3 Forzosa / ≤1 Brisas-Guadualito)
   sedeTotals: Partial<Record<Sede, number>>   // candidatos por sede antes del sorteo
 }
 
-// ─── Límites de premios ───────────────────────────────────────────────────────
+// ─── Límites de premios por sede ─────────────────────────────────────────────
 
-const GENERAL_MAX = 20
-const SEDE_MAX: Partial<Record<Sede, number>> = { FORZOSA: 3, BRISAS: 1, GUADUALITO: 1 }
+const SEDE_MAX: Partial<Record<Sede, number>> = { FORZOSA: 3, BRISAS: 1, GUADUALITO: 1, GENERAL: 20 }
 
 // Sorteo determinístico: misma semilla → mismo resultado en cada carga
 function seededShuffle<T>(arr: T[], seed: string): T[] {
@@ -108,11 +107,7 @@ export async function getWinners(): Promise<Winner[]> {
       .filter((p) => p.GolesCol === m.GolesCol && p.GolesRival === m.GolesRival)
       .map((p) => ({ name: p.NombreCompleto, sede: p.Sede }))
 
-    // Sorteo general: barajar con semilla del partido, tomar los primeros 20
-    const shuffled = seededShuffle(allCorrect, m.id)
-    const generalWinners = shuffled.slice(0, GENERAL_MAX)
-
-    // Sorteo por sede: independiente del general, límite según sede
+    // Sorteo por sede: barajar candidatos de cada sede con semilla, tomar los primeros N
     const sedeWinners: WinnerEntry[] = []
     const sedeTotals: Partial<Record<Sede, number>> = {}
     for (const [sede, max] of Object.entries(SEDE_MAX) as [Sede, number][]) {
@@ -129,7 +124,7 @@ export async function getWinners(): Promise<Winner[]> {
       scoreCol: m.GolesCol!,
       scoreOpp: m.GolesRival!,
       totalCorrect: allCorrect.length,
-      generalWinners,
+      allCorrect,
       sedeWinners,
       sedeTotals,
     })

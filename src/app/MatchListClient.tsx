@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import type { MatchWithStatus, Winner } from "./actions/public"
+import { useState, useRef } from "react"
+import type { MatchWithStatus, Winner, WinnerEntry } from "./actions/public"
 import type { Sede } from "@/lib/airtable"
 import { getWinners } from "./actions/public"
 import MatchCard from "@/components/MatchCard"
@@ -117,9 +117,6 @@ export default function MatchListClient({ matches }: Props) {
                   </button>
                 </div>
 
-                {/* Apuesta especial: finalistas */}
-                <FinalistPicker participant={participant} onNeedName={handleNeedName} />
-
                 {/* Match list */}
                 {matches.length === 0 ? (
                   <div className="polla-empty">
@@ -136,6 +133,9 @@ export default function MatchListClient({ matches }: Props) {
                     />
                   ))
                 )}
+
+                {/* Apuesta especial: finalistas */}
+                <FinalistPicker participant={participant} onNeedName={handleNeedName} />
               </>
             )}
           </div>
@@ -172,8 +172,8 @@ export default function MatchListClient({ matches }: Props) {
                     <WinnerCard
                       key={w.matchId}
                       winner={w}
-                      participantSede={participant?.sede ?? "GENERAL"}
                       participantName={participant?.fullName ?? ""}
+                      participantSede={participant?.sede ?? ""}
                     />
                   ))
               )
@@ -241,28 +241,175 @@ const SEDE_STYLE: Partial<Record<Sede, { bg: string; text: string; label: string
   FORZOSA:    { bg: "#00205B", text: "#FFCD00", label: "Alojamiento Forzosa" },
   BRISAS:     { bg: "#0a3aa8", text: "#ffffff", label: "Alojamiento Brisas" },
   GUADUALITO: { bg: "#CE1126", text: "#ffffff", label: "Alojamiento Guadualito" },
+  GENERAL:    { bg: "#374151", text: "#ffffff", label: "Sin alojamiento" },
+}
+
+function SedeRoulette({
+  candidates,
+  winners,
+  textColor,
+}: {
+  candidates: WinnerEntry[]
+  winners: WinnerEntry[]
+  textColor: string
+}) {
+  const [phase, setPhase]           = useState<"idle" | "spinning" | "done">("idle")
+  const [displayName, setDisplayName] = useState("")
+  const [flash, setFlash]           = useState(false)
+  const [confirmed, setConfirmed]   = useState<WinnerEntry[]>([])
+  const abortRef                    = useRef(false)
+
+  async function run() {
+    abortRef.current = false
+    setPhase("spinning")
+    setConfirmed([])
+    setDisplayName("")
+
+    const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
+    const stages = [
+      { ms: 48,  reps: 20 },
+      { ms: 100, reps: 12 },
+      { ms: 190, reps: 7  },
+      { ms: 340, reps: 4  },
+      { ms: 520, reps: 2  },
+    ]
+
+    for (let wi = 0; wi < winners.length; wi++) {
+      for (const { ms, reps } of stages) {
+        for (let r = 0; r < reps; r++) {
+          if (abortRef.current) return
+          setDisplayName(candidates[Math.floor(Math.random() * candidates.length)].name)
+          await sleep(ms)
+        }
+      }
+      if (abortRef.current) return
+      setDisplayName(winners[wi].name)
+      setFlash(true)
+      await sleep(950)
+      if (abortRef.current) return
+      setFlash(false)
+      setConfirmed((prev) => [...prev, winners[wi]])
+      setDisplayName("")
+      if (wi < winners.length - 1) await sleep(600)
+    }
+    if (!abortRef.current) setPhase("done")
+  }
+
+  function reset() {
+    abortRef.current = true
+    setPhase("idle")
+    setDisplayName("")
+    setFlash(false)
+    setConfirmed([])
+  }
+
+  if (candidates.length <= winners.length) return null
+
+  const dark   = "rgba(0,0,0,0.22)"
+  const medium = "rgba(0,0,0,0.15)"
+  const rimW   = "rgba(255,255,255,0.3)"
+
+  return (
+    <div style={{ marginTop: 10 }}>
+      {phase === "idle" && (
+        <button
+          onClick={run}
+          style={{
+            width: "100%", background: medium,
+            border: `1px solid ${rimW}`,
+            borderRadius: 20, padding: "8px 16px",
+            color: textColor, fontSize: 11, fontWeight: 800,
+            cursor: "pointer", letterSpacing: ".4px",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          }}
+        >
+          <span style={{ fontSize: 14 }}>🎰</span> Ver sorteo
+        </button>
+      )}
+
+      {phase === "spinning" && (
+        <div>
+          <p style={{
+            fontSize: 10, color: textColor, opacity: .8, marginBottom: 6,
+            textAlign: "center", fontWeight: 700, letterSpacing: ".3px",
+          }}>
+            {flash
+              ? `✓ ¡Ganador ${confirmed.length + 1} de ${winners.length} elegido!`
+              : `Eligiendo ganador ${confirmed.length + 1} de ${winners.length}…`}
+          </p>
+          <div style={{
+            background: flash ? "rgba(255,255,255,0.22)" : dark,
+            border: `2px solid ${flash ? "rgba(255,255,255,0.85)" : rimW}`,
+            borderRadius: 10, padding: "12px 14px",
+            fontSize: 13, fontWeight: 900, color: textColor,
+            minHeight: 46, display: "flex", alignItems: "center", justifyContent: "center",
+            transform: flash ? "scale(1.03)" : "scale(1)",
+            transition: "all 0.08s ease", letterSpacing: ".3px", textAlign: "center",
+            textShadow: "0 1px 3px rgba(0,0,0,0.3)",
+          }}>
+            {displayName || "…"}
+          </div>
+          {confirmed.length > 0 && (
+            <div style={{ marginTop: 6, display: "flex", flexDirection: "column", gap: 3 }}>
+              {confirmed.map((w, i) => (
+                <div key={i} style={{
+                  background: "rgba(255,255,255,0.15)",
+                  border: "1px solid rgba(255,255,255,0.3)",
+                  borderRadius: 6, padding: "5px 10px",
+                  fontSize: 12, fontWeight: 800, color: textColor,
+                  display: "flex", alignItems: "center", gap: 6,
+                }}>
+                  <span style={{ opacity: .7 }}>✓</span> {w.name}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {phase === "done" && (
+        <button
+          onClick={reset}
+          style={{
+            background: medium, border: `1px solid ${rimW}`,
+            borderRadius: 20, padding: "5px 14px",
+            color: textColor, fontSize: 10, fontWeight: 700,
+            cursor: "pointer", letterSpacing: ".3px", opacity: .85,
+          }}
+        >
+          ↺ Ver de nuevo
+        </button>
+      )}
+    </div>
+  )
 }
 
 function WinnerCard({
   winner,
-  participantSede,
   participantName,
+  participantSede,
 }: {
   winner: Winner
-  participantSede: Sede
   participantName: string
+  participantSede: Sede | ""
 }) {
-  const resStr        = `${winner.scoreCol} : ${winner.scoreOpp}`
-  const showSede      = participantSede !== "GENERAL"
-  const mySedeWinners = winner.sedeWinners.filter((e) => e.sede === participantSede)
-  const hadLottery    = winner.totalCorrect > winner.generalWinners.length
-  const sedeStyle     = SEDE_STYLE[participantSede]
+  const resStr    = `${winner.scoreCol} : ${winner.scoreOpp}`
+  const showAll   = !participantSede
 
-  const iAmGeneral = !!participantName && winner.generalWinners.some((e) => e.name === participantName)
-  const iAmSede    = !!participantName && mySedeWinners.some((e) => e.name === participantName)
+  // Filtrar entradas visibles según la sede del participante
+  const visibleCorrect = showAll
+    ? winner.allCorrect
+    : winner.allCorrect.filter((e) => e.sede === participantSede)
+  const visibleWinners = showAll
+    ? winner.sedeWinners
+    : winner.sedeWinners.filter((e) => e.sede === participantSede)
+
+  const winnerSet  = new Set(visibleWinners.map((e) => e.name))
+  const iAmWinner  = !!participantName && winnerSet.has(participantName)
 
   return (
     <div className="polla-card">
+      {/* Cabecera del partido */}
       <div className="polla-mhead">
         <span className="polla-fase">{winner.phase}</span>
         <span className="polla-badge b-final">Final {resStr}</span>
@@ -271,79 +418,26 @@ function WinnerCard({
         COLOMBIA <span style={{ color: "var(--gris)" }}>vs</span> {winner.rival.toUpperCase()}
       </div>
 
-      {/* Premio alojamiento — PRIMERO y destacado */}
-      {showSede && sedeStyle && (
-        <div style={{
-          marginTop: 12,
-          background: sedeStyle.bg,
-          borderRadius: 10,
-          padding: "10px 12px",
-        }}>
-          <p style={{
-            fontSize: 10, fontWeight: 800, textTransform: "uppercase",
-            letterSpacing: "0.8px", color: sedeStyle.text, opacity: 0.75, marginBottom: 4,
-          }}>
-            Tu alojamiento · {sedeStyle.label}
-          </p>
-          {(() => {
-            const total = winner.sedeTotals[participantSede] ?? mySedeWinners.length
-            return total > mySedeWinners.length && mySedeWinners.length > 0 ? (
-              <p style={{ fontSize: 10, color: sedeStyle.text, opacity: 0.65, marginBottom: 6 }}>
-                Sorteo entre {total} aciertos · {mySedeWinners.length}{" "}
-                {mySedeWinners.length === 1 ? "seleccionado" : "seleccionados"}
-              </p>
-            ) : null
-          })()}
-          {mySedeWinners.length === 0 ? (
-            <p style={{ fontSize: 13, color: sedeStyle.text, opacity: 0.7, margin: 0 }}>
-              Nadie de tu alojamiento acertó este marcador.
-            </p>
-          ) : (
-            mySedeWinners.map((e, i) => {
-              const isMe = participantName && e.name === participantName
-              return (
-                <div key={i} style={{
-                  background: isMe ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.1)",
-                  border: isMe ? "1.5px solid rgba(255,255,255,0.5)" : "1.5px solid transparent",
-                  borderRadius: 8, padding: "7px 10px", marginBottom: 4,
-                  display: "flex", alignItems: "center", justifyContent: "space-between",
-                }}>
-                  <span style={{ color: sedeStyle.text, fontWeight: isMe ? 800 : 600, fontSize: 13 }}>
-                    {isMe ? "⭐ " : ""}{e.name}
-                  </span>
-                  {isMe && (
-                    <span style={{
-                      fontSize: 10, fontWeight: 800, background: "rgba(255,255,255,0.2)",
-                      color: sedeStyle.text, padding: "2px 8px", borderRadius: 20,
-                    }}>¡Eres tú!</span>
-                  )}
-                </div>
-              )
-            })
-          )}
-        </div>
-      )}
-
-      {/* Ganadores */}
-      <div style={{ marginTop: showSede ? 10 : 12 }}>
+      {/* Todos los que acertaron (filtrados por sede) */}
+      <div style={{ marginTop: 12 }}>
         <p style={{
           fontSize: 11, fontWeight: 700, textTransform: "uppercase",
-          letterSpacing: "0.6px", color: "var(--gris)", marginBottom: 1,
+          letterSpacing: "0.6px", color: "var(--gris)", marginBottom: 4,
         }}>
-          Ganadores
+          {visibleCorrect.length === 0
+            ? "Nadie acertó"
+            : `Acertaron el marcador (${visibleCorrect.length})`}
         </p>
-        {hadLottery && (
-          <p style={{ fontSize: 10, color: "var(--gris)", marginBottom: 6 }}>
-            Sorteo entre {winner.totalCorrect} aciertos · {winner.generalWinners.length} seleccionados
-          </p>
-        )}
-        {winner.generalWinners.length === 0 ? (
+
+        {visibleCorrect.length === 0 ? (
           <div className="polla-empty" style={{ padding: "10px 0" }}>
             Nadie acertó el marcador exacto.
           </div>
         ) : (
-          winner.generalWinners.map((e, i) => {
-            const isMe = participantName && e.name === participantName
+          visibleCorrect.map((e, i) => {
+            const isMe      = !!participantName && e.name === participantName
+            const isWinner  = winnerSet.has(e.name)
+            const eSede     = showAll ? SEDE_STYLE[e.sede as Sede] : undefined
             return (
               <div key={i} className="polla-winner-row" style={isMe ? {
                 background: "rgba(255,205,0,0.12)",
@@ -352,26 +446,123 @@ function WinnerCard({
               } : {}}>
                 <span className="polla-winner-name">
                   {isMe ? "⭐ " : ""}{e.name}
+                  {eSede && (
+                    <span style={{
+                      marginLeft: 6, fontSize: 9, fontWeight: 700,
+                      padding: "1px 5px", borderRadius: 4,
+                      background: eSede.bg, color: eSede.text,
+                      verticalAlign: "middle",
+                    }}>
+                      {eSede.label.replace("Alojamiento ", "")}
+                    </span>
+                  )}
                 </span>
-                {isMe
-                  ? <span style={{ fontSize: 11, fontWeight: 800, color: "var(--amarillo)" }}>¡Eres tú!</span>
-                  : <span className="polla-crown">Ganó</span>
-                }
+                {isWinner && (
+                  isMe
+                    ? <span style={{ fontSize: 11, fontWeight: 800, color: "var(--amarillo)" }}>¡Eres tú!</span>
+                    : <span className="polla-crown">Ganó</span>
+                )}
               </div>
             )
           })
         )}
-        {iAmGeneral && (
-          <p style={{ fontSize: 11, color: "var(--amarillo)", fontWeight: 700, marginTop: 6 }}>
-            🎉 ¡Ganaste el premio general! Acércate a Bienestar Social.
-          </p>
-        )}
-        {iAmSede && (
-          <p style={{ fontSize: 11, color: "var(--amarillo)", fontWeight: 700, marginTop: 4 }}>
-            🎉 ¡Ganaste el premio de tu alojamiento!
-          </p>
-        )}
       </div>
+
+      {/* Ganadores por alojamiento (filtrados por sede) */}
+      {visibleWinners.length > 0 && (
+        <div style={{ marginTop: 12 }}>
+          <p style={{
+            fontSize: 11, fontWeight: 700, textTransform: "uppercase",
+            letterSpacing: "0.6px", color: "var(--gris)", marginBottom: 6,
+          }}>
+            Ganadores
+          </p>
+          {(Object.entries(SEDE_STYLE) as [Sede, NonNullable<typeof SEDE_STYLE[Sede]>][])
+            .filter(([, s]) => !!s)
+            .filter(([sede]) => showAll || sede === participantSede)
+            .map(([sede, style]) => {
+              const sedeWinners    = visibleWinners.filter((e) => e.sede === sede)
+              const sedeCandidates = winner.allCorrect.filter((e) => e.sede === sede)
+              const sedeTotal      = winner.sedeTotals[sede] ?? 0
+              if (sedeWinners.length === 0) return null
+              return (
+                <div key={sede} style={{
+                  background: style.bg, borderRadius: 10,
+                  overflow: "hidden", marginBottom: 8,
+                }}>
+                  {/* Header sede */}
+                  <div style={{
+                    padding: "9px 12px 7px",
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    borderBottom: "1px solid rgba(255,255,255,0.12)",
+                  }}>
+                    <span style={{
+                      fontSize: 10, fontWeight: 900, textTransform: "uppercase",
+                      letterSpacing: "0.9px", color: style.text,
+                    }}>
+                      {style.label}
+                    </span>
+                    {sedeTotal > sedeWinners.length && (
+                      <span style={{
+                        fontSize: 9, fontWeight: 700,
+                        background: "rgba(0,0,0,0.25)", color: style.text,
+                        padding: "2px 8px", borderRadius: 20, letterSpacing: ".3px",
+                      }}>
+                        Sorteo entre {sedeTotal}
+                      </span>
+                    )}
+                  </div>
+                  {/* Filas de ganadores */}
+                  <div style={{ padding: "8px 10px", display: "flex", flexDirection: "column", gap: 4 }}>
+                  {sedeWinners.map((e, i) => {
+                    const isMe = !!participantName && e.name === participantName
+                    return (
+                      <div key={i} style={{
+                        background: isMe ? "rgba(255,255,255,0.18)" : "rgba(0,0,0,0.18)",
+                        border: isMe ? "1.5px solid rgba(255,255,255,0.6)" : "1.5px solid rgba(255,255,255,0.08)",
+                        borderRadius: 7, padding: "8px 12px",
+                        display: "flex", alignItems: "center", justifyContent: "space-between",
+                      }}>
+                        <span style={{
+                          color: style.text, fontWeight: 800, fontSize: 13,
+                          letterSpacing: ".2px", textShadow: "0 1px 2px rgba(0,0,0,0.25)",
+                        }}>
+                          {isMe ? "⭐ " : "🏅 "}{e.name}
+                        </span>
+                        {isMe && (
+                          <span style={{
+                            fontSize: 10, fontWeight: 900,
+                            background: "rgba(255,255,255,0.92)",
+                            color: style.bg,
+                            padding: "3px 10px", borderRadius: 20,
+                            letterSpacing: ".3px", whiteSpace: "nowrap",
+                          }}>¡Eres tú!</span>
+                        )}
+                      </div>
+                    )
+                  })}
+                  </div>
+                  <div style={{ padding: "0 10px 10px" }}>
+                    <SedeRoulette
+                      candidates={sedeCandidates}
+                      winners={sedeWinners}
+                      textColor={style.text}
+                    />
+                  </div>
+                </div>
+              )
+            })}
+        </div>
+      )}
+
+      {/* Mensaje personal al ganador */}
+      {iAmWinner && (
+        <p style={{ fontSize: 11, color: "var(--amarillo)", fontWeight: 700, marginTop: 6 }}>
+          {participantSede === "GENERAL"
+            ? "🎉 ¡Ganaste! Acércate a Bienestar Social para reclamar tu premio."
+            : "🎉 ¡Ganaste! El equipo de Bienestar Social se comunicará contigo para entregarte tu premio."}
+        </p>
+      )}
     </div>
   )
 }

@@ -216,6 +216,40 @@ export async function setResultAction(
   }
 }
 
+/**
+ * Igual a setResultAction pero omite la validación de hora de inicio.
+ * Solo para pruebas en desarrollo/staging.
+ */
+export async function setResultForceAction(
+  id: string,
+  _prev: MatchActionState,
+  formData: FormData
+): Promise<MatchActionState> {
+  await requireAdmin()
+
+  const parsed = ResultSchema.safeParse({
+    resultCol: formData.get("resultCol"),
+    resultOpp: formData.get("resultOpp"),
+  })
+  if (!parsed.success) return { error: parsed.error.issues[0].message }
+
+  const match = await getMatch(id)
+  if (!match) return { error: "Partido no encontrado" }
+
+  try {
+    await updateMatchResult(id, {
+      GolesCol: parsed.data.resultCol,
+      GolesRival: parsed.data.resultOpp,
+    })
+    revalidatePath("/admin")
+    revalidatePath("/")
+    revalidatePath("/ganadores")
+    return { success: true }
+  } catch {
+    return { error: "Error guardando el resultado" }
+  }
+}
+
 // ─── Data para el panel ───────────────────────────────────────────────────────
 
 export interface AdminMatch extends MatchRecord {

@@ -1,25 +1,14 @@
 import { getWinners } from "@/app/actions/public"
 import type { WinnerEntry } from "@/app/actions/public"
 import Link from "next/link"
+import type { Sede } from "@/lib/airtable"
 
 const SEDE_CONFIG = [
-  { sede: "FORZOSA",    label: "Alojamiento Forzosa",    max: 3, color: "#00205B", text: "#FFCD00" },
-  { sede: "BRISAS",     label: "Alojamiento Brisas",     max: 1, color: "#0a3aa8", text: "#ffffff" },
-  { sede: "GUADUALITO", label: "Alojamiento Guadualito", max: 1, color: "#CE1126", text: "#ffffff" },
+  { sede: "FORZOSA"    as Sede, label: "Alojamiento Forzosa",    color: "#00205B", text: "#FFCD00" },
+  { sede: "BRISAS"     as Sede, label: "Alojamiento Brisas",     color: "#0a3aa8", text: "#ffffff" },
+  { sede: "GUADUALITO" as Sede, label: "Alojamiento Guadualito", color: "#CE1126", text: "#ffffff" },
+  { sede: "GENERAL"    as Sede, label: "Sin alojamiento",        color: "#374151", text: "#ffffff" },
 ] as const
-
-function WinnerList({ entries }: { entries: WinnerEntry[] }) {
-  return (
-    <ul className="space-y-1 mt-2">
-      {entries.map((entry, idx) => (
-        <li key={idx} className="flex items-center gap-2 bg-emerald-50 rounded-lg px-3 py-2 text-sm font-medium text-emerald-800">
-          <span className="text-emerald-500">✓</span>
-          {entry.name}
-        </li>
-      ))}
-    </ul>
-  )
-}
 
 export const dynamic = "force-dynamic"
 
@@ -85,58 +74,76 @@ export default async function GanadoresPage() {
                   </div>
                 </div>
 
-                {/* Ganadores */}
                 <div className="px-4 pb-4 space-y-4">
-                  {w.generalWinners.length === 0 && w.sedeWinners.length === 0 ? (
+                  {w.allCorrect.length === 0 ? (
                     <p className="text-center text-sm text-slate-400 bg-slate-50 rounded-xl py-3">
                       Nadie acertó el marcador exacto en este partido
                     </p>
                   ) : (
                     <>
-                      {/* Premio general */}
+                      {/* Todos los que acertaron */}
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-1">
-                          Ganadores
+                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">
+                          Acertaron el marcador ({w.allCorrect.length})
                         </p>
-                        {w.totalCorrect > w.generalWinners.length && (
-                          <p className="text-xs text-slate-400 mb-1">
-                            Sorteo entre {w.totalCorrect} aciertos · {w.generalWinners.length} seleccionados
-                          </p>
-                        )}
-                        {w.generalWinners.length === 0 ? (
-                          <p className="text-xs text-slate-400">Sin ganadores generales</p>
-                        ) : (
-                          <WinnerList entries={w.generalWinners} />
-                        )}
+                        <ul className="space-y-1">
+                          {w.allCorrect.map((entry: WinnerEntry, idx: number) => {
+                            const sedeConf = SEDE_CONFIG.find((s) => s.sede === entry.sede)
+                            return (
+                              <li key={idx} className="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2 text-sm">
+                                <span className="flex-1 font-medium text-slate-700">{entry.name}</span>
+                                {sedeConf && (
+                                  <span
+                                    className="text-xs font-bold px-2 py-0.5 rounded"
+                                    style={{ background: sedeConf.color, color: sedeConf.text }}
+                                  >
+                                    {sedeConf.label.replace("Alojamiento ", "")}
+                                  </span>
+                                )}
+                              </li>
+                            )
+                          })}
+                        </ul>
                       </div>
 
-                      {/* Premios por alojamiento */}
-                      {SEDE_CONFIG.map(({ sede, label, max, color, text }) => {
-                        const sedeEntries = w.sedeWinners.filter((e) => e.sede === sede)
-                        if (sedeEntries.length === 0) return null
-                        const total = w.sedeTotals[sede] ?? sedeEntries.length
-                        return (
-                          <div key={sede}>
-                            <div className="flex items-center gap-2 mb-1">
-                              <span
-                                className="text-xs font-bold uppercase tracking-wide px-2 py-0.5 rounded"
-                                style={{ background: color, color: text }}
-                              >
-                                {label}
-                              </span>
-                              <span className="text-xs text-slate-400">
-                                (hasta {max} {max === 1 ? "ganador" : "ganadores"})
-                              </span>
-                            </div>
-                            {total > sedeEntries.length && (
-                              <p className="text-xs text-slate-400 mb-1">
-                                Sorteo entre {total} aciertos · {sedeEntries.length} seleccionados
-                              </p>
-                            )}
-                            <WinnerList entries={sedeEntries} />
+                      {/* Ganadores por alojamiento */}
+                      {w.sedeWinners.length > 0 && (
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">
+                            Ganadores
+                          </p>
+                          <div className="space-y-2">
+                            {SEDE_CONFIG.map(({ sede, label, color, text }) => {
+                              const sedeEntries = w.sedeWinners.filter((e) => e.sede === sede)
+                              if (sedeEntries.length === 0) return null
+                              const total = w.sedeTotals[sede] ?? sedeEntries.length
+                              return (
+                                <div key={sede} className="rounded-xl overflow-hidden">
+                                  <div
+                                    className="px-3 py-1.5 text-xs font-bold uppercase tracking-wide flex items-center justify-between"
+                                    style={{ background: color, color: text }}
+                                  >
+                                    <span>{label}</span>
+                                    {total > sedeEntries.length && (
+                                      <span style={{ opacity: 0.7, fontWeight: 400 }}>
+                                        Sorteo entre {total}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <ul className="divide-y divide-slate-50">
+                                    {sedeEntries.map((entry, idx) => (
+                                      <li key={idx} className="flex items-center gap-2 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800">
+                                        <span className="text-emerald-500">✓</span>
+                                        {entry.name}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )
+                            })}
                           </div>
-                        )
-                      })}
+                        </div>
+                      )}
                     </>
                   )}
                 </div>
@@ -145,7 +152,6 @@ export default async function GanadoresPage() {
           </div>
         )}
 
-        {/* Instrucción de Bienestar */}
         <div className="mt-6 bg-col-yellow/10 border border-col-yellow/30 rounded-2xl px-4 py-4 text-center">
           <p className="text-col-yellow font-semibold text-sm">
             🏅 Si apareces en la lista, preséntate con tu cédula en Bienestar Social para reclamar tu premio.

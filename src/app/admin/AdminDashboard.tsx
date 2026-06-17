@@ -10,6 +10,7 @@ import {
   updateMatchAction,
   deleteMatchAction,
   setResultAction,
+  setResultForceAction,
   getMatchPredictions,
   exportPredictionsCsv,
 } from "@/app/actions/admin"
@@ -606,10 +607,31 @@ function MatchForm({ title, initial, onCancel, action, onSuccess }: MatchFormPro
 function ResultForm({ match, onCancel, onSuccess }: { match: AdminMatch; onCancel: () => void; onSuccess: () => void }) {
   const boundAction = setResultAction.bind(null, match.id)
   const [state, formAction, pending] = useActionState(boundAction, {})
+  const [scoreCol, setScoreCol] = useState(match.GolesCol ?? 0)
+  const [scoreOpp, setScoreOpp] = useState(match.GolesRival ?? 0)
+
   const onSuccessRef = useRef(onSuccess)
   onSuccessRef.current = onSuccess
-  useEffect(() => { if (state?.success) onSuccessRef.current() }, [state?.success])
+  useEffect(() => {
+    if (state?.success) onSuccessRef.current()
+  }, [state?.success])
   if (state?.success) return null
+
+  const errorMsg = state?.error
+
+  const inputStyle = (color: string, bg: string) => ({
+    width: 80, height: 72, textAlign: "center" as const,
+    fontFamily: "var(--font-display)", fontSize: 36, fontWeight: 400,
+    border: `2px solid ${color}`, borderRadius: 12,
+    color, outline: "none", background: bg,
+  })
+
+  const scores = (
+    <>
+      <input type="hidden" name="resultCol" value={scoreCol} />
+      <input type="hidden" name="resultOpp" value={scoreOpp} />
+    </>
+  )
 
   return (
     <div style={{
@@ -632,59 +654,55 @@ function ResultForm({ match, onCancel, onSuccess }: { match: AdminMatch; onCance
         </h3>
       </div>
 
-      <form action={formAction} style={{ display: "flex", alignItems: "flex-end", gap: 14, flexWrap: "wrap" }}>
-
+      {/* Inputs de marcador (controlados, compartidos por ambos formularios) */}
+      <div style={{ display: "flex", alignItems: "flex-end", gap: 14, flexWrap: "wrap", marginBottom: 14 }}>
         <div style={{ textAlign: "center" }}>
           <label className="polla-label" style={{ textAlign: "center", display: "block" }}>Colombia</label>
-          <input name="resultCol" type="number" min={0} max={20}
-            defaultValue={match.GolesCol ?? 0} required
-            style={{
-              width: 80, height: 72, textAlign: "center",
-              fontFamily: "var(--font-display)", fontSize: 36, fontWeight: 400,
-              border: "2px solid var(--azul)", borderRadius: 12,
-              color: "var(--azul)", outline: "none", background: "#f0f4ff",
-            }} />
+          <input type="number" min={0} max={20} value={scoreCol} required
+            onChange={e => setScoreCol(Math.max(0, Math.min(20, +e.target.value)))}
+            style={inputStyle("var(--azul)", "#f0f4ff")} />
         </div>
 
         <div style={{ fontSize: 32, fontWeight: 900, color: "var(--gris-2)", paddingBottom: 6 }}>—</div>
 
         <div style={{ textAlign: "center" }}>
           <label className="polla-label" style={{ textAlign: "center", display: "block" }}>{match.Rival}</label>
-          <input name="resultOpp" type="number" min={0} max={20}
-            defaultValue={match.GolesRival ?? 0} required
-            style={{
-              width: 80, height: 72, textAlign: "center",
-              fontFamily: "var(--font-display)", fontSize: 36, fontWeight: 400,
-              border: "2px solid var(--rojo)", borderRadius: 12,
-              color: "var(--rojo)", outline: "none", background: "#fff5f6",
-            }} />
+          <input type="number" min={0} max={20} value={scoreOpp} required
+            onChange={e => setScoreOpp(Math.max(0, Math.min(20, +e.target.value)))}
+            style={inputStyle("var(--rojo)", "#fff5f6")} />
         </div>
+      </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingBottom: 2 }}>
+      {/* Botones */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {/* Registro normal (respeta validación de hora) */}
+        <form action={formAction} style={{ margin: 0 }}>
+          {scores}
           <button type="submit" disabled={pending} style={{
-            background: "var(--ok)", color: "#fff",
+            width: "100%", background: "var(--ok)", color: "#fff",
             border: 0, borderRadius: 10, padding: "12px 22px",
             fontSize: 13, fontWeight: 700, cursor: "pointer",
-            opacity: pending ? .6 : 1, fontFamily: "var(--font-body)", whiteSpace: "nowrap",
+            opacity: pending ? .6 : 1, fontFamily: "var(--font-body)",
           }}>
             {pending ? "Guardando…" : "✓ Registrar resultado"}
           </button>
-          <button type="button" onClick={onCancel} style={{
-            background: "transparent", color: "var(--gris)",
-            border: "1.5px solid var(--linea)", borderRadius: 10,
-            padding: "9px 18px", fontSize: 13, fontWeight: 600,
-            cursor: "pointer", fontFamily: "var(--font-body)",
-          }}>
-            Cancelar
-          </button>
-        </div>
+        </form>
 
-        {state?.error && (
-          <p style={{ width: "100%", fontSize: 12, fontWeight: 600, color: "var(--rojo)", margin: 0 }}>
-            {state.error}
-          </p>
-        )}
-      </form>
+<button type="button" onClick={onCancel} style={{
+          background: "transparent", color: "var(--gris)",
+          border: "1.5px solid var(--linea)", borderRadius: 10,
+          padding: "9px 18px", fontSize: 13, fontWeight: 600,
+          cursor: "pointer", fontFamily: "var(--font-body)",
+        }}>
+          Cancelar
+        </button>
+      </div>
+
+      {errorMsg && (
+        <p style={{ fontSize: 12, fontWeight: 600, color: "var(--rojo)", margin: "10px 0 0" }}>
+          {errorMsg}
+        </p>
+      )}
     </div>
   )
 }
