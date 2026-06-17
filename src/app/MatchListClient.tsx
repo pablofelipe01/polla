@@ -47,7 +47,7 @@ export default function MatchListClient({ matches }: Props) {
         <div className="brandbar">
           <span /><span /><span />
         </div>
-        <div className="eyebrow">Mundial 2026 · Bienestar Social</div>
+        <div className="eyebrow">Mundial 2026</div>
         <h1 style={{
           fontFamily: "var(--font-display)",
           fontWeight: 400,
@@ -61,7 +61,7 @@ export default function MatchListClient({ matches }: Props) {
           <span style={{ color: "var(--amarillo)" }}>Tricolor</span>
         </h1>
         <p style={{ margin: "8px 0 0", color: "rgba(255,255,255,.7)", fontSize: 13.5, maxWidth: "36ch", lineHeight: 1.55 }}>
-          Pronostica el marcador exacto de la Selección Colombia. Solo gana quien clava el resultado clavado.
+          Pronostica el marcador exacto de la Selección Colombia. Tienen posibilidades de ganar quienes acierten el resultado.
         </p>
       </header>
 
@@ -559,8 +559,8 @@ function WinnerCard({
       {iAmWinner && (
         <p style={{ fontSize: 11, color: "var(--amarillo)", fontWeight: 700, marginTop: 6 }}>
           {participantSede === "GENERAL"
-            ? "🎉 ¡Ganaste! Acércate a Bienestar Social para reclamar tu premio."
-            : "🎉 ¡Ganaste! El equipo de Bienestar Social se comunicará contigo para entregarte tu premio."}
+            ? "🎉 ¡Ganaste! Acércate a Gestion Humana para reclamar tu premio a partir del 1 de Julio."
+            : "🎉 ¡Ganaste! El equipo de Bienestar Social se acercará al alojamiento para entregarte tu premio."}
         </p>
       )}
     </div>

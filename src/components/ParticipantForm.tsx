@@ -137,7 +137,7 @@ export default function NameGate({ onSave }: GateProps) {
             autoFocus
           />
           <p className="polla-hint">
-            Solo pueden participar colaboradores activos de Guaicaramo y SIAGRI.
+          
           </p>
 
           {error && (
