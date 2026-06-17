@@ -80,6 +80,8 @@ export default function NameGate({ onSave }: GateProps) {
       } else if (result.status === "found") {
         setFound({ fullName: result.fullName, sede: result.sede })
         setStep("confirm")
+      } else if (result.status === "api_error") {
+        setError(`Error al conectar con la nómina: ${result.message}`)
       } else {
         setError("Tu cédula no aparece en la nómina. Comunícate con Gestión Humana.")
       }

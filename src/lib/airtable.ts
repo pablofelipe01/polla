@@ -360,32 +360,32 @@ export async function lookupEmployee(
   cedula: string
 ): Promise<{ fullName: string; sede: Sede } | null> {
   const rosterId = process.env.ROSTER_BASE_ID
-  if (!rosterId) return null
+  if (!rosterId) throw new Error("ROSTER_BASE_ID no está configurado en las variables de entorno")
 
   const safeCedula = cedula.replace(/"/g, "")
-  try {
-    const q = new URLSearchParams({
-      filterByFormula: `{Cedula}="${safeCedula}"`,
-      pageSize: "1",
-    })
-    const res = await at<ATPage<ColaboradorFields>>(
-      `${rosterId}/Colaboradores?${q}&fields[]=NombreCompleto&fields[]=Sede`
-    )
-    if (res.records.length === 0) return null
-    const f = res.records[0].fields
-    return {
-      fullName: f.NombreCompleto ?? "",
-      sede: isValidSede(f.Sede) ? f.Sede : "GENERAL",
-    }
-  } catch {
-    return null
+  const q = new URLSearchParams({
+    filterByFormula: `{Cedula}="${safeCedula}"`,
+    pageSize: "1",
+  })
+  const res = await at<ATPage<ColaboradorFields>>(
+    `${rosterId}/Colaboradores?${q}&fields[]=NombreCompleto&fields[]=Sede`
+  )
+  if (res.records.length === 0) return null
+  const f = res.records[0].fields
+  return {
+    fullName: f.NombreCompleto ?? "",
+    sede: isValidSede(f.Sede) ? f.Sede : "GENERAL",
   }
 }
 
 export async function validateCedula(cedula: string): Promise<boolean> {
   if (process.env.VALIDATE_ROSTER !== "true") return true
-  const employee = await lookupEmployee(cedula)
-  return employee !== null
+  try {
+    const employee = await lookupEmployee(cedula)
+    return employee !== null
+  } catch {
+    return false
+  }
 }
 
 // ─── Finalistas ───────────────────────────────────────────────────────────────

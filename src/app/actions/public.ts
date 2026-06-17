@@ -67,12 +67,18 @@ export type LookupResult =
   | { status: "found"; fullName: string; sede: Sede }
   | { status: "not_found" }
   | { status: "roster_disabled" }
+  | { status: "api_error"; message: string }
 
 export async function lookupParticipant(cedula: string): Promise<LookupResult> {
   if (process.env.VALIDATE_ROSTER !== "true") return { status: "roster_disabled" }
-  const employee = await lookupEmployee(cedula)
-  if (!employee) return { status: "not_found" }
-  return { status: "found", fullName: employee.fullName, sede: employee.sede }
+  try {
+    const employee = await lookupEmployee(cedula)
+    if (!employee) return { status: "not_found" }
+    return { status: "found", fullName: employee.fullName, sede: employee.sede }
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e)
+    return { status: "api_error", message }
+  }
 }
 
 // ─── getMatches ───────────────────────────────────────────────────────────────
