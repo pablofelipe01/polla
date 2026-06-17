@@ -81,7 +81,7 @@ export default function NameGate({ onSave }: GateProps) {
         setFound({ fullName: result.fullName, sede: result.sede })
         setStep("confirm")
       } else if (result.status === "api_error") {
-        setError(`Error al conectar con la nómina: ${result.message}`)
+        setError("Error al verificar la nómina. Intenta de nuevo o comunícate con Bienestar social.")
       } else {
         setError("Tu cédula no aparece en la nómina. Comunícate con Gestión Humana.")
       }

@@ -229,7 +229,7 @@ export default function MatchListClient({ matches }: Props) {
         background: "var(--tinta)",
         letterSpacing: ".3px",
       }}>
-        Polla Tricolor · Los datos se guardan en Airtable.
+        Polla Tricolor 
       </footer>
     </div>
   )
