@@ -68,7 +68,7 @@ export default function AdminDashboard({ matches: initialMatches }: Props) {
   const [predictionsMatchId, setPredictionsMatchId] = useState<string | null>(null)
   const [predictions,       setPredictions]       = useState<PredictionRecord[]>([])
   const [loadingPreds,      setLoadingPreds]      = useState(false)
-  const [csvPending, startCsvTransition]          = useTransition()
+  const [csvPending, startCsvTransition] = useTransition()
   const router = useRouter()
 
   async function viewPredictions(matchId: string) {
@@ -133,28 +133,52 @@ export default function AdminDashboard({ matches: initialMatches }: Props) {
           ))}
         </div>
 
-        {/* CSV */}
-        <button
-          onClick={handleExportCsv}
-          disabled={csvPending}
-          style={{
-            marginLeft: "auto",
-            background: "var(--ok)",
-            color: "#fff",
-            border: 0,
-            borderRadius: 10,
-            padding: "9px 20px",
-            fontSize: 13,
-            fontWeight: 700,
-            cursor: "pointer",
-            opacity: csvPending ? .55 : 1,
-            whiteSpace: "nowrap",
-            fontFamily: "var(--font-body)",
-            letterSpacing: ".2px",
-          }}
-        >
-          {csvPending ? "Generando…" : "⬇ Exportar CSV"}
-        </button>
+        {/* Exportaciones */}
+        <div style={{ marginLeft: "auto", display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <a
+            href="/api/admin/excel/finalistas"
+            download
+            style={{
+              background: "var(--azul)",
+              color: "var(--amarillo)",
+              border: 0,
+              borderRadius: 10,
+              padding: "9px 20px",
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              fontFamily: "var(--font-body)",
+              letterSpacing: ".2px",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+            }}
+          >
+            📊 Excel Finalistas
+          </a>
+
+          <button
+            onClick={handleExportCsv}
+            disabled={csvPending}
+            style={{
+              background: "var(--ok)",
+              color: "#fff",
+              border: 0,
+              borderRadius: 10,
+              padding: "9px 20px",
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: "pointer",
+              opacity: csvPending ? .55 : 1,
+              whiteSpace: "nowrap",
+              fontFamily: "var(--font-body)",
+              letterSpacing: ".2px",
+            }}
+          >
+            {csvPending ? "Generando…" : "⬇ Exportar CSV"}
+          </button>
+        </div>
       </div>
 
       {/* ── Tab: Partidos ── */}
@@ -333,6 +357,28 @@ export default function AdminDashboard({ matches: initialMatches }: Props) {
                           >
                             ✏ Editar
                           </Btn>
+                          <a
+                            href={`/api/admin/excel/${m.id}`}
+                            download
+                            style={{
+                              background: "#1d6f42",
+                              color: "#fff",
+                              border: 0,
+                              borderRadius: 7,
+                              padding: "5px 10px",
+                              fontSize: 11,
+                              fontWeight: 700,
+                              cursor: "pointer",
+                              whiteSpace: "nowrap",
+                              fontFamily: "var(--font-body)",
+                              letterSpacing: ".1px",
+                              textDecoration: "none",
+                              display: "inline-flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            📊 Excel
+                          </a>
                           <DelBtn matchId={m.id} />
                         </div>
                       </td>

@@ -472,3 +472,16 @@ export async function getFinalistPrediction(cedula: string): Promise<FinalistRec
     return null
   }
 }
+
+/**
+ * Devuelve todos los pronósticos de finalistas registrados.
+ * Retorna [] si la tabla aún no existe.
+ */
+export async function listAllFinalistPredictions(): Promise<FinalistRecord[]> {
+  try {
+    const recs = await listAll<FinalistFields>("PronosticosFinalistas")
+    return recs.map(toFinalist)
+  } catch {
+    return []
+  }
+}

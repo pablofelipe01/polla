@@ -49,7 +49,7 @@ function buildBrandedSvgString(qrSvgEl: SVGElement, url: string): string {
     font-size="28"
     font-weight="bold"
     fill="#FFCD00"
-    letter-spacing="1">POLLA MUNDIALISTA</text>
+    letter-spacing="1">PRONOSTICO MUNDIALISTA</text>
 
   <!-- URL -->
   <text x="${W / 2}" y="${CARD_Y + CARD_SIZE + 82}"
