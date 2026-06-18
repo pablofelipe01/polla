@@ -379,11 +379,12 @@ export async function lookupEmployee(
 }
 
 export async function validateCedula(cedula: string): Promise<boolean> {
-  if (process.env.VALIDATE_ROSTER !== "true") return true
+  if (process.env.VALIDATE_ROSTER?.toLowerCase() !== "true") return true
   try {
     const employee = await lookupEmployee(cedula)
     return employee !== null
-  } catch {
+  } catch (e) {
+    console.error("[validateCedula] error consultando nómina:", e)
     return false
   }
 }

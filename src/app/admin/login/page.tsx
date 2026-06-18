@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
             textTransform: "uppercase", color: "var(--amarillo)",
             fontWeight: 700, marginBottom: 6, position: "relative",
           }}>
-            Polla Tricolor · Guaicaramo
+            Pronóstico Mundialista · Guaicaramo
           </div>
 
           <h1 style={{

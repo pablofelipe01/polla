@@ -16,7 +16,7 @@ const anton = Anton({
 })
 
 export const metadata: Metadata = {
-  title: "Polla Tricolor 2026 · Guaicaramo",
+  title: "Pronosico Mundialista 2026 · Guaicaramo",
   description:
     "Pronostica el marcador exacto de los partidos de Colombia en el Mundial 2026 junto a Guaicaramo.",
 }

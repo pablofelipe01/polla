@@ -69,7 +69,7 @@ export type LookupResult =
   | { status: "api_error"; message: string }
 
 export async function lookupParticipant(cedula: string): Promise<LookupResult> {
-  if (process.env.VALIDATE_ROSTER !== "true") return { status: "roster_disabled" }
+  if (process.env.VALIDATE_ROSTER?.toLowerCase() !== "true") return { status: "roster_disabled" }
   try {
     const employee = await lookupEmployee(cedula)
     if (!employee) return { status: "not_found" }

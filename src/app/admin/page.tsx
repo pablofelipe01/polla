@@ -33,7 +33,7 @@ export default async function AdminPage() {
             letterSpacing: ".5px",
             whiteSpace: "nowrap",
           }}>
-            Polla Tricolor
+            Pronóstico Mundialista
           </span>
           <span style={{ color: "rgba(255,255,255,.4)", fontSize: 12, whiteSpace: "nowrap" }}>· Admin</span>
         </div>

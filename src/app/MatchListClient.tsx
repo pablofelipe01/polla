@@ -57,8 +57,8 @@ export default function MatchListClient({ matches }: Props) {
           margin: 0,
           textTransform: "uppercase",
         }}>
-          La Polla<br />
-          <span style={{ color: "var(--amarillo)" }}>Tricolor</span>
+          Pronostico<br />
+          <span style={{ color: "var(--amarillo)" }}>Mundialista</span>
         </h1>
         <p style={{ margin: "8px 0 0", color: "rgba(255,255,255,.7)", fontSize: 13.5, maxWidth: "36ch", lineHeight: 1.55 }}>
           Pronostica el marcador exacto de la Selección Colombia. Tienen posibilidades de ganar quienes acierten el resultado.
@@ -149,7 +149,9 @@ export default function MatchListClient({ matches }: Props) {
               <div>
                 <div className="polla-prize-title">¿Acertaste el marcador exacto?</div>
                 <div className="polla-prize-sub">
-                  En los próximos días nos acercaremos para entregarte tu premio.
+                  {participant?.sede === "GENERAL"
+                    ? "El 3 de julio acércate con tu cédula a Gestión Humana para reclamar tu premio."
+                    : "En los próximos días nos acercaremos para entregarte tu premio."}
                 </div>
               </div>
             </div>
@@ -229,7 +231,7 @@ export default function MatchListClient({ matches }: Props) {
         background: "var(--tinta)",
         letterSpacing: ".3px",
       }}>
-        Polla Tricolor 
+        Hecho con Corazón  
       </footer>
     </div>
   )
