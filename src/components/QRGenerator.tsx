@@ -133,7 +133,7 @@ export default function QRGenerator() {
       ctx.fillStyle = "#FFCD00"
       ctx.font = "bold 28px Anton, Impact, sans-serif"
       ctx.textAlign = "center"
-      ctx.fillText("POLLA MUNDIALISTA", W / 2, CARD_Y + CARD_SIZE + 52)
+      ctx.fillText("PRONOSTICO MUNDIALISTA", W / 2, CARD_Y + CARD_SIZE + 52)
 
       // URL
       ctx.fillStyle = "#a0b4d6"
