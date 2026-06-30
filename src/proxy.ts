@@ -28,9 +28,11 @@ export const proxy = auth(function (req) {
   // Página de bienvenida (animación de entrada) → pública, sin sesión requerida
   if (pathname === "/bienvenida") return NextResponse.next()
 
-  // Raíz sin sesión → mostrar la animación de entrada antes del login
-  if (pathname === "/" && !sesion) {
-    return NextResponse.redirect(new URL("/bienvenida", req.url))
+  // Raíz → siempre pasa por bienvenida; si ya hay sesión salta directo al módulo
+  if (pathname === "/") {
+    if (!sesion) return NextResponse.redirect(new URL("/bienvenida", req.url))
+    const destino = role === "Admin" ? "/admin" : (role === "DT" || role === "CuerpoTecnico") ? "/equipos" : "/pronosticos"
+    return NextResponse.redirect(new URL(destino, req.url))
   }
 
   // Sin sesión → todo va al login
