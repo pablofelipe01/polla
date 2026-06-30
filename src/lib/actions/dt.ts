@@ -212,7 +212,7 @@ export async function retirarMiembroAction(usuarioId: string): Promise<ActionSta
   }
 }
 
-// ─── Ayudante de cuerpo técnico ─────────────────────────────────────────────────
+// ─── Asistente técnico ───────────────────────────────────────────────────────────
 
 /**
  * Asigna a un usuario como ayudante de un equipo del continente del DT.

@@ -19,9 +19,9 @@ import { NotFoundError, ValidationError } from "@/types/errors"
 
 export type DatosEquipoDT = {
   equipo: Equipo
-  /** Plantilla del equipo: solo jugadores (Rol=Usuario), sin DT ni ayudante. */
+  /** Plantilla del equipo: solo jugadores (Rol=Usuario), sin DT ni asistente técnico. */
   miembros: Usuario[]
-  /** Ayudante de cuerpo técnico encargado del equipo (Rol=CuerpoTecnico), si existe. */
+  /** Asistente técnico encargado del equipo (Rol=CuerpoTecnico), si existe. */
   ayudante: Usuario | null
 }
 

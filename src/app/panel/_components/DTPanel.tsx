@@ -13,7 +13,7 @@ export default function DTPanel({
   puedeAsignarAyudante = false,
 }: {
   datos: DatosDT
-  /** Solo el DT principal (o Admin) puede asignar el ayudante; el ayudante no. */
+  /** Solo el DT principal (o Admin) puede asignar el asistente técnico; el asistente no. */
   puedeAsignarAyudante?: boolean
 }) {
   const [equipoSelIdx, setEquipoSelIdx] = useState(0)
@@ -55,9 +55,9 @@ export default function DTPanel({
 
       {puedeAsignarAyudante && (
         <div style={card}>
-          <SectionTitle>Ayudante · {sel.equipo.Nombre}</SectionTitle>
+          <SectionTitle>Asistente técnico · {sel.equipo.Nombre}</SectionTitle>
           <p style={{ fontSize: 12, color: "var(--gris)", margin: "0 0 12px" }}>
-            Asigna un ayudante encargado de este equipo. Podrá agregar integrantes y editar
+            Asigna un asistente técnico encargado de este equipo. Podrá agregar integrantes y editar
             los pronósticos únicamente de <strong>{sel.equipo.Nombre}</strong>.
           </p>
           <SeccionAyudante equipoId={sel.equipo.id} ayudante={sel.ayudante} />

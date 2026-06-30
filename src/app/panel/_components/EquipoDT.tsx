@@ -161,8 +161,8 @@ function BuscadorUsuario({
 }
 
 /**
- * Sección para que el DT asigne (o retire) al ayudante encargado del equipo.
- * Un solo ayudante por equipo: si ya hay uno, se muestra con opción de retirarlo;
+ * Sección para que el DT asigne (o retire) al asistente técnico encargado del equipo.
+ * Un solo asistente técnico por equipo: si ya hay uno, se muestra con opción de retirarlo;
  * si no, se ofrece el buscador para asignarlo.
  */
 export function SeccionAyudante({ equipoId, ayudante }: { equipoId: string; ayudante: Usuario | null }) {
@@ -178,7 +178,7 @@ export function SeccionAyudante({ equipoId, ayudante }: { equipoId: string; ayud
       if (res.error) { setError(res.error); toast(res.error, "error") }
       else {
         setQuery(""); setResultados([])
-        toast(`${u.Nombre} asignado como ayudante`, "success")
+        toast(`${u.Nombre} asignado como asistente técnico`, "success")
         router.refresh()
       }
     })
@@ -193,8 +193,8 @@ export function SeccionAyudante({ equipoId, ayudante }: { equipoId: string; ayud
           <div style={{ fontSize: 11, color: "var(--gris)" }}>{ayudante.Cedula || ayudante.Email}</div>
         </div>
         <DeleteButton
-          confirmMsg={`¿Retirar a ${ayudante.Nombre} como ayudante?`}
-          okMsg="Ayudante retirado"
+          confirmMsg={`¿Retirar a ${ayudante.Nombre} como asistente técnico?`}
+          okMsg="Asistente técnico retirado"
           onDelete={() => quitarAyudanteAction(ayudante.id)}
         />
       </div>
@@ -203,7 +203,7 @@ export function SeccionAyudante({ equipoId, ayudante }: { equipoId: string; ayud
 
   return (
     <BuscadorUsuario
-      placeholder="Buscar al ayudante por nombre o cédula…"
+      placeholder="Buscar al asistente técnico por nombre o cédula…"
       query={query}
       setQuery={setQuery}
       buscando={buscando}
