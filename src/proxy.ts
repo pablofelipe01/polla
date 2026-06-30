@@ -6,7 +6,6 @@ import type { Rol } from "@/lib/clients/airtable"
 // Capacidades por módulo (espejo de los helpers de auth.ts, sin sesión completa).
 const puedeAdmin = (r?: Rol) => r === "Admin"
 const puedeEquipos = (r?: Rol) => r === "Admin" || r === "DT" || r === "CuerpoTecnico"
-const puedePronosticos = (r?: Rol) => r === "Admin" || r === "DT" || r === "CuerpoTecnico" || r === "Usuario"
 
 export const proxy = auth(function (req) {
   const { pathname } = req.nextUrl

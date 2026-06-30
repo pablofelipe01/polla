@@ -12,7 +12,6 @@ import {
   listIntegrantesByEquipo,
   createIntegrante,
   deleteIntegrante,
-  countHabilitadosByEquipo,
   updateUsuario,
   type Continente,
   type Equipo,
@@ -25,7 +24,6 @@ import { NotFoundError, ValidationError } from "@/types/errors"
 
 export const MIN_INTEGRANTES = 20
 export const MAX_INTEGRANTES = 30
-export const MAX_DELEGADOS = 2
 
 // ─── Continentes ────────────────────────────────────────────────────────────────
 
@@ -105,9 +103,4 @@ export async function validarTamanoEquipo(equipoId: string): Promise<Result<true
     )
   }
   return ok(true)
-}
-
-/** Indica si el equipo aún tiene cupo para habilitar pronósticos (máx 2). */
-export async function equipoTieneCupoHabilitado(equipoId: string): Promise<boolean> {
-  return (await countHabilitadosByEquipo(equipoId)) < MAX_DELEGADOS
 }

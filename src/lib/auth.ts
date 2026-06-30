@@ -32,8 +32,8 @@ declare module "@auth/core/jwt" {
   }
 }
 
-function requierePin(rol: string, puedePronosticar: boolean): boolean {
-  return rol === "Admin" || rol === "DT" || rol === "CuerpoTecnico" || puedePronosticar
+function requierePin(rol: string): boolean {
+  return rol === "Admin" || rol === "DT" || rol === "CuerpoTecnico"
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -54,7 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           if (!usuario || !usuario.Activo) return null
 
           // Verificación de PIN para roles especiales
-          if (requierePin(usuario.Rol, usuario.PuedePronosticar)) {
+          if (requierePin(usuario.Rol)) {
             if (pin !== cedula.slice(-4)) return null
           }
 
@@ -114,9 +114,8 @@ export const isAdmin = (s: SessionLike): boolean => s?.user?.role === "Admin"
 export const isDT = (s: SessionLike): boolean =>
   s?.user?.role === "DT" || s?.user?.role === "CuerpoTecnico"
 
-/** Solo los usuarios con PuedePronosticar=true pueden registrar/editar pronósticos. */
-export const canPredict = (s: SessionLike): boolean =>
-  s?.user?.puedePronosticar === true
+/** Solo DT y Cuerpo Técnico registran/editan los pronósticos oficiales de sus equipos. */
+export const canPredict = (s: SessionLike): boolean => isDT(s)
 
 // ─── Capacidades por módulo (las "4 capas" del sistema) ──────────────────────────
 // Cada módulo declara quién puede entrar. La UI y el proxy consumen estos helpers

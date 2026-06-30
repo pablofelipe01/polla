@@ -94,7 +94,7 @@ function NuevoUsuario({ continentes }: { continentes: Continente[] }) {
         )}
 
         <p style={{ fontSize: 11, color: "var(--gris)", margin: 0 }}>
-          El usuario ingresará con su cédula. Admin, DT y habilitados para pronósticos usarán su cédula + PIN (últimos 4 dígitos).
+          El usuario ingresará con su cédula. Admin, DT y Cuerpo Técnico usarán su cédula + PIN (últimos 4 dígitos).
         </p>
 
         <ErrorMsg msg={error} />
@@ -218,11 +218,6 @@ function ListaUsuarios({
                   <span style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", background: "rgba(255,214,0,.12)", border: "1px solid rgba(255,214,0,.25)", color: "var(--oro)", borderRadius: 4, padding: "1px 6px", letterSpacing: ".4px" }}>
                     {u.Rol}
                   </span>
-                  {u.PuedePronosticar && (
-                    <span style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", background: "rgba(0,220,130,.12)", border: "1px solid rgba(0,220,130,.25)", color: "var(--verde)", borderRadius: 4, padding: "1px 6px", letterSpacing: ".4px", marginLeft: 4 }}>
-                      Habilitado
-                    </span>
-                  )}
                 </div>
                 <div style={{ fontSize: 12, color: "var(--gris)" }}>
                   {u.Cedula || u.Email}

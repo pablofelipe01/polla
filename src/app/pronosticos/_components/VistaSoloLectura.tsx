@@ -10,7 +10,7 @@ function esFaseGrupos(fase: string): boolean {
  * Vista de solo lectura de partidos y marcadores. Muestra:
  * - Todos los partidos de fase eliminatoria (32avos en adelante).
  * - Partidos de fase de grupos aún no finalizados.
- * Para todos los roles excepto los 2 pronosticadores habilitados.
+ * Para roles de consulta (Admin y usuarios regulares); el DT y el Cuerpo Técnico editan.
  */
 export default function VistaSoloLectura({ datos }: { datos: VistaPronosticos }) {
   const encuentros = datos.encuentros.filter(

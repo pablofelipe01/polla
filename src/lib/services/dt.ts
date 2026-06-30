@@ -7,7 +7,6 @@ import {
   createEquipo,
   updateEquipo,
   updateUsuario,
-  countHabilitadosByEquipo,
   type Equipo,
   type Usuario,
 } from "@/lib/clients/airtable"
@@ -17,12 +16,9 @@ import { NotFoundError, ValidationError } from "@/types/errors"
 
 // Gestión del panel del Director Técnico. Sin Next.js.
 
-export const MAX_HABILITADOS = 2
-
 export type DatosEquipoDT = {
   equipo: Equipo
   miembros: Usuario[]
-  habilitados: number
 }
 
 export type DatosDT = {
@@ -63,11 +59,7 @@ export async function getDatosDT(continenteId: string): Promise<DatosDT> {
   const equipos = await Promise.all(
     equiposDeContinente.map(async (equipo) => {
       const miembros = await listUsuariosByEquipoNombre(equipo.Nombre)
-      return {
-        equipo,
-        miembros,
-        habilitados: miembros.filter((u) => u.PuedePronosticar).length,
-      }
+      return { equipo, miembros }
     })
   )
 
@@ -137,36 +129,8 @@ export async function asignarMiembro(
 }
 
 /**
- * Retira a un usuario del equipo (limpia EquipoId y desactiva PuedePronosticar).
+ * Retira a un usuario del equipo (limpia EquipoId).
  */
 export async function retirarMiembro(usuarioId: string): Promise<Usuario> {
-  return updateUsuario(usuarioId, { EquipoId: null, PuedePronosticar: false })
-}
-
-/**
- * Habilita a un usuario para registrar pronósticos.
- * Máximo {@link MAX_HABILITADOS} por equipo.
- *
- * @returns Result con el usuario, o ValidationError si ya se alcanzó el límite.
- */
-export async function habilitarPronosticador(
-  usuarioId: string,
-  equipoId: string
-): Promise<Result<Usuario>> {
-  const actuales = await countHabilitadosByEquipo(equipoId)
-  if (actuales >= MAX_HABILITADOS) {
-    return err(
-      new ValidationError(
-        `Solo se permiten ${MAX_HABILITADOS} pronosticadores por equipo. Deshabilita uno primero.`
-      )
-    )
-  }
-  return ok(await updateUsuario(usuarioId, { PuedePronosticar: true }))
-}
-
-/**
- * Deshabilita a un usuario para registrar pronósticos.
- */
-export async function deshabilitarPronosticador(usuarioId: string): Promise<Usuario> {
-  return updateUsuario(usuarioId, { PuedePronosticar: false })
+  return updateUsuario(usuarioId, { EquipoId: null })
 }

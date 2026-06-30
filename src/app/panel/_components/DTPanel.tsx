@@ -39,14 +39,10 @@ export default function DTPanel({ datos }: { datos: DatosDT }) {
       <div style={card}>
         <SectionTitle>Integrantes · {sel.equipo.Nombre}</SectionTitle>
         <p style={{ fontSize: 12, color: "var(--gris)", margin: "0 0 12px" }}>
-          Agrega tu plantilla (mínimo 20, máximo 30) y habilita exactamente{" "}
-          <strong>2 pronosticadores</strong>. El resto queda como solo consulta.
+          Agrega tu plantilla (mínimo 20, máximo 30). Los pronósticos oficiales del equipo
+          los registran el DT y el Cuerpo Técnico desde el módulo Pronósticos.
         </p>
-        <ListaMiembros
-          miembros={sel.miembros}
-          habilitados={sel.habilitados}
-          equipoId={sel.equipo.id}
-        />
+        <ListaMiembros miembros={sel.miembros} />
         <BuscadorMiembros equipoId={sel.equipo.id} />
       </div>
 
@@ -63,7 +59,7 @@ export default function DTPanel({ datos }: { datos: DatosDT }) {
 function ElegirPais({ datos, compacto }: { datos: DatosDT; compacto?: boolean }) {
   const [paisSel, setPaisSel] = useState<string>("")
   const [state, action, pending] = useActionState(crearEquipoDTAction, {})
-  useActionFeedback(state, "Equipo creado. Ahora arma tu plantilla y habilita 2 pronosticadores.")
+  useActionFeedback(state, "Equipo creado. Ahora arma tu plantilla de integrantes.")
 
   const conf = CONFEDERACIONES.find((c) => c.id === datos.continenteNombre)
   const confColor = conf?.color ?? "var(--azul)"

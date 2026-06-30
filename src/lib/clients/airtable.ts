@@ -200,7 +200,8 @@ export interface Pronostico {
   id: string
   Clave: string
   EncuentroId: string | null
-  UsuarioId: string | null
+  EquipoId: string | null
+  UsuarioId: string | null // DT/Cuerpo Técnico que registró el pronóstico (auditoría)
   GolesLocal: number
   GolesVisitante: number
   RegistradoPor: string
@@ -391,17 +392,6 @@ export const listUsuarios = unstable_cache(fetchUsuarios, ["at:listUsuarios"], {
 export async function getUsuario(id: string): Promise<Usuario | null> {
   const r = await getOne<UsuarioFields>("Usuarios", id)
   return r ? toUsuario(r) : null
-}
-/**
- * Cuenta usuarios habilitados para pronósticos en un equipo (máx 2).
- * Consulta filtrada en el servidor (getEquipo + miembros del equipo) en lugar
- * de escanear toda la tabla de usuarios. Siempre fresco: es el guard del límite.
- */
-export async function countHabilitadosByEquipo(equipoId: string): Promise<number> {
-  const equipo = await getEquipo(equipoId)
-  if (!equipo) return 0
-  const miembros = await listUsuariosByEquipoNombre(equipo.Nombre)
-  return miembros.filter((u) => u.PuedePronosticar).length
 }
 export async function createUsuario(d: {
   Cedula: string
@@ -615,6 +605,7 @@ export async function deleteEncuentro(id: string): Promise<void> {
 type PronosticoFields = {
   Clave: string
   Encuentro?: string[]
+  Equipo?: string[]
   UsuarioId?: string
   GolesLocal?: number
   GolesVisitante?: number
@@ -625,6 +616,7 @@ const toPronostico = (r: ATRecord<PronosticoFields>): Pronostico => ({
   id: r.id,
   Clave: r.fields.Clave ?? "",
   EncuentroId: firstLink(r.fields.Encuentro),
+  EquipoId: firstLink(r.fields.Equipo),
   UsuarioId: r.fields.UsuarioId ?? null,
   GolesLocal: r.fields.GolesLocal ?? 0,
   GolesVisitante: r.fields.GolesVisitante ?? 0,
@@ -641,7 +633,7 @@ export const listPronosticos = unstable_cache(fetchPronosticos, ["at:listPronost
   revalidate: 600,
 })
 export async function listPronosticosByEncuentro(encuentroId: string): Promise<Pronostico[]> {
-  // Clave = `${encuentroId}_${usuarioId}` → filtramos por prefijo con la fórmula de Airtable.
+  // Clave = `${encuentroId}_${equipoId}` → filtramos por prefijo con la fórmula de Airtable.
   const recs = await listAll<PronosticoFields>(
     "PronosticosPaises",
     `LEFT({Clave}, ${encuentroId.length + 1})="${esc(encuentroId)}_"`
@@ -649,21 +641,28 @@ export async function listPronosticosByEncuentro(encuentroId: string): Promise<P
   return recs.map(toPronostico)
 }
 
-/** Upsert por clave `${encuentroId}_${usuarioId}` — garantiza un único pronóstico por usuario/encuentro. */
+/**
+ * Upsert por clave `${encuentroId}_${equipoId}` — garantiza un único pronóstico
+ * oficial por equipo/encuentro. Lo registra el DT o Cuerpo Técnico del continente.
+ *
+ * @param d.registradoPorId - ID del usuario (DT/C.Técnico) que registra, para auditoría.
+ */
 export async function upsertPronostico(d: {
   encuentroId: string
-  usuarioId: string
+  equipoId: string
+  registradoPorId: string
+  registradoPor: string
   golesLocal: number
   golesVisitante: number
-  registradoPor: string
 }): Promise<Pronostico> {
-  const clave = `${d.encuentroId}_${d.usuarioId}`
+  const clave = `${d.encuentroId}_${d.equipoId}`
   const existing = await listAll<PronosticoFields>("PronosticosPaises", `{Clave}="${esc(clave)}"`)
   if (existing.length) {
     return toPronostico(
       await updateOne<PronosticoFields>("PronosticosPaises", existing[0].id, {
         GolesLocal: d.golesLocal,
         GolesVisitante: d.golesVisitante,
+        UsuarioId: d.registradoPorId,
         RegistradoPor: d.registradoPor,
       })
     )
@@ -672,7 +671,8 @@ export async function upsertPronostico(d: {
     await createOne<PronosticoFields>("PronosticosPaises", {
       Clave: clave,
       Encuentro: toLink(d.encuentroId),
-      UsuarioId: d.usuarioId,
+      Equipo: toLink(d.equipoId),
+      UsuarioId: d.registradoPorId,
       GolesLocal: d.golesLocal,
       GolesVisitante: d.golesVisitante,
       RegistradoPor: d.registradoPor,

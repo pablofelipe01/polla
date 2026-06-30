@@ -9,17 +9,22 @@ export const dynamic = "force-dynamic"
 
 /**
  * Módulo 3 · Pronósticos. Acceso a todos los roles autenticados.
- * Los 2 integrantes habilitados editan; el resto (Admin, DT, consulta) solo visualiza
- * los pronósticos oficiales del equipo.
+ * El DT y el Cuerpo Técnico registran el pronóstico oficial de cada equipo de su
+ * continente (eligen el equipo en un selector); el resto (Admin, consulta) solo visualiza.
  */
-export default async function PronosticosPage() {
+export default async function PronosticosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ equipo?: string }>
+}) {
   const session = await auth()
   if (!session?.user) redirect("/login")
   if (!canAccessPronosticos(session)) redirect("/estadisticas")
 
   const puedeEditar = canPredict(session)
+  const { equipo } = await searchParams
   const [datosEdit, datosVista] = await Promise.all([
-    puedeEditar ? getDatosPanel() : Promise.resolve(null),
+    puedeEditar ? getDatosPanel(equipo) : Promise.resolve(null),
     puedeEditar ? Promise.resolve(null) : getVistaPronosticos(),
   ])
 

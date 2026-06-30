@@ -87,10 +87,9 @@ const PAISES_ES_POR_CONFEDERACION: Record<string, string[]> = {
     "Siria", "Emiratos Árabes Unidos", "Yemen",
     // Asia Central
     "Kirguistán", "Tayikistán", "Turkmenistán", "Uzbekistán",
-    // Oceanía (Australia migró de OFC a AFC en 2006)
-    "Australia",
   ],
   [CONF_OFC]: [
+    "Australia",
     // 11 miembros plenos FIFA
     "Samoa Americana", "Islas Cook", "Fiyi", "Nueva Caledonia", "Nueva Zelanda",
     "Papúa Nueva Guinea", "Samoa", "Islas Salomón", "Tahití", "Tonga", "Vanuatu",
@@ -167,11 +166,11 @@ const PAISES_POR_CONFEDERACION: Record<string, string[]> = {
     "Lebanon", "Oman", "Palestine", "Qatar", "Saudi Arabia",
     "Syria", "United Arab Emirates", "Yemen",
     "Kyrgyzstan", "Tajikistan", "Turkmenistan", "Uzbekistan",
-    "Australia",
   ],
   [CONF_OFC]: [
     ...PAISES_ES_POR_CONFEDERACION[CONF_OFC],
     // EN aliases
+    "Australia",
     "American Samoa", "Cook Islands", "Fiji", "New Caledonia", "New Zealand",
     "Papua New Guinea", "Samoa", "Solomon Islands", "Tahiti", "Tonga", "Vanuatu",
   ],

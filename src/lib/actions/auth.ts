@@ -10,14 +10,14 @@ export interface LoginState {
 }
 
 /** Devuelve true para roles que requieren PIN al ingresar. */
-function requierePin(rol: string, puedePronosticar: boolean): boolean {
-  return rol === "Admin" || rol === "DT" || rol === "CuerpoTecnico" || puedePronosticar
+function requierePin(rol: string): boolean {
+  return rol === "Admin" || rol === "DT" || rol === "CuerpoTecnico"
 }
 
 /**
  * Inicia sesión con cédula.
  * Usuarios regulares: solo cédula.
- * Admin, DT y usuarios habilitados para pronósticos: cédula + PIN (últimos 4 dígitos).
+ * Admin, DT y Cuerpo Técnico: cédula + PIN (últimos 4 dígitos).
  * El PIN se deriva automáticamente de la cédula — no requiere configuración manual.
  */
 export async function loginAction(_prev: LoginState, formData: FormData): Promise<LoginState> {
@@ -31,7 +31,7 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
     return { error: "Tu registro no aparece en el sistema, comunícate con Gestión Humana" }
   }
 
-  if (requierePin(usuario.Rol, usuario.PuedePronosticar)) {
+  if (requierePin(usuario.Rol)) {
     if (!pin) {
       return { error: "Este acceso requiere PIN — ingresa los últimos 4 dígitos de tu cédula" }
     }

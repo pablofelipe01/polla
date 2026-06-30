@@ -6,90 +6,31 @@ import type { Usuario } from "@/lib/clients/airtable"
 import {
   asignarMiembroAction,
   retirarMiembroAction,
-  habilitarPronosticadorAction,
-  deshabilitarPronosticadorAction,
   buscarMiembrosDisponiblesAction,
 } from "@/lib/actions/dt"
 import { label, input, ErrorMsg, DeleteButton } from "@/app/admin/_components/ui"
 import { useFeedback } from "@/app/_components/Feedback"
 import Avatar from "@/app/_components/Avatar"
 
-const badge = (text: string, bg: string, color: string): React.CSSProperties => ({
-  fontSize: 10, fontWeight: 800, textTransform: "uppercase" as const,
-  background: bg, color, borderRadius: 4, padding: "1px 6px", letterSpacing: ".4px",
-})
-
-/** Lista de miembros con toggle de pronosticador y botón de retirar. */
-export function ListaMiembros({
-  miembros,
-  habilitados,
-  equipoId,
-}: {
-  miembros: Usuario[]
-  habilitados: number
-  equipoId: string
-}) {
-  const [error, setError] = useState<string>()
-  const [pending, start] = useTransition()
-  const router = useRouter()
-  const { toast } = useFeedback()
-
-  const toggle = (u: Usuario) => {
-    if (!u.PuedePronosticar && habilitados >= 2) {
-      const m = "Ya hay 2 pronosticadores habilitados. Deshabilita uno primero."
-      setError(m); toast(m, "error")
-      return
-    }
-    setError(undefined)
-    start(async () => {
-      const res = u.PuedePronosticar
-        ? await deshabilitarPronosticadorAction(u.id)
-        : await habilitarPronosticadorAction(u.id, equipoId)
-      if (res.error) { setError(res.error); toast(res.error, "error") }
-      else {
-        toast(
-          u.PuedePronosticar ? `${u.Nombre} ya no es pronosticador` : `${u.Nombre} habilitado como pronosticador`,
-          "success"
-        )
-        router.refresh()
-      }
-    })
-  }
-
+/** Lista de miembros del equipo con botón de retirar. */
+export function ListaMiembros({ miembros }: { miembros: Usuario[] }) {
   if (miembros.length === 0) {
     return <p style={{ color: "var(--gris)", fontSize: 13 }}>Sin miembros asignados aún.</p>
   }
 
   return (
-    <>
-      <ErrorMsg msg={error} />
-      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 6 }}>
-        {miembros.map((u) => (
-          <li key={u.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 0", borderBottom: "1px solid var(--linea)" }}>
-            <button
-              disabled={pending}
-              onClick={() => toggle(u)}
-              title={u.PuedePronosticar ? "Deshabilitar pronosticador" : "Habilitar pronosticador"}
-              style={{ width: 22, height: 22, borderRadius: 5, border: "2px solid", borderColor: u.PuedePronosticar ? "var(--verde)" : "var(--linea)", background: u.PuedePronosticar ? "var(--verde)" : "transparent", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, color: "#020D18", flexShrink: 0 }}
-            >
-              {u.PuedePronosticar ? "✓" : ""}
-            </button>
-            <Avatar nombre={u.Nombre} size={32} />
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <span style={{ fontWeight: 700, color: "var(--tinta)", fontSize: 13 }}>{u.Nombre}</span>
-              {u.PuedePronosticar && (
-                <span style={{ ...badge("Pronosticador", "rgba(0,220,130,.12)", "var(--verde)"), border: "1px solid rgba(0,220,130,.25)", marginLeft: 6 }}>Pronosticador</span>
-              )}
-              <div style={{ fontSize: 11, color: "var(--gris)" }}>{u.Cedula || u.Email}</div>
-            </div>
-            <DeleteButton confirmMsg={`¿Retirar a ${u.Nombre} del equipo?`} onDelete={() => retirarMiembroAction(u.id)} />
-          </li>
-        ))}
-      </ul>
-      <p style={{ fontSize: 11, color: "var(--gris-2)", marginTop: 8 }}>
-        Pronosticadores habilitados: <strong>{habilitados}/2</strong> · Haz clic en el cuadro para habilitar/deshabilitar.
-      </p>
-    </>
+    <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+      {miembros.map((u) => (
+        <li key={u.id} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 0", borderBottom: "1px solid var(--linea)" }}>
+          <Avatar nombre={u.Nombre} size={32} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <span style={{ fontWeight: 700, color: "var(--tinta)", fontSize: 13 }}>{u.Nombre}</span>
+            <div style={{ fontSize: 11, color: "var(--gris)" }}>{u.Cedula || u.Email}</div>
+          </div>
+          <DeleteButton confirmMsg={`¿Retirar a ${u.Nombre} del equipo?`} onDelete={() => retirarMiembroAction(u.id)} />
+        </li>
+      ))}
+    </ul>
   )
 }
 

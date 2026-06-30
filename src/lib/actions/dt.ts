@@ -12,8 +12,6 @@ import {
   crearEquipoDeContinente,
   asignarMiembro,
   retirarMiembro,
-  habilitarPronosticador,
-  deshabilitarPronosticador,
   type DatosDT,
 } from "@/lib/services/dt"
 import { listEquipos, CACHE_TAGS, type Usuario } from "@/lib/clients/airtable"
@@ -155,7 +153,7 @@ export async function asignarMiembroAction(
 }
 
 /**
- * Retira a un miembro del equipo (limpia equipo y deshabilita pronósticos si los tenía).
+ * Retira a un miembro del equipo (limpia su equipo).
  */
 export async function retirarMiembroAction(usuarioId: string): Promise<ActionState> {
   await requireDT()
@@ -168,40 +166,5 @@ export async function retirarMiembroAction(usuarioId: string): Promise<ActionSta
   } catch (e) {
     logger.error(e, { action: "retirarMiembro" })
     return { error: "Error retirando el miembro" }
-  }
-}
-
-// ─── Habilitados ──────────────────────────────────────────────────────────────
-
-/**
- * Habilita a un miembro como pronosticador (máx 2 por equipo).
- */
-export async function habilitarPronosticadorAction(
-  usuarioId: string,
-  equipoId: string
-): Promise<ActionState> {
-  await requireDT()
-  const res = await habilitarPronosticador(usuarioId, equipoId)
-  if (!res.ok) return { error: res.error.message }
-  revalidateTag(CACHE_TAGS.usuarios, "max")
-  revalidatePath("/panel")
-  revalidatePath("/admin")
-  return { success: true }
-}
-
-/**
- * Deshabilita a un miembro como pronosticador.
- */
-export async function deshabilitarPronosticadorAction(usuarioId: string): Promise<ActionState> {
-  await requireDT()
-  try {
-    await deshabilitarPronosticador(usuarioId)
-    revalidateTag(CACHE_TAGS.usuarios, "max")
-    revalidatePath("/panel")
-    revalidatePath("/admin")
-    return { success: true }
-  } catch (e) {
-    logger.error(e, { action: "deshabilitarPronosticador" })
-    return { error: "Error deshabilitando el pronosticador" }
   }
 }

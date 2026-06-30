@@ -13,17 +13,19 @@ import { NotFoundError, ValidationError } from "@/types/errors"
 export const obtenerPronosticosDeEncuentro = listPronosticosByEncuentro
 
 /**
- * Registra (o actualiza) el único pronóstico del usuario para un encuentro.
+ * Registra (o actualiza) el único pronóstico oficial de un equipo para un encuentro.
+ * Lo registra el DT o Cuerpo Técnico del continente del equipo.
  * Solo se permite mientras el encuentro está ABIERTO (se bloquea al iniciar / en CierreUtc).
  *
  * @returns Result con el pronóstico, o ValidationError si el encuentro ya cerró/finalizó.
  */
 export async function registrarPronostico(d: {
   encuentroId: string
-  usuarioId: string
+  equipoId: string
+  registradoPorId: string
+  registradoPor: string
   golesLocal: number
   golesVisitante: number
-  registradoPor: string
 }): Promise<Result<Pronostico>> {
   const enc = await getEncuentro(d.encuentroId)
   if (!enc) return err(new NotFoundError("Encuentro"))
@@ -42,10 +44,11 @@ export async function registrarPronostico(d: {
   return ok(
     await upsertPronostico({
       encuentroId: d.encuentroId,
-      usuarioId: d.usuarioId,
+      equipoId: d.equipoId,
+      registradoPorId: d.registradoPorId,
+      registradoPor: d.registradoPor,
       golesLocal: d.golesLocal,
       golesVisitante: d.golesVisitante,
-      registradoPor: d.registradoPor,
     })
   )
 }
