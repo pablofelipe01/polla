@@ -104,7 +104,13 @@ function TarjetaPartido({
         <TeamHalf nombre={e.Local} tenue={cerrado && !final} />
         <div className="fmc-center">
           <div className="fmc-score-row">
-            {pronostico ? (
+            {final ? (
+              <>
+                <span className="fmc-num">{e.GolesLocal}</span>
+                <span className="fmc-colon">:</span>
+                <span className="fmc-num">{e.GolesVisitante}</span>
+              </>
+            ) : pronostico ? (
               <>
                 <span className="fmc-num">{pronostico.GolesLocal}</span>
                 <span className="fmc-colon">:</span>
@@ -118,6 +124,11 @@ function TarjetaPartido({
               </>
             )}
           </div>
+          {final && e.PenalesLocal !== null && e.PenalesVisitante !== null && (
+            <span style={{ fontSize: 11, color: "var(--gris)", letterSpacing: ".03em", marginTop: 2 }}>
+              Pen. {e.PenalesLocal} – {e.PenalesVisitante}
+            </span>
+          )}
           <span className="fmc-when">{e.inicioBogota}</span>
         </div>
         <TeamHalf nombre={e.Visitante} tenue={cerrado && !final} />
@@ -125,7 +136,9 @@ function TarjetaPartido({
 
       <div className={`fmc-foot ${final ? "gold" : pronostico ? "info" : "muted"}`}>
         {final
-          ? `Resultado oficial: ${e.GolesLocal} – ${e.GolesVisitante}${e.PenalesLocal !== null && e.PenalesVisitante !== null ? ` (Pen. ${e.PenalesLocal} – ${e.PenalesVisitante})` : ""}`
+          ? pronostico
+            ? `Pronóstico del equipo: ${pronostico.GolesLocal} – ${pronostico.GolesVisitante}`
+            : "Tu equipo no pronosticó este partido"
           : pronostico
           ? "Pronóstico del equipo"
           : "Tu equipo aún no tiene pronóstico para este partido"}
