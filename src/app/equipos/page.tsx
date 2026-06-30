@@ -42,7 +42,12 @@ export default async function EquiposPage() {
             <IntegrantesTab equipos={datosAdmin.equipos} />
           </>
         ) : (
-          datosDT && <DTPanel datos={datosDT} />
+          datosDT && (
+            <DTPanel
+              datos={datosDT}
+              puedeAsignarAyudante={isAdmin(session) || session.user.role === "DT"}
+            />
+          )
         )}
       </main>
     </div>

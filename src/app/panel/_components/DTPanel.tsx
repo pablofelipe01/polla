@@ -5,10 +5,17 @@ import { crearEquipoDTAction } from "@/lib/actions/dt"
 import type { DatosDT } from "@/lib/services/dt"
 import { card, label, input, btnPrimary, SectionTitle } from "@/app/admin/_components/ui"
 import { useActionFeedback } from "@/app/_components/Feedback"
-import { ListaMiembros, BuscadorMiembros } from "./EquipoDT"
+import { ListaMiembros, BuscadorMiembros, SeccionAyudante } from "./EquipoDT"
 import GlobeSelector, { CONFEDERACIONES } from "@/app/admin/_components/GlobeSelector"
 
-export default function DTPanel({ datos }: { datos: DatosDT }) {
+export default function DTPanel({
+  datos,
+  puedeAsignarAyudante = false,
+}: {
+  datos: DatosDT
+  /** Solo el DT principal (o Admin) puede asignar el ayudante; el ayudante no. */
+  puedeAsignarAyudante?: boolean
+}) {
   const [equipoSelIdx, setEquipoSelIdx] = useState(0)
 
   if (datos.equipos.length === 0) {
@@ -45,6 +52,17 @@ export default function DTPanel({ datos }: { datos: DatosDT }) {
         <ListaMiembros miembros={sel.miembros} />
         <BuscadorMiembros equipoId={sel.equipo.id} />
       </div>
+
+      {puedeAsignarAyudante && (
+        <div style={card}>
+          <SectionTitle>Ayudante · {sel.equipo.Nombre}</SectionTitle>
+          <p style={{ fontSize: 12, color: "var(--gris)", margin: "0 0 12px" }}>
+            Asigna un ayudante encargado de este equipo. Podrá agregar integrantes y editar
+            los pronósticos únicamente de <strong>{sel.equipo.Nombre}</strong>.
+          </p>
+          <SeccionAyudante equipoId={sel.equipo.id} ayudante={sel.ayudante} />
+        </div>
+      )}
 
       {datos.paisesDisponibles.length > 0 && <ElegirPais datos={datos} compacto />}
     </div>

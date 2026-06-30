@@ -56,10 +56,15 @@ export async function registrarPronosticoAction(
   })
   if (!parsed.success) return { error: parsed.error.issues[0].message }
 
-  // El equipo debe pertenecer al continente del DT (Admin no llega: canPredict = isDT).
+  // El ayudante (CuerpoTecnico) solo pronostica por su equipo asignado; el DT por
+  // cualquier equipo de su continente (Admin no llega: canPredict = isDT).
   const equipo = await getEquipo(parsed.data.equipoId)
   if (!equipo) return { error: "Equipo no encontrado" }
-  if (equipo.ContinenteId !== (session.user.continenteId ?? null)) {
+  if (session.user.role === "CuerpoTecnico") {
+    if (equipo.id !== (session.user.equipoId ?? null)) {
+      return { error: "Solo puedes pronosticar por tu equipo asignado" }
+    }
+  } else if (equipo.ContinenteId !== (session.user.continenteId ?? null)) {
     return { error: "Ese equipo no pertenece a tu continente" }
   }
 
@@ -111,10 +116,13 @@ export async function getDatosPanel(equipoIdSel?: string): Promise<DatosPanel> {
     listPronosticos(),
   ])
 
-  // Equipos del continente del DT/Cuerpo Técnico (Admin vería todos, pero no edita).
+  // Equipos visibles: Admin todos (no edita); el ayudante (CuerpoTecnico) solo su
+  // equipo asignado; el DT todos los de su continente.
   const delContinente = isAdmin(session)
     ? equipos
-    : equipos.filter((e) => e.ContinenteId === continenteId)
+    : session.user.role === "CuerpoTecnico"
+      ? equipos.filter((e) => e.id === (session.user.equipoId ?? null))
+      : equipos.filter((e) => e.ContinenteId === continenteId)
   const opciones = delContinente.map((e) => ({ id: e.id, nombre: e.Nombre }))
 
   // Equipo seleccionado: el pedido si pertenece al continente, si no el primero.

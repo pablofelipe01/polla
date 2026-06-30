@@ -4,6 +4,7 @@ import {
   listUsuariosByEquipoNombre,
   searchUsuarios,
   getUsuario,
+  getEquipo,
   createEquipo,
   updateEquipo,
   updateUsuario,
@@ -18,7 +19,10 @@ import { NotFoundError, ValidationError } from "@/types/errors"
 
 export type DatosEquipoDT = {
   equipo: Equipo
+  /** Plantilla del equipo: solo jugadores (Rol=Usuario), sin DT ni ayudante. */
   miembros: Usuario[]
+  /** Ayudante de cuerpo técnico encargado del equipo (Rol=CuerpoTecnico), si existe. */
+  ayudante: Usuario | null
 }
 
 export type DatosDT = {
@@ -56,10 +60,14 @@ export async function getDatosDT(continenteId: string): Promise<DatosDT> {
 
   // Miembros por equipo filtrando en el servidor por nombre del equipo
   // (≤30 filas, 1 página) en vez de escanear las ~2.179 filas de Usuarios.
+  // El ayudante (Rol=CuerpoTecnico) también queda vinculado al equipo, así que
+  // se separa de la plantilla de jugadores (Rol=Usuario).
   const equipos = await Promise.all(
     equiposDeContinente.map(async (equipo) => {
-      const miembros = await listUsuariosByEquipoNombre(equipo.Nombre)
-      return { equipo, miembros }
+      const usuarios = await listUsuariosByEquipoNombre(equipo.Nombre)
+      const ayudante = usuarios.find((u) => u.Rol === "CuerpoTecnico") ?? null
+      const miembros = usuarios.filter((u) => u.Rol === "Usuario")
+      return { equipo, miembros, ayudante }
     })
   )
 
@@ -133,4 +141,47 @@ export async function asignarMiembro(
  */
 export async function retirarMiembro(usuarioId: string): Promise<Usuario> {
   return updateUsuario(usuarioId, { EquipoId: null })
+}
+
+/**
+ * Asigna a un usuario como ayudante de cuerpo técnico de un equipo: lo promueve
+ * a Rol=CuerpoTecnico y lo vincula al equipo y su continente. El ayudante solo
+ * podrá agregar integrantes y editar los pronósticos de ese equipo.
+ *
+ * Se permite un único ayudante por equipo: si ya existe otro, devuelve
+ * ValidationError para forzar a retirarlo primero.
+ *
+ * @returns Result con el usuario actualizado, NotFoundError o ValidationError.
+ */
+export async function asignarAyudante(
+  usuarioId: string,
+  equipoId: string,
+  continenteId: string
+): Promise<Result<Usuario>> {
+  const [usuario, equipo] = await Promise.all([getUsuario(usuarioId), getEquipo(equipoId)])
+  if (!usuario) return err(new NotFoundError("Usuario"))
+  if (!equipo) return err(new NotFoundError("Equipo"))
+
+  const existentes = await listUsuariosByEquipoNombre(equipo.Nombre)
+  if (existentes.some((u) => u.Rol === "CuerpoTecnico" && u.id !== usuarioId)) {
+    return err(
+      new ValidationError("Este equipo ya tiene un ayudante. Retíralo antes de asignar otro.")
+    )
+  }
+
+  return ok(
+    await updateUsuario(usuarioId, {
+      Rol: "CuerpoTecnico",
+      EquipoId: equipoId,
+      ContinenteId: continenteId,
+    })
+  )
+}
+
+/**
+ * Retira al ayudante de un equipo: revierte su rol a Usuario y limpia su
+ * vínculo de equipo y continente.
+ */
+export async function quitarAyudante(usuarioId: string): Promise<Usuario> {
+  return updateUsuario(usuarioId, { Rol: "Usuario", EquipoId: null, ContinenteId: null })
 }

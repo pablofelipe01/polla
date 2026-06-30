@@ -12,9 +12,11 @@ import {
   crearEquipoDeContinente,
   asignarMiembro,
   retirarMiembro,
+  asignarAyudante,
+  quitarAyudante,
   type DatosDT,
 } from "@/lib/services/dt"
-import { listEquipos, CACHE_TAGS, type Usuario } from "@/lib/clients/airtable"
+import { listEquipos, getUsuario, CACHE_TAGS, type Usuario } from "@/lib/clients/airtable"
 
 // ─── Guard ────────────────────────────────────────────────────────────────────
 
@@ -25,6 +27,23 @@ async function requireDT() {
     throw new ForbiddenError("Solo los DT y Cuerpo Técnico pueden acceder a este panel")
   }
   return session
+}
+
+/**
+ * Guard para acciones que solo el DT (o Admin) puede ejecutar, no el ayudante.
+ * El ayudante (CuerpoTecnico) gestiona su equipo pero no asigna otros ayudantes.
+ */
+async function requireDTPrincipal() {
+  const session = await requireDT()
+  if (!isAdmin(session) && session.user.role !== "DT") {
+    throw new ForbiddenError("Solo el Director Técnico puede asignar ayudantes")
+  }
+  return session
+}
+
+/** True si la sesión es de un ayudante de equipo (CuerpoTecnico vinculado a un equipo). */
+function esAyudante(session: { user: { role?: string; equipoId?: string | null } }): boolean {
+  return session.user.role === "CuerpoTecnico"
 }
 
 export interface ActionState {
@@ -52,7 +71,20 @@ export async function getDatosPanelDT(): Promise<DatosDT> {
     return getDatosDT(equipos[0]?.ContinenteId ?? "")
   }
 
-  return getDatosDT(continenteId!)
+  const datos = await getDatosDT(continenteId!)
+
+  // El ayudante solo gestiona su equipo asignado: se le oculta el resto del
+  // continente y la opción de tomar nuevos países (no crea equipos).
+  if (esAyudante(session)) {
+    const equipoId = session.user.equipoId ?? null
+    return {
+      ...datos,
+      equipos: datos.equipos.filter((e) => e.equipo.id === equipoId),
+      paisesDisponibles: [],
+    }
+  }
+
+  return datos
 }
 
 // ─── Equipos ──────────────────────────────────────────────────────────────────
@@ -138,12 +170,16 @@ export async function buscarMiembrosDisponiblesAction(
 
 /**
  * Asigna un usuario del pool al equipo indicado.
+ * El ayudante solo puede agregar integrantes a su propio equipo.
  */
 export async function asignarMiembroAction(
   usuarioId: string,
   equipoId: string
 ): Promise<ActionState> {
-  await requireDT()
+  const session = await requireDT()
+  if (esAyudante(session) && equipoId !== (session.user.equipoId ?? null)) {
+    return { error: "Solo puedes gestionar integrantes de tu equipo asignado" }
+  }
   const res = await asignarMiembro(usuarioId, equipoId)
   if (!res.ok) return { error: res.error.message }
   revalidateTag(CACHE_TAGS.usuarios, "max")
@@ -154,10 +190,17 @@ export async function asignarMiembroAction(
 
 /**
  * Retira a un miembro del equipo (limpia su equipo).
+ * El ayudante solo puede retirar integrantes de su propio equipo.
  */
 export async function retirarMiembroAction(usuarioId: string): Promise<ActionState> {
-  await requireDT()
+  const session = await requireDT()
   try {
+    if (esAyudante(session)) {
+      const objetivo = await getUsuario(usuarioId)
+      if (!objetivo || objetivo.EquipoId !== (session.user.equipoId ?? null)) {
+        return { error: "Solo puedes gestionar integrantes de tu equipo asignado" }
+      }
+    }
     await retirarMiembro(usuarioId)
     revalidateTag(CACHE_TAGS.usuarios, "max")
     revalidatePath("/panel")
@@ -166,5 +209,54 @@ export async function retirarMiembroAction(usuarioId: string): Promise<ActionSta
   } catch (e) {
     logger.error(e, { action: "retirarMiembro" })
     return { error: "Error retirando el miembro" }
+  }
+}
+
+// ─── Ayudante de cuerpo técnico ─────────────────────────────────────────────────
+
+/**
+ * Asigna a un usuario como ayudante de un equipo del continente del DT.
+ * Solo el DT (o Admin) puede hacerlo. Valida que el equipo sea de su continente.
+ *
+ * @param usuarioId - Usuario a promover a ayudante (Rol=CuerpoTecnico)
+ * @param equipoId  - Equipo que quedará a cargo del ayudante
+ */
+export async function asignarAyudanteAction(
+  usuarioId: string,
+  equipoId: string
+): Promise<ActionState> {
+  const session = await requireDTPrincipal()
+  const continenteId = session.user.continenteId ?? null
+
+  const equipos = await listEquipos()
+  const equipo = equipos.find((e) => e.id === equipoId)
+  if (!equipo) return { error: "Equipo no encontrado" }
+  if (!isAdmin(session) && equipo.ContinenteId !== continenteId) {
+    return { error: "Ese equipo no pertenece a tu continente" }
+  }
+
+  const res = await asignarAyudante(usuarioId, equipoId, equipo.ContinenteId ?? continenteId ?? "")
+  if (!res.ok) return { error: res.error.message }
+  revalidateTag(CACHE_TAGS.usuarios, "max")
+  revalidatePath("/panel")
+  revalidatePath("/admin")
+  return { success: true }
+}
+
+/**
+ * Retira al ayudante de un equipo (revierte su rol a Usuario y limpia su vínculo).
+ * Solo el DT (o Admin) puede hacerlo.
+ */
+export async function quitarAyudanteAction(usuarioId: string): Promise<ActionState> {
+  await requireDTPrincipal()
+  try {
+    await quitarAyudante(usuarioId)
+    revalidateTag(CACHE_TAGS.usuarios, "max")
+    revalidatePath("/panel")
+    revalidatePath("/admin")
+    return { success: true }
+  } catch (e) {
+    logger.error(e, { action: "quitarAyudante" })
+    return { error: "Error retirando el ayudante" }
   }
 }
