@@ -63,8 +63,20 @@ export async function sincronizarPartidos(): Promise<ResultadoSincronizacion> {
         if (visitanteNuevo && visitanteNuevo !== existente.Visitante) cambios.Visitante = visitanteNuevo
 
         if (partido.status === "FINISHED") {
-          const home = partido.score.fullTime.home
-          const away = partido.score.fullTime.away
+          // football-data.org devuelve en fullTime el marcador con los penaltis
+          // ya sumados. El resultado reglamentario (90' + prórroga) se obtiene
+          // restando la tanda de penaltis cuando la hubo.
+          const penH = partido.score.penalties?.home ?? null
+          const penA = partido.score.penalties?.away ?? null
+          const huboPenales = penH !== null && penA !== null
+
+          const home = huboPenales
+            ? (partido.score.fullTime.home ?? 0) - penH
+            : partido.score.fullTime.home
+          const away = huboPenales
+            ? (partido.score.fullTime.away ?? 0) - penA
+            : partido.score.fullTime.away
+
           const yaTieneResultado =
             existente.GolesLocal !== null && existente.GolesVisitante !== null
           const cambioResultado =
@@ -73,6 +85,15 @@ export async function sincronizarPartidos(): Promise<ResultadoSincronizacion> {
           if (!yaTieneResultado || cambioResultado) {
             cambios.GolesLocal = home
             cambios.GolesVisitante = away
+          }
+
+          if (huboPenales) {
+            const cambiosPen =
+              existente.PenalesLocal !== penH || existente.PenalesVisitante !== penA
+            if (cambiosPen) {
+              cambios.PenalesLocal = penH
+              cambios.PenalesVisitante = penA
+            }
           }
         }
 

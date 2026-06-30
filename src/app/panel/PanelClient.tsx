@@ -87,13 +87,18 @@ function FilaPronostico({
                   </>
                 )}
               </div>
+              {final && e.PenalesLocal !== null && e.PenalesVisitante !== null && (
+                <span style={{ fontSize: 11, color: "var(--gris)", letterSpacing: "0.03em", marginTop: 2 }}>
+                  Pen. {e.PenalesLocal} – {e.PenalesVisitante}
+                </span>
+              )}
               <span className="fmc-when">{e.inicioBogota}</span>
             </div>
             <TeamHalf nombre={e.Visitante} tenue={!final} />
           </div>
           <div className={`fmc-foot ${final ? "gold" : pronostico ? "info" : "muted"}`}>
             {final
-              ? `Resultado oficial: ${e.GolesLocal} – ${e.GolesVisitante}`
+              ? `Resultado oficial: ${e.GolesLocal} – ${e.GolesVisitante}${e.PenalesLocal !== null && e.PenalesVisitante !== null ? ` (Pen. ${e.PenalesLocal} – ${e.PenalesVisitante})` : ""}`
               : pronostico
               ? "Tu pronóstico · cerrado"
               : "Sin pronóstico · cerrado"}

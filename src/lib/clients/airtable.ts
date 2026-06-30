@@ -191,6 +191,8 @@ export interface Encuentro {
   CierreUtc: string | null
   GolesLocal: number | null
   GolesVisitante: number | null
+  PenalesLocal: number | null
+  PenalesVisitante: number | null
   ExternalId: string | null
   CreatedAt: string
 }
@@ -513,6 +515,8 @@ type EncuentroFields = {
   CierreUtc?: string
   GolesLocal?: number | null
   GolesVisitante?: number | null
+  PenalesLocal?: number | null
+  PenalesVisitante?: number | null
   ExternalId?: string
 }
 
@@ -525,6 +529,8 @@ const toEncuentro = (r: ATRecord<EncuentroFields>): Encuentro => ({
   CierreUtc: r.fields.CierreUtc ?? null,
   GolesLocal: r.fields.GolesLocal ?? null,
   GolesVisitante: r.fields.GolesVisitante ?? null,
+  PenalesLocal: r.fields.PenalesLocal ?? null,
+  PenalesVisitante: r.fields.PenalesVisitante ?? null,
   ExternalId: r.fields.ExternalId ?? null,
   CreatedAt: r.createdTime,
 })
@@ -574,6 +580,8 @@ export async function updateEncuentro(
     CierreUtc: string | null
     GolesLocal: number | null
     GolesVisitante: number | null
+    PenalesLocal: number | null
+    PenalesVisitante: number | null
     ExternalId: string
   }>
 ): Promise<Encuentro> {

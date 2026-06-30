@@ -54,6 +54,11 @@ export default function VistaSoloLectura({ datos }: { datos: VistaPronosticos })
                     </>
                   )}
                 </div>
+                {final && e.PenalesLocal !== null && e.PenalesVisitante !== null && (
+                  <span style={{ fontSize: 11, color: "var(--gris)", letterSpacing: "0.03em", marginTop: 2 }}>
+                    Pen. {e.PenalesLocal} – {e.PenalesVisitante}
+                  </span>
+                )}
                 <span className="fmc-when">{e.inicioBogota}</span>
               </div>
               <TeamHalf nombre={e.Visitante} tenue={cerrado && !final} />
