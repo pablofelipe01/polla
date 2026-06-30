@@ -354,7 +354,7 @@ const toUsuario = (r: ATRecord<UsuarioFields>): Usuario => ({
   Email: r.fields.Email ?? "",
   Cedula: r.fields.Cedula ?? "",
   Nombre: r.fields.Nombre ?? "",
-  Rol: (r.fields.Rol as Rol) ?? "Usuario",
+  Rol: ((r.fields.Rol as Rol) || "Usuario"),
   EquipoId: firstLink(r.fields.Equipo),
   ContinenteId: firstLink(r.fields.Continente),
   Activo: r.fields.Activo ?? false,

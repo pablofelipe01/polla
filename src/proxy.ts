@@ -21,6 +21,8 @@ export const proxy = auth(function (req) {
   // /login → si ya está autenticado, redirigir a su módulo
   if (pathname === "/login") {
     if (!sesion) return NextResponse.next()
+    // Rol desconocido/vacío: mostrar login para que el usuario vuelva a autenticarse
+    if (!role) return NextResponse.next()
     const destino = role === "Admin" ? "/admin" : (role === "DT" || role === "CuerpoTecnico") ? "/equipos" : "/pronosticos"
     return NextResponse.redirect(new URL(destino, req.url))
   }
@@ -48,9 +50,10 @@ export const proxy = auth(function (req) {
     return puedeEquipos(role) ? NextResponse.next() : aLogin()
   }
 
-  // Módulo 3 · Pronósticos → todos los roles autenticados
+  // Módulo 3 · Pronósticos → cualquier usuario autenticado (sesión verificada arriba)
+  // No se comprueba el rol aquí; la página maneja canAccessPronosticos y redirige si hace falta
   if (pathname.startsWith("/pronosticos") || pathname.startsWith("/panel")) {
-    return puedePronosticos(role) ? NextResponse.next() : aLogin()
+    return NextResponse.next()
   }
 
   return NextResponse.next()
