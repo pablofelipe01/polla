@@ -1,198 +1,270 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import type { MatchWithStatus } from "@/app/actions/public"
-import ScoreSelector from "./ScoreSelector"
-import type { Participant } from "./ParticipantForm"
-import Countdown from "./Countdown"
+import { useState } from "react"
+import { Calendar } from "lucide-react"
 
-function picksKey(cedula: string) { return `polla:picks:${cedula}` }
+/* ── Types ──────────────────────────────────────────────── */
 
-function loadPick(matchId: string, cedula: string): { col: number; opp: number } | null {
-  try {
-    const raw = localStorage.getItem(picksKey(cedula))
-    if (!raw) return null
-    return JSON.parse(raw)[matchId] ?? null
-  } catch {
-    return null
+type Team = {
+  name: string
+  flagCode?: string
+}
+
+type Prediction = {
+  golesLocal: number
+  golesVisitante: number
+}
+
+export type MatchCardProps = {
+  matchDate: string
+  phase: string
+  status: "OPEN" | "CLOSED"
+  homeTeam: Team
+  awayTeam: Team
+  userPrediction?: Prediction
+  onSave?: (prediction: Prediction) => void | Promise<void>
+}
+
+/* ── Helpers ─────────────────────────────────────────────── */
+
+function FlagEmoji({ code }: { code?: string }) {
+  if (!code) return null
+  const flag = code
+    .toUpperCase()
+    .replace(/./g, (c) =>
+      String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65)
+    )
+  return <span className="text-2xl leading-none">{flag}</span>
+}
+
+/* ── Main Component ──────────────────────────────────────── */
+
+/**
+ * Tarjeta de partido mundialista con soporte para pronóstico editable (OPEN)
+ * y lectura (CLOSED). Usa Bebas Neue para impacto y Montserrat para datos.
+ */
+export default function MatchCard({
+  matchDate,
+  phase,
+  status,
+  homeTeam,
+  awayTeam,
+  userPrediction,
+  onSave,
+}: MatchCardProps) {
+  const isOpen = status === "OPEN"
+
+  const [golesLocal, setGolesLocal] = useState<string>(
+    userPrediction?.golesLocal?.toString() ?? ""
+  )
+  const [golesVisitante, setGolesVisitante] = useState<string>(
+    userPrediction?.golesVisitante?.toString() ?? ""
+  )
+  const [saving, setSaving] = useState(false)
+
+  const hasPrediction =
+    userPrediction !== undefined &&
+    userPrediction.golesLocal !== undefined &&
+    userPrediction.golesVisitante !== undefined
+
+  const canSubmit =
+    isOpen && golesLocal !== "" && golesVisitante !== ""
+
+  async function handleSave() {
+    if (!canSubmit || !onSave) return
+    setSaving(true)
+    try {
+      await onSave({
+        golesLocal: parseInt(golesLocal, 10),
+        golesVisitante: parseInt(golesVisitante, 10),
+      })
+    } finally {
+      setSaving(false)
+    }
   }
-}
-
-function pickStr(col: number, opp: number, isHome: boolean): string {
-  return isHome ? `${col} : ${opp}` : `${opp} : ${col}`
-}
-
-interface Props {
-  match: MatchWithStatus
-  participant: Participant | null
-  onNeedName: () => void
-}
-
-export default function MatchCard({ match, participant, onNeedName }: Props) {
-  const [status, setStatus] = useState(match.status)
-  const [myPick, setMyPick] = useState<{ col: number; opp: number } | null>(null)
-
-  // Leer pick guardado del localStorage (por cédula del participante)
-  useEffect(() => {
-    if (participant) setMyPick(loadPick(match.id, participant.cedula))
-    else setMyPick(null)
-  }, [match.id, participant])
-
-  const isHome     = match.EsLocal
-  const leftTeam   = isHome ? "COLOMBIA" : match.Rival.toUpperCase()
-  const rightTeam  = isHome ? match.Rival.toUpperCase() : "COLOMBIA"
-  const isColLeft  = isHome
-
-  const isFinal   = status === "FINALIZADO"
-  const isOpen    = status === "ABIERTO"
-  const isClosed  = status === "CERRADO"
-  const isUpcoming = status === "PROXIMO"
-
-  // Badge por estado
-  const badge = (() => {
-    const openTimestampMs =
-      new Date(match.FechaHoraUtc).getTime() - 48 * 60 * 60 * 1000
-    const closeMs = match.closeTimestampMs
-    const now = Date.now()
-
-    if (isUpcoming) {
-      const remainOpen = openTimestampMs - now
-      return (
-        <span className="polla-badge b-prox">
-          Abre en <Countdown closeMs={openTimestampMs} />
-          {/* fallback si ya pasó */}
-          {remainOpen <= 0 ? "Próximo" : ""}
-        </span>
-      )
-    }
-    if (isOpen)   return <span className="polla-badge b-open">Abierta</span>
-    if (isClosed) return <span className="polla-badge b-close">Cerrada</span>
-    return <span className="polla-badge b-final">Final</span>
-  })()
-
-  // Foot info
-  const foot = (() => {
-    if (isUpcoming) return "Las apuestas abren 48 h antes."
-    if (isOpen) {
-      return (
-        <>
-          Cierra en{" "}
-          <Countdown
-            closeMs={match.closeTimestampMs}
-            onClose={() => setStatus("CERRADO")}
-          />
-        </>
-      )
-    }
-    if (isClosed) return "Apuestas cerradas. Esperando resultado."
-    return null
-  })()
-
-  // Cuerpo del card
-  const body = (() => {
-    if (isOpen) {
-      if (!participant) {
-        return (
-          <button
-            className="polla-btn polla-btn-amar"
-            style={{ marginTop: 12 }}
-            onClick={onNeedName}
-          >
-            ¡Quiero pronosticar!
-          </button>
-        )
-      }
-      return (
-        <ScoreSelector
-          matchId={match.id}
-          leftTeam={leftTeam}
-          rightTeam={rightTeam}
-          isColLeft={isColLeft}
-          closeTimestampMs={match.closeTimestampMs}
-          participant={participant}
-          onStatusChange={() => setStatus("CERRADO")}
-        />
-      )
-    }
-
-    if (isUpcoming) {
-      return (
-        <div className="polla-locked">
-          ⏳ Vuelve cuando se abran las apuestas.
-        </div>
-      )
-    }
-
-    if (isClosed) {
-      if (myPick) {
-        return (
-          <div className="polla-locked">
-            Tu marcador:{" "}
-            <span className="polla-mypick">
-              {pickStr(myPick.col, myPick.opp, isHome)}
-            </span>
-          </div>
-        )
-      }
-      return (
-        <div className="polla-locked">
-          No alcanzaste a pronosticar este partido.
-        </div>
-      )
-    }
-
-    if (isFinal && match.GolesCol !== null && match.GolesRival !== null) {
-      const resultLeft  = isHome ? match.GolesCol : match.GolesRival
-      const resultRight = isHome ? match.GolesRival : match.GolesCol
-      const acerto =
-        myPick &&
-        myPick.col === match.GolesCol &&
-        myPick.opp === match.GolesRival
-
-      return (
-        <div
-          className="polla-locked"
-          style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "center" }}
-        >
-          <div>Resultado oficial</div>
-          <div className="polla-res">
-            {resultLeft} : {resultRight}
-          </div>
-          {myPick && (
-            <div>
-              Tu marcador:{" "}
-              <span className="polla-mypick">
-                {pickStr(myPick.col, myPick.opp, isHome)}
-              </span>{" "}
-              {acerto ? "✓ ¡Acertaste!" : "✗"}
-            </div>
-          )}
-        </div>
-      )
-    }
-
-    return null
-  })()
 
   return (
-    <div className="polla-card">
-      <div className="polla-mhead">
-        <span className="polla-fase">{match.Fase}</span>
-        {badge}
+    <div
+      className="
+        bg-white rounded-xl shadow-md
+        border border-gray-100 border-t-4 border-t-rojo
+        p-5 w-full max-w-2xl mx-auto
+      "
+    >
+      {/* ── Header ── */}
+      <div className="flex justify-between items-start">
+        <div>
+          <p
+            className="text-sm font-bold text-azul uppercase tracking-wide"
+            style={{ fontFamily: "var(--font-montserrat)" }}
+          >
+            {phase}
+          </p>
+          <p
+            className="flex items-center gap-1 mt-1 text-xs text-gray-500"
+            style={{ fontFamily: "var(--font-montserrat)" }}
+          >
+            <Calendar size={12} strokeWidth={2} />
+            {matchDate}
+          </p>
+        </div>
+
+        <StatusBadge status={status} />
       </div>
 
-      <div className="polla-vs">
-        {leftTeam}{" "}
-        <span style={{ color: "var(--gris)" }}>vs</span>{" "}
-        {rightTeam}
+      {/* ── Teams + Score ── */}
+      <div className="flex items-center justify-center gap-4 my-8 flex-wrap">
+        {/* Home */}
+        <TeamBlock team={homeTeam} align="right" />
+
+        {/* Home score */}
+        {isOpen ? (
+          <ScoreInput
+            value={golesLocal}
+            onChange={setGolesLocal}
+            label={homeTeam.name}
+          />
+        ) : (
+          <ScoreDisplay value={hasPrediction ? userPrediction!.golesLocal : undefined} />
+        )}
+
+        {/* VS separator */}
+        <div
+          className="
+            w-8 h-8 flex-shrink-0 flex items-center justify-center
+            rounded-full border border-gray-200
+            text-gray-400 text-xs font-bold
+          "
+          style={{ fontFamily: "var(--font-montserrat)" }}
+        >
+          VS
+        </div>
+
+        {/* Away score */}
+        {isOpen ? (
+          <ScoreInput
+            value={golesVisitante}
+            onChange={setGolesVisitante}
+            label={awayTeam.name}
+          />
+        ) : (
+          <ScoreDisplay value={hasPrediction ? userPrediction!.golesVisitante : undefined} />
+        )}
+
+        {/* Away */}
+        <TeamBlock team={awayTeam} align="left" />
       </div>
 
-      <div className="polla-when">
-        {match.kickoffBogota}
-        {foot ? <> · {foot}</> : null}
-      </div>
+      {/* ── Footer ── */}
+      <div
+        className="border-t border-gray-100 pt-4 mt-2 text-center"
+        style={{ fontFamily: "var(--font-montserrat)" }}
+      >
+        <p className={`text-sm ${hasPrediction ? "text-ok font-semibold" : "text-gray-400"}`}>
+          {hasPrediction ? "✓ Pronóstico guardado" : "Sin pronóstico registrado"}
+        </p>
 
-      {body}
+        {isOpen && (
+          <button
+            onClick={handleSave}
+            disabled={!canSubmit || saving}
+            className="
+              w-full mt-4 py-3 rounded-lg
+              bg-rojo hover:bg-red-700 disabled:opacity-50
+              text-white text-xl tracking-wide
+              transition-colors duration-150
+              cursor-pointer disabled:cursor-not-allowed
+            "
+            style={{ fontFamily: "var(--font-bebas)" }}
+          >
+            {saving ? "Guardando…" : hasPrediction ? "Actualizar pronóstico" : "Guardar pronóstico"}
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/* ── Sub-components ──────────────────────────────────────── */
+
+function StatusBadge({ status }: { status: "OPEN" | "CLOSED" }) {
+  const isOpen = status === "OPEN"
+  return (
+    <span
+      className={`
+        px-3 py-1 rounded-full text-xs font-bold tracking-wide flex-shrink-0
+        ${isOpen
+          ? "bg-green-50 text-ok"
+          : "bg-red-50 text-rojo"
+        }
+      `}
+      style={{ fontFamily: "var(--font-montserrat)" }}
+    >
+      {isOpen ? "Abierto" : "Cerrado"}
+    </span>
+  )
+}
+
+function TeamBlock({ team, align }: { team: Team; align: "left" | "right" }) {
+  return (
+    <div
+      className={`flex flex-col items-center gap-1 w-24 sm:w-32 ${
+        align === "right" ? "text-right" : "text-left"
+      }`}
+    >
+      <FlagEmoji code={team.flagCode} />
+      <span
+        className="text-3xl sm:text-4xl text-slate-800 tracking-wide leading-none text-center w-full truncate"
+        style={{ fontFamily: "var(--font-bebas)" }}
+        title={team.name}
+      >
+        {team.name}
+      </span>
+    </div>
+  )
+}
+
+function ScoreInput({
+  value,
+  onChange,
+}: {
+  value: string
+  onChange: (v: string) => void
+  label: string
+}) {
+  return (
+    <input
+      type="number"
+      min={0}
+      max={50}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder="0"
+      className="
+        w-16 h-20 flex-shrink-0
+        bg-slate-50 border-2 border-slate-200 rounded-lg
+        text-center text-4xl text-slate-800
+        focus:border-rojo focus:outline-none focus:ring-0
+        transition-colors duration-150
+        [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
+      "
+      style={{ fontFamily: "var(--font-bebas)" }}
+    />
+  )
+}
+
+function ScoreDisplay({ value }: { value?: number }) {
+  return (
+    <div
+      className="
+        w-16 h-20 flex-shrink-0
+        bg-slate-50 border-2 border-slate-200 rounded-lg
+        flex items-center justify-center
+        text-4xl text-slate-800
+      "
+      style={{ fontFamily: "var(--font-bebas)" }}
+    >
+      {value !== undefined ? value : <span className="text-slate-300">–</span>}
     </div>
   )
 }

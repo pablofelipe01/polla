@@ -11,7 +11,7 @@ Aplicación Next.js 16 con React 19, TypeScript 5 y TailwindCSS v4.
 - **UI**: React 19 con Server Components por defecto
 - **Lenguaje**: TypeScript 5 — modo estricto activado
 - **Estilos**: TailwindCSS v4 (CSS-first, sin tailwind.config.js)
-- **Gestor de paquetes**: pnpm
+- **Gestor de paquetes**: npm
 
 ---
 
@@ -383,12 +383,12 @@ public/
 
 ## Comandos
 ```bash
-pnpm dev          # Desarrollo (Turbopack)
-pnpm build        # Producción
-pnpm lint         # ESLint
-pnpm type-check   # tsc --noEmit
-pnpm test         # Vitest
-pnpm test:e2e     # Playwright
+npm run dev          # Desarrollo (Turbopack)
+npm run build        # Producción
+npm run lint         # ESLint
+npm run type-check   # tsc --noEmit
+npm test             # Vitest
+npm run test:e2e     # Playwright
 ```
 
 ---

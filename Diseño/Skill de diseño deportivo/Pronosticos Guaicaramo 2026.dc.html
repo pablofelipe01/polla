@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+@keyframes glow{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes pulse-ring{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.4);opacity:0}}
+</style>
+</helmet>
+
+<!-- ═══════════════ LOGIN ═══════════════ -->
+<div style="position:absolute;left:80px;top:80px;width:460px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(200,230,255,.4);letter-spacing:.1em;text-transform:uppercase">01 — Login</div>
+  <div style="background:#080F1C;border-radius:20px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.8),0 0 0 1px rgba(0,220,130,.12)">
+    <!-- Pitch lines background -->
+    <div style="position:relative;overflow:hidden">
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:.04" viewBox="0 0 460 380" preserveAspectRatio="none">
+        <circle cx="230" cy="190" r="90" fill="none" stroke="white" stroke-width="2"/>
+        <line x1="0" y1="190" x2="460" y2="190" stroke="white" stroke-width="1.5"/>
+        <rect x="10" y="110" width="80" height="160" fill="none" stroke="white" stroke-width="1.5"/>
+        <rect x="370" y="110" width="80" height="160" fill="none" stroke="white" stroke-width="1.5"/>
+        <circle cx="230" cy="190" r="4" fill="white"/>
+      </svg>
+      <!-- Green radial glow -->
+      <div style="position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:320px;height:320px;background:radial-gradient(circle,rgba(0,220,130,.18) 0%,transparent 70%);pointer-events:none"></div>
+      <div style="position:relative;padding:52px 48px 48px;display:flex;flex-direction:column;align-items:center;gap:0">
+        <!-- Ball -->
+        <div style="position:relative;margin-bottom:24px">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:88px;height:88px;border-radius:50%;background:rgba(0,220,130,.15);animation:pulse-ring 2s ease-out infinite"></div>
+          <div style="width:76px;height:76px;background:#0F1E35;border-radius:50%;border:2px solid rgba(0,220,130,.4);display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 24px rgba(0,220,130,.25)">
+            <svg viewBox="0 0 52 52" width="50" height="50">
+              <circle cx="26" cy="26" r="24" fill="white" stroke="#e0e8f0" stroke-width=".8"/>
+              <path d="M26 4 L32 14 L30 22 L22 22 L20 14 Z" fill="#0a1628"/>
+              <path d="M32 14 L42 16.5 L44.5 24 L39 30 L30 22 Z" fill="#0a1628" opacity=".7"/>
+              <path d="M20 14 L10 16.5 L7.5 24 L13 30 L22 22 Z" fill="#0a1628" opacity=".7"/>
+              <path d="M39 30 L41 39 L32 43.5 L26 37 L30 22 Z" fill="#0a1628" opacity=".45"/>
+              <path d="M13 30 L11 39 L20 43.5 L26 37 L22 22 Z" fill="#0a1628" opacity=".45"/>
+            </svg>
+          </div>
+        </div>
+        <!-- Title -->
+        <div style="font:400 30px/1.1 'Bebas Neue',sans-serif;color:#F0F4FF;text-align:center;letter-spacing:-.01em">Pronósticos Guaicaramo</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:10px;margin-bottom:40px">
+          <div style="height:1px;width:32px;background:rgba(0,220,130,.4)"></div>
+          <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:#00DC82;letter-spacing:.2em;text-transform:uppercase">Mundial 2026 · FIFA</div>
+          <div style="height:1px;width:32px;background:rgba(0,220,130,.4)"></div>
+        </div>
+        <!-- Fields -->
+        <div style="width:100%;display:flex;flex-direction:column;gap:20px">
+          <div>
+            <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:9px">Cédula de ciudadanía</div>
+            <div style="background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:14px 18px;font:400 16px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);display:flex;align-items:center;justify-content:space-between">
+              <span>1.018.461.230</span>
+              <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.4"><circle cx="8" cy="5.5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+            </div>
+          </div>
+          <div>
+            <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35);letter-spacing:.12em;text-transform:uppercase;margin-bottom:13px">PIN de acceso</div>
+            <div style="display:flex;gap:12px;justify-content:center">
+              <div style="width:62px;height:62px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(0,220,130,.2)"><div style="width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.9)"></div></div>
+              <div style="width:62px;height:62px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(0,220,130,.2)"><div style="width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.9)"></div></div>
+              <div style="width:62px;height:62px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(0,220,130,.2)"><div style="width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.9)"></div></div>
+              <div style="width:62px;height:62px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.12);border-radius:12px;display:flex;align-items:center;justify-content:center"><div style="width:2px;height:24px;background:rgba(255,255,255,.3);border-radius:1px"></div></div>
+            </div>
+            <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);text-align:center;margin-top:12px">Por defecto: últimos 4 dígitos de tu cédula</div>
+          </div>
+          <div style="background:linear-gradient(135deg,#00DC82,#00A866);border-radius:12px;padding:16px;text-align:center;font:500 15px/1 'Barlow Condensed',system-ui;color:white;letter-spacing:.06em;box-shadow:0 4px 20px rgba(0,220,130,.35);margin-top:4px;cursor:pointer">Ingresar →</div>
+        </div>
+        <!-- Footer -->
+        <div style="display:flex;align-items:center;gap:10px;margin-top:36px;padding-top:24px;border-top:1px solid rgba(255,255,255,.07);width:100%;justify-content:center">
+          
+          <span style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ADMIN PANEL ═══════════════ -->
+<div style="position:absolute;left:620px;top:80px;width:1280px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(200,230,255,.4);letter-spacing:.1em;text-transform:uppercase">02 — Panel Administrador</div>
+  <div style="display:flex;height:740px;border-radius:20px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.06)">
+    <!-- Sidebar -->
+    <div style="width:200px;min-width:200px;background:#05090F;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.06)">
+      <div style="padding:22px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;background:#0F1929;border-radius:8px;border:1px solid rgba(0,220,130,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="11" fill="white"/><path d="M12 2.5 L14.5 7 L13.5 11 L10.5 11 L9.5 7 Z" fill="#0a1628"/><path d="M14.5 7 L19 8 L20 11.5 L17.5 14.5 L13.5 11 Z" fill="#0a1628" opacity=".65"/><path d="M9.5 7 L5 8 L4 11.5 L6.5 14.5 L10.5 11 Z" fill="#0a1628" opacity=".65"/><path d="M17.5 14.5 L18.5 19 L14.5 21.5 L12 18.5 L13.5 11 Z" fill="#0a1628" opacity=".4"/><path d="M6.5 14.5 L5.5 19 L9.5 21.5 L12 18.5 L10.5 11 Z" fill="#0a1628" opacity=".4"/></svg>
+        </div>
+        <div>
+          <div style="font:500 11px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Guaicaramo</div>
+          <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:#00DC82;margin-top:3px">MUNDIAL 2026</div>
+        </div>
+      </div>
+      <nav style="flex:1;padding:12px 8px;display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:rgba(0,220,130,.12);border:1px solid rgba(0,220,130,.2)">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="#00DC82"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+          <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white">Panel Admin</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="rgba(255,255,255,.2)"><path d="M8 1L2 3.8v4.2c0 3.2 2.4 6 6 7.5C11.6 14 14 11.2 14 8V3.8L8 1z"/></svg>
+          <span style="font:400 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">Equipos</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5"><circle cx="8" cy="8" r="7"/><circle cx="8" cy="8" r="3.5"/><circle cx="8" cy="8" r="1" fill="rgba(255,255,255,.2)" stroke="none"/></svg>
+          <span style="font:400 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">Pronósticos</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="rgba(255,255,255,.2)"><rect x="1" y="8" width="3.5" height="7" rx=".5"/><rect x="6" y="5" width="3.5" height="10" rx=".5"/><rect x="11" y="2" width="3.5" height="13" rx=".5"/></svg>
+          <span style="font:400 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">Estadísticas</span>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,.06);margin:8px 4px"></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5"><path d="M10 8H2M6 5l-3 3 3 3"/><path d="M9 3h4a1 1 0 011 1v8a1 1 0 01-1 1H9"/></svg>
+          <span style="font:400 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">Salir</span>
+        </div>
+      </nav>
+      <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#00DC82,#00A866);display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:white;flex-shrink:0">AG</div>
+        <div>
+          <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Admin García</div>
+          <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:#FFD600;margin-top:3px">ADMINISTRADOR</div>
+        </div>
+      </div>
+    </div>
+    <!-- Main -->
+    <div style="flex:1;background:#080F1C;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:22px 28px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+        <div>
+          <div style="font:400 24px/1.1 'Bebas Neue',sans-serif;color:white">Panel de Administración</div>
+          <div style="font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:5px">Mundial FIFA 2026 · 104 partidos cargados</div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <div style="padding:10px 16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;font:500 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:8px;cursor:pointer">
+            <svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="1.4"><path d="M7 1v9M7 10l-3-3M7 10l3-3"/><rect x="1" y="11" width="12" height="2" rx="1" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.4)" stroke-width="1.2"/></svg>
+            Descargar reportes
+          </div>
+          <div style="padding:10px 16px;background:#00DC82;border-radius:10px;font:500 12px/1 'Barlow Condensed',system-ui;color:#020D18;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 4px 16px rgba(0,220,130,.3)">
+            <svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="#020D18" stroke-width="1.6"><circle cx="7" cy="7" r="6"/><path d="M7 4.5V7l1.8 1.2"/></svg>
+            Sincronizar API
+          </div>
+        </div>
+      </div>
+      <!-- Stats bar -->
+      <div style="padding:18px 28px 0;display:flex;gap:14px;flex-shrink:0">
+        <div style="flex:1;background:rgba(0,220,130,.08);border:1px solid rgba(0,220,130,.15);border-radius:12px;padding:16px 18px">
+          <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Usuarios</div>
+          <div style="font:400 32px/1 'Bebas Neue',sans-serif;color:#00DC82">156</div>
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(0,220,130,.6);margin-top:6px">+12 esta semana</div>
+        </div>
+        <div style="flex:1;background:rgba(255,214,0,.06);border:1px solid rgba(255,214,0,.12);border-radius:12px;padding:16px 18px">
+          <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Continentes</div>
+          <div style="font:400 32px/1 'Bebas Neue',sans-serif;color:#FFD600">6</div>
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,100,100,.7);margin-top:6px">3 sin DT asignado</div>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px">
+          <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Partidos</div>
+          <div style="font:400 32px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.8)">104</div>
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-top:6px">todos cargados</div>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px">
+          <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Pronósticos</div>
+          <div style="font:400 32px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.8)">1.872</div>
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-top:6px">registrados</div>
+        </div>
+      </div>
+      <!-- Continent cards grid -->
+      <div style="padding:18px 28px 28px;flex:1;overflow:auto">
+        <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px">Continentes · Asignación de DT</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <!-- UEFA -->
+          <div style="background:#0D1929;border-radius:14px;overflow:hidden;border:1px solid rgba(59,130,246,.25)">
+            <div style="height:4px;background:linear-gradient(90deg,#3B82F6,#2563EB)"></div>
+            <div style="padding:18px 20px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+                <div>
+                  <div style="font:400 20px/1 'Bebas Neue',sans-serif;color:white">UEFA</div>
+                  <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:4px">16 países</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(0,220,130,.12);border-radius:20px;border:1px solid rgba(0,220,130,.2)">
+                  <div style="width:5px;height:5px;border-radius:50%;background:#00DC82"></div>
+                  <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:#00DC82">Activo</span>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#1D4ED8);display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:white">CG</div>
+                <div>
+                  <div style="font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Carlos Gutiérrez</div>
+                  <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">DT Asignado</div>
+                </div>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;height:4px;margin-bottom:6px">
+                <div style="width:80%;height:100%;background:#3B82F6;border-radius:6px"></div>
+              </div>
+              <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">24 / 30 integrantes</div>
+            </div>
+          </div>
+          <!-- CONMEBOL -->
+          <div style="background:#0D1929;border-radius:14px;overflow:hidden;border:1px solid rgba(245,158,11,.25)">
+            <div style="height:4px;background:linear-gradient(90deg,#F59E0B,#D97706)"></div>
+            <div style="padding:18px 20px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+                <div>
+                  <div style="font:400 20px/1 'Bebas Neue',sans-serif;color:white">CONMEBOL</div>
+                  <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:4px">6 países</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(0,220,130,.12);border-radius:20px;border:1px solid rgba(0,220,130,.2)">
+                  <div style="width:5px;height:5px;border-radius:50%;background:#00DC82"></div>
+                  <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:#00DC82">Activo</span>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#D97706);display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:white">ML</div>
+                <div>
+                  <div style="font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">María López</div>
+                  <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">DT Asignada</div>
+                </div>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;height:4px;margin-bottom:6px">
+                <div style="width:60%;height:100%;background:#F59E0B;border-radius:6px"></div>
+              </div>
+              <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">18 / 30 integrantes</div>
+            </div>
+          </div>
+          <!-- CONCACAF -->
+          <div style="background:#0D1929;border-radius:14px;overflow:hidden;border:1px solid rgba(0,220,130,.2)">
+            <div style="height:4px;background:linear-gradient(90deg,#00DC82,#00A866)"></div>
+            <div style="padding:18px 20px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+                <div>
+                  <div style="font:400 20px/1 'Bebas Neue',sans-serif;color:white">CONCACAF</div>
+                  <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:4px">6 países</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(255,158,11,.1);border-radius:20px;border:1px solid rgba(255,158,11,.2)">
+                  <div style="width:5px;height:5px;border-radius:50%;background:#F59E0B"></div>
+                  <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:#F59E0B">Configurando</span>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+                <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00DC82,#00A866);display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:white">PM</div>
+                <div>
+                  <div style="font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Pedro Morales</div>
+                  <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">DT Asignado</div>
+                </div>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;height:4px;margin-bottom:6px">
+                <div style="width:40%;height:100%;background:#00DC82;border-radius:6px"></div>
+              </div>
+              <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">12 / 30 integrantes</div>
+            </div>
+          </div>
+          <!-- CAF -->
+          <div style="background:#0D1929;border-radius:14px;overflow:hidden;border:1px solid rgba(255,71,87,.2)">
+            <div style="height:4px;background:rgba(255,71,87,.5)"></div>
+            <div style="padding:18px 20px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+                <div>
+                  <div style="font:400 20px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.5)">CAF</div>
+                  <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2);margin-top:4px">9 países</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(255,71,87,.1);border-radius:20px;border:1px solid rgba(255,71,87,.2)">
+                  <div style="width:5px;height:5px;border-radius:50%;background:#FF4757"></div>
+                  <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:#FF4757">Sin DT</span>
+                </div>
+              </div>
+              <div style="height:36px;background:rgba(255,255,255,.03);border:1.5px dashed rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;cursor:pointer">
+                <span style="font:500 12px/1 'Barlow Condensed',system-ui;color:#00DC82">+ Asignar DT</span>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;height:4px;margin-bottom:6px">
+                <div style="width:0%;height:100%;background:rgba(255,71,87,.5);border-radius:6px"></div>
+              </div>
+              <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">0 / 30 integrantes</div>
+            </div>
+          </div>
+          <!-- AFC -->
+          <div style="background:#0D1929;border-radius:14px;overflow:hidden;border:1px solid rgba(255,71,87,.2)">
+            <div style="height:4px;background:rgba(255,71,87,.5)"></div>
+            <div style="padding:18px 20px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+                <div>
+                  <div style="font:400 20px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.5)">AFC</div>
+                  <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2);margin-top:4px">8 países</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(255,71,87,.1);border-radius:20px;border:1px solid rgba(255,71,87,.2)">
+                  <div style="width:5px;height:5px;border-radius:50%;background:#FF4757"></div>
+                  <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:#FF4757">Sin DT</span>
+                </div>
+              </div>
+              <div style="height:36px;background:rgba(255,255,255,.03);border:1.5px dashed rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;cursor:pointer">
+                <span style="font:500 12px/1 'Barlow Condensed',system-ui;color:#00DC82">+ Asignar DT</span>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;height:4px;margin-bottom:6px">
+                <div style="width:0%;height:100%;background:rgba(255,71,87,.5);border-radius:6px"></div>
+              </div>
+              <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">0 / 30 integrantes</div>
+            </div>
+          </div>
+          <!-- OFC -->
+          <div style="background:#0D1929;border-radius:14px;overflow:hidden;border:1px solid rgba(255,71,87,.2)">
+            <div style="height:4px;background:rgba(255,71,87,.5)"></div>
+            <div style="padding:18px 20px">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px">
+                <div>
+                  <div style="font:400 20px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.5)">OFC</div>
+                  <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2);margin-top:4px">1 país</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(255,71,87,.1);border-radius:20px;border:1px solid rgba(255,71,87,.2)">
+                  <div style="width:5px;height:5px;border-radius:50%;background:#FF4757"></div>
+                  <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:#FF4757">Sin DT</span>
+                </div>
+              </div>
+              <div style="height:36px;background:rgba(255,255,255,.03);border:1.5px dashed rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;cursor:pointer">
+                <span style="font:500 12px/1 'Barlow Condensed',system-ui;color:#00DC82">+ Asignar DT</span>
+              </div>
+              <div style="background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;height:4px;margin-bottom:6px">
+                <div style="width:0%;height:100%;background:rgba(255,71,87,.5);border-radius:6px"></div>
+              </div>
+              <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">0 / 30 integrantes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PRONÓSTICOS ═══════════════ -->
+<div style="position:absolute;left:80px;top:900px;width:1280px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(200,230,255,.4);letter-spacing:.1em;text-transform:uppercase">03 — Pronósticos · Vista Pronosticador</div>
+  <div style="display:flex;height:740px;border-radius:20px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.06)">
+    <!-- Sidebar -->
+    <div style="width:200px;min-width:200px;background:#05090F;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.06)">
+      <div style="padding:22px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;background:#0F1929;border-radius:8px;border:1px solid rgba(0,220,130,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="11" fill="white"/><path d="M12 2.5 L14.5 7 L13.5 11 L10.5 11 L9.5 7 Z" fill="#0a1628"/><path d="M14.5 7 L19 8 L20 11.5 L17.5 14.5 L13.5 11 Z" fill="#0a1628" opacity=".65"/><path d="M9.5 7 L5 8 L4 11.5 L6.5 14.5 L10.5 11 Z" fill="#0a1628" opacity=".65"/><path d="M17.5 14.5 L18.5 19 L14.5 21.5 L12 18.5 L13.5 11 Z" fill="#0a1628" opacity=".4"/><path d="M6.5 14.5 L5.5 19 L9.5 21.5 L12 18.5 L10.5 11 Z" fill="#0a1628" opacity=".4"/></svg>
+        </div>
+        <div>
+          <div style="font:500 11px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Guaicaramo</div>
+          <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:#00DC82;margin-top:3px">MUNDIAL 2026</div>
+        </div>
+      </div>
+      <nav style="flex:1;padding:12px 8px;display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:rgba(0,220,130,.12);border:1px solid rgba(0,220,130,.2)">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="#00DC82" stroke-width="1.6"><circle cx="8" cy="8" r="7"/><circle cx="8" cy="8" r="3.5"/><circle cx="8" cy="8" r="1" fill="#00DC82" stroke="none"/></svg>
+          <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white">Pronósticos</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="rgba(255,255,255,.2)"><rect x="1" y="8" width="3.5" height="7" rx=".5"/><rect x="6" y="5" width="3.5" height="10" rx=".5"/><rect x="11" y="2" width="3.5" height="13" rx=".5"/></svg>
+          <span style="font:400 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">Estadísticas</span>
+        </div>
+      </nav>
+      <!-- Player card -->
+      <div style="padding:16px 14px;border-top:1px solid rgba(255,255,255,.06)">
+        <div style="background:rgba(0,220,130,.08);border:1px solid rgba(0,220,130,.15);border-radius:12px;padding:14px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00DC82,#00A866);display:flex;align-items:center;justify-content:center;font:500 13px/1 'Barlow Condensed',system-ui;color:white;flex-shrink:0">CR</div>
+            <div>
+              <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.9)">Carlos Ramírez</div>
+              <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:#00DC82;margin-top:3px">⚽ Pronosticador</div>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:10px">
+            <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px">Mi equipo</div>
+            <div style="font:500 14px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.9)">Colombia</div>
+            <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">CONMEBOL</div>
+          </div>
+          <div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between">
+            <span style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">Puntos</span>
+            <span style="font:400 18px/1 'Bebas Neue',sans-serif;color:#FFD600">342</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Main -->
+    <div style="flex:1;background:#080F1C;display:flex;flex-direction:column;overflow:hidden">
+      <div style="padding:20px 28px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;position:relative;overflow:hidden">
+        <!-- Stadium silhouette -->
+        <svg style="position:absolute;right:0;top:0;opacity:.05;height:100%" viewBox="0 0 500 120" preserveAspectRatio="xMaxYMid slice">
+          <!-- Stadium arcs / stands -->
+          <ellipse cx="250" cy="180" rx="240" ry="160" fill="none" stroke="white" stroke-width="3"/>
+          <ellipse cx="250" cy="180" rx="200" ry="130" fill="none" stroke="white" stroke-width="2"/>
+          <ellipse cx="250" cy="180" rx="160" ry="100" fill="none" stroke="white" stroke-width="1.5"/>
+          <!-- Floodlight towers -->
+          <rect x="10" y="0" width="8" height="60" fill="white"/>
+          <rect x="6" y="0" width="16" height="6" fill="white" rx="1"/>
+          <rect x="482" y="0" width="8" height="60" fill="white"/>
+          <rect x="478" y="0" width="16" height="6" fill="white" rx="1"/>
+          <!-- Light beams -->
+          <path d="M14 6 L250 180" stroke="white" stroke-width=".8" opacity=".5"/>
+          <path d="M486 6 L250 180" stroke="white" stroke-width=".8" opacity=".5"/>
+        </svg>
+        <div style="font:400 26px/1 'Bebas Neue',sans-serif;color:white;margin-bottom:14px">Mis Pronósticos</div>
+        <div style="display:flex;gap:8px">
+          <div style="padding:8px 18px;background:#00DC82;border-radius:20px;font:500 12px/1 'Barlow Condensed',system-ui;color:#020D18;box-shadow:0 4px 12px rgba(0,220,130,.3)">Fase de Grupos</div>
+          <div style="padding:8px 18px;background:rgba(255,255,255,.06);border-radius:20px;font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35)">Octavos</div>
+          <div style="padding:8px 18px;background:rgba(255,255,255,.06);border-radius:20px;font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35)">Cuartos</div>
+          <div style="padding:8px 18px;background:rgba(255,255,255,.06);border-radius:20px;font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35)">Semifinal</div>
+          <div style="padding:8px 18px;background:rgba(255,255,255,.06);border-radius:20px;font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35)">Final</div>
+        </div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:22px 28px;display:flex;flex-direction:column;gap:26px">
+        <!-- Group B -->
+        <div>
+          <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px">Grupo B · 3 partidos</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+            <!-- Saved match -->
+            <div style="background:#0D1929;border-radius:16px;overflow:hidden;border:1px solid rgba(0,220,130,.25)">
+              <div style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06)">
+                <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.06em">GRP B · 12 JUN 14:00</span>
+                <span style="display:inline-flex;align-items:center;gap:5px;font:500 10px/1 'Barlow Condensed',system-ui;color:#00DC82">
+                  <svg viewBox="0 0 10 10" width="9" height="9"><path d="M1.5 5L4 7.5 8.5 2.5" stroke="#00DC82" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                  Guardado
+                </span>
+              </div>
+              <!-- Teams -->
+              <div style="display:flex">
+                <div style="flex:1;background:rgba(0,104,71,.35);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:#006847;border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:white">MEX</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white;text-align:center">México</span>
+                </div>
+                <div style="width:104px;background:#080F1C;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px 0">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <div style="width:38px;height:38px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 20px/1 'Bebas Neue',sans-serif;color:#00DC82">2</div>
+                    <span style="font:400 14px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.3)">:</span>
+                    <div style="width:38px;height:38px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 20px/1 'Bebas Neue',sans-serif;color:#00DC82">1</div>
+                  </div>
+                </div>
+                <div style="flex:1;background:rgba(0,40,104,.35);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:#002868;border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:white">USA</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white;text-align:center">EE.UU.</span>
+                </div>
+              </div>
+              <div style="padding:10px;background:rgba(0,220,130,.06);text-align:center;font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(0,220,130,.6)">Editado hace 2h · Plazo: 12 Jun 13:00</div>
+            </div>
+            <!-- Pending match -->
+            <div style="background:#0D1929;border-radius:16px;overflow:hidden;border:1px solid rgba(255,214,0,.25)">
+              <div style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06)">
+                <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.06em">GRP B · 17 JUN 17:00</span>
+                <span style="display:inline-flex;align-items:center;gap:5px;font:500 10px/1 'Barlow Condensed',system-ui;color:#FFD600">
+                  <div style="width:5px;height:5px;border-radius:50%;background:#FFD600"></div>
+                  Pendiente
+                </span>
+              </div>
+              <div style="display:flex">
+                <div style="flex:1;background:rgba(191,10,48,.3);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:#BF0A30;border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:white">CAN</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white;text-align:center">Canadá</span>
+                </div>
+                <div style="width:104px;background:#080F1C;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px 0">
+                  <div style="display:flex;align-items:center;gap:8px">
+                    <div style="width:38px;height:38px;background:rgba(255,214,0,.08);border:2px solid rgba(255,214,0,.4);border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 16px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">–</div>
+                    <span style="font:400 14px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.2)">:</span>
+                    <div style="width:38px;height:38px;background:rgba(255,214,0,.08);border:2px solid rgba(255,214,0,.4);border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 16px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">–</div>
+                  </div>
+                </div>
+                <div style="flex:1;background:rgba(207,20,43,.3);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:#CF142B;border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:white">MAR</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white;text-align:center">Marruecos</span>
+                </div>
+              </div>
+              <div style="padding:10px;background:#00DC82;text-align:center;font:500 12px/1 'Barlow Condensed',system-ui;color:#020D18;cursor:pointer;letter-spacing:.04em">Guardar pronóstico →</div>
+            </div>
+            <!-- Closed -->
+            <div style="background:#080F1C;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.06);opacity:.5">
+              <div style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.04)">
+                <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2);letter-spacing:.06em">GRP B · 22 JUN 20:00</span>
+                <span style="display:inline-flex;align-items:center;gap:5px;font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">
+                  <svg viewBox="0 0 10 10" width="9" height="9" fill="none"><rect x="2.5" y="1.5" width="5" height="3" rx="1" stroke="rgba(255,255,255,.3)" stroke-width="1.1"/><rect x="1" y="4.5" width="8" height="5" rx="1" stroke="rgba(255,255,255,.3)" stroke-width="1.1"/></svg>
+                  Cerrado
+                </span>
+              </div>
+              <div style="display:flex">
+                <div style="flex:1;background:rgba(0,104,71,.15);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:rgba(0,104,71,.6);border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.6)">MEX</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.4);text-align:center">México</span>
+                </div>
+                <div style="width:104px;background:#060C18;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 0">
+                  <div style="width:38px;height:38px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 16px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">?</div>
+                  <span style="font:400 14px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.15)">:</span>
+                  <div style="width:38px;height:38px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 16px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">?</div>
+                </div>
+                <div style="flex:1;background:rgba(207,20,43,.15);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:rgba(207,20,43,.5);border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.6)">MAR</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.4);text-align:center">Marruecos</span>
+                </div>
+              </div>
+              <div style="padding:10px;text-align:center;font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">Plazo de pronóstico vencido</div>
+            </div>
+          </div>
+        </div>
+        <!-- Group C -->
+        <div>
+          <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px">Grupo C · 3 partidos</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+            <!-- ARG saved -->
+            <div style="background:#0D1929;border-radius:16px;overflow:hidden;border:1px solid rgba(0,220,130,.25)">
+              <div style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06)">
+                <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.06em">GRP C · 13 JUN 19:00</span>
+                <span style="display:inline-flex;align-items:center;gap:5px;font:500 10px/1 'Barlow Condensed',system-ui;color:#00DC82"><svg viewBox="0 0 10 10" width="9" height="9"><path d="M1.5 5L4 7.5 8.5 2.5" stroke="#00DC82" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>Guardado</span>
+              </div>
+              <div style="display:flex">
+                <div style="flex:1;background:rgba(0,51,160,.35);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:#0033A0;border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:white">ARG</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white;text-align:center">Argentina</span>
+                </div>
+                <div style="width:104px;background:#080F1C;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 0">
+                  <div style="width:38px;height:38px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 20px/1 'Bebas Neue',sans-serif;color:#00DC82">3</div>
+                  <span style="font:400 14px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.3)">:</span>
+                  <div style="width:38px;height:38px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 20px/1 'Bebas Neue',sans-serif;color:#00DC82">0</div>
+                </div>
+                <div style="flex:1;background:rgba(213,43,30,.3);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:#D52B1E;border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:white">KSA</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white;text-align:center">Arabia Saudita</span>
+                </div>
+              </div>
+              <div style="padding:10px;background:rgba(0,220,130,.06);text-align:center;font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(0,220,130,.6)">Venció: 13 Jun 18:00</div>
+            </div>
+            <!-- BRA-COL pending -->
+            <div style="background:#0D1929;border-radius:16px;overflow:hidden;border:1px solid rgba(255,214,0,.25)">
+              <div style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.06)">
+                <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.06em">GRP C · 18 JUN 14:00</span>
+                <span style="display:inline-flex;align-items:center;gap:5px;font:500 10px/1 'Barlow Condensed',system-ui;color:#FFD600"><div style="width:5px;height:5px;border-radius:50%;background:#FFD600"></div>Pendiente</span>
+              </div>
+              <div style="display:flex">
+                <div style="flex:1;background:rgba(0,156,59,.3);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:#009C3B;border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:white">BRA</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white;text-align:center">Brasil</span>
+                </div>
+                <div style="width:104px;background:#080F1C;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 0">
+                  <div style="width:38px;height:38px;background:rgba(255,214,0,.08);border:2px solid rgba(255,214,0,.4);border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 16px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">–</div>
+                  <span style="font:400 14px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.2)">:</span>
+                  <div style="width:38px;height:38px;background:rgba(255,214,0,.08);border:2px solid rgba(255,214,0,.4);border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 16px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">–</div>
+                </div>
+                <div style="flex:1;background:rgba(252,209,22,.2);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:#FCD116;border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:#111">COL</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white;text-align:center">Colombia</span>
+                </div>
+              </div>
+              <div style="padding:10px;background:#00DC82;text-align:center;font:500 12px/1 'Barlow Condensed',system-ui;color:#020D18;cursor:pointer;letter-spacing:.04em">Guardar pronóstico →</div>
+            </div>
+            <!-- upcoming -->
+            <div style="background:#080F1C;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.06);opacity:.45">
+              <div style="padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.04)">
+                <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2);letter-spacing:.06em">GRP C · 26 JUN 21:00</span>
+                <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">Sin abrir</span>
+              </div>
+              <div style="display:flex">
+                <div style="flex:1;background:rgba(0,51,160,.2);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:rgba(0,51,160,.5);border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.6)">ARG</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.4);text-align:center">Argentina</span>
+                </div>
+                <div style="width:104px;background:#060C18;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 0">
+                  <div style="width:38px;height:38px;background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 16px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.15)">?</div>
+                  <span style="color:rgba(255,255,255,.1)">:</span>
+                  <div style="width:38px;height:38px;background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 16px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.15)">?</div>
+                </div>
+                <div style="flex:1;background:rgba(0,156,59,.2);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px">
+                  <div style="width:42px;height:30px;background:rgba(0,156,59,.5);border-radius:5px;display:flex;align-items:center;justify-content:center;font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.6)">BRA</div>
+                  <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.4);text-align:center">Brasil</span>
+                </div>
+              </div>
+              <div style="padding:10px;text-align:center;font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.15)">Disponible el 25 Jun · 20:00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ESTADÍSTICAS ═══════════════ -->
+<div style="position:absolute;left:1460px;top:80px;width:1280px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(200,230,255,.4);letter-spacing:.1em;text-transform:uppercase">04 — Estadísticas · Tabla de Posiciones</div>
+  <div style="display:flex;height:740px;border-radius:20px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.06)">
+    <!-- Sidebar -->
+    <div style="width:200px;min-width:200px;background:#05090F;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.06)">
+      <div style="padding:22px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;background:#0F1929;border-radius:8px;border:1px solid rgba(0,220,130,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="11" fill="white"/><path d="M12 2.5 L14.5 7 L13.5 11 L10.5 11 L9.5 7 Z" fill="#0a1628"/><path d="M14.5 7 L19 8 L20 11.5 L17.5 14.5 L13.5 11 Z" fill="#0a1628" opacity=".65"/><path d="M9.5 7 L5 8 L4 11.5 L6.5 14.5 L10.5 11 Z" fill="#0a1628" opacity=".65"/><path d="M17.5 14.5 L18.5 19 L14.5 21.5 L12 18.5 L13.5 11 Z" fill="#0a1628" opacity=".4"/><path d="M6.5 14.5 L5.5 19 L9.5 21.5 L12 18.5 L10.5 11 Z" fill="#0a1628" opacity=".4"/></svg>
+        </div>
+        <div>
+          <div style="font:500 11px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Guaicaramo</div>
+          <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:#00DC82;margin-top:3px">MUNDIAL 2026</div>
+        </div>
+      </div>
+      <nav style="flex:1;padding:12px 8px;display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.6"><circle cx="8" cy="8" r="7"/><circle cx="8" cy="8" r="3.5"/><circle cx="8" cy="8" r="1" fill="rgba(255,255,255,.2)" stroke="none"/></svg>
+          <span style="font:400 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">Pronósticos</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:rgba(0,220,130,.12);border:1px solid rgba(0,220,130,.2)">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="#00DC82"><rect x="1" y="8" width="3.5" height="7" rx=".5"/><rect x="6" y="5" width="3.5" height="10" rx=".5"/><rect x="11" y="2" width="3.5" height="13" rx=".5"/></svg>
+          <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white">Estadísticas</span>
+        </div>
+      </nav>
+      <div style="padding:14px 18px;border-top:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+        <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#00DC82,#00A866);display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:white;flex-shrink:0">CR</div>
+        <div>
+          <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Carlos Ramírez</div>
+          <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:#00DC82;margin-top:3px">Pronosticador</div>
+        </div>
+      </div>
+    </div>
+    <!-- Main stats -->
+    <div style="flex:1;background:#080F1C;display:flex;flex-direction:column;overflow:auto">
+      <div style="padding:22px 28px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;position:relative;overflow:hidden">
+        <!-- Trophy watermark -->
+        <svg style="position:absolute;right:16px;top:-8px;opacity:.06" viewBox="0 0 120 160" width="120" height="160" fill="white">
+          <path d="M20 10 L100 10 L100 70 Q100 110 60 120 Q20 110 20 70 Z"/>
+          <path d="M10 10 L20 10 L20 50 Q10 45 8 30 Q6 15 10 10 Z"/>
+          <path d="M110 10 L100 10 L100 50 Q110 45 112 30 Q114 15 110 10 Z"/>
+          <rect x="48" y="120" width="24" height="20"/>
+          <rect x="35" y="140" width="50" height="12" rx="3"/>
+          <path d="M55 30 L60 18 L65 30 L78 30 L68 38 L72 52 L60 43 L48 52 L52 38 L42 30 Z"/>
+        </svg>
+        <div style="font:400 26px/1 'Bebas Neue',sans-serif;color:white;margin-bottom:5px">Estadísticas Globales</div>
+        <div style="font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">Actualizado: 25 Jun 2026 · 14:32</div>
+      </div>
+      <!-- Summary stats -->
+      <div style="padding:22px 28px 0;display:flex;gap:14px;flex-shrink:0">
+        <div style="flex:1;background:rgba(0,220,130,.08);border:1px solid rgba(0,220,130,.15);border-radius:12px;padding:16px 18px;text-align:center">
+          <div style="font:400 36px/1 'Bebas Neue',sans-serif;color:#00DC82">23</div>
+          <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-top:7px">Partidos Jugados</div>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;text-align:center">
+          <div style="font:400 36px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.8)">1.872</div>
+          <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-top:7px">Pronósticos</div>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px 18px;text-align:center">
+          <div style="font:400 36px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.8)">48%</div>
+          <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-top:7px">Efectividad</div>
+        </div>
+      </div>
+      <!-- PODIUM -->
+      <div style="padding:28px 28px 0">
+        <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);letter-spacing:.12em;text-transform:uppercase;margin-bottom:24px">Top Pronosticadores</div>
+        <div style="display:flex;align-items:flex-end;justify-content:center;gap:16px">
+          <!-- 2nd -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div style="text-align:center">
+              <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#6D28D9);display:flex;align-items:center;justify-content:center;font:500 16px/1 'Barlow Condensed',system-ui;color:white;margin:0 auto;border:2px solid rgba(139,92,246,.4)">LP</div>
+              <div style="font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);margin-top:8px">Laura Pérez</div>
+              <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">Colombia</div>
+              <div style="font:400 22px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.6);margin-top:6px">298 <span style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">pts</span></div>
+            </div>
+            <div style="width:150px;height:80px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center">
+              <span style="font:400 48px/1 'Bebas Neue',sans-serif;color:rgba(139,92,246,.4)">2</span>
+            </div>
+          </div>
+          <!-- 1st -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div style="text-align:center">
+              <!-- Crown -->
+              <svg viewBox="0 0 32 18" width="32" height="18" style="display:block;margin:0 auto 6px"><path d="M2 16 L6 6 L12 12 L16 2 L20 12 L26 6 L30 16 Z" fill="#FFD600"/><rect x="2" y="15" width="28" height="3" rx="1.5" fill="#FFD600"/></svg>
+              <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#00DC82,#00A866);display:flex;align-items:center;justify-content:center;font:500 18px/1 'Barlow Condensed',system-ui;color:white;margin:0 auto;border:3px solid #FFD600;box-shadow:0 0 24px rgba(255,214,0,.4)">CR</div>
+              <div style="font:500 14px/1 'Barlow Condensed',system-ui;color:white;margin-top:8px">Carlos Ramírez</div>
+              <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">Colombia</div>
+              <div style="font:400 28px/1 'Bebas Neue',sans-serif;color:#FFD600;margin-top:6px">342 <span style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,214,0,.5)">pts</span></div>
+            </div>
+            <div style="width:170px;height:120px;background:rgba(255,214,0,.1);border:1px solid rgba(255,214,0,.3);border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(255,214,0,.1)">
+              <span style="font:400 64px/1 'Bebas Neue',sans-serif;color:rgba(255,214,0,.5)">1</span>
+            </div>
+          </div>
+          <!-- 3rd -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+            <div style="text-align:center">
+              <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#2563EB);display:flex;align-items:center;justify-content:center;font:500 16px/1 'Barlow Condensed',system-ui;color:white;margin:0 auto;border:2px solid rgba(59,130,246,.4)">JS</div>
+              <div style="font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);margin-top:8px">José Salazar</div>
+              <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">Ecuador</div>
+              <div style="font:400 22px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.6);margin-top:6px">275 <span style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">pts</span></div>
+            </div>
+            <div style="width:140px;height:55px;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);border-radius:10px 10px 0 0;display:flex;align-items:center;justify-content:center">
+              <span style="font:400 36px/1 'Bebas Neue',sans-serif;color:rgba(59,130,246,.35)">3</span>
+            </div>
+          </div>
+        </div>
+        <!-- Podium base -->
+        <div style="height:16px;background:rgba(255,255,255,.04);border-radius:0 0 8px 8px;margin:0 60px;border:1px solid rgba(255,255,255,.06);border-top:none"></div>
+      </div>
+      <!-- Ranked list 4–10 -->
+      <div style="padding:24px 28px 28px">
+        <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px">Clasificación Completa</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <!-- Row template: pos, avatar, name/country, flag, pronosts, pts, bar -->
+          <div style="background:#0D1929;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,.06)">
+            <div style="width:28px;font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.25);text-align:center">4</div>
+            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#D97706);display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:white;flex-shrink:0">MR</div>
+            <div style="flex:1">
+              <div style="font:500 14px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">María Rojas</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+                <div style="width:22px;height:16px;background:#002395;border-radius:2px;display:flex;align-items:center;justify-content:center;font:500 7px/1 'Barlow Condensed',system-ui;color:white">FRA</div>
+                <span style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">Francia · UEFA</span>
+              </div>
+            </div>
+            <div style="text-align:center;min-width:50px">
+              <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">22 pron.</div>
+              <div style="font:500 12px/1 'Barlow Condensed',system-ui;color:#00DC82;margin-top:3px">9 exactos</div>
+            </div>
+            <div style="text-align:right;min-width:60px">
+              <div style="font:400 22px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.7)">261</div>
+              <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">PUNTOS</div>
+            </div>
+            <div style="min-width:90px">
+              <div style="background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;height:5px;margin-bottom:4px">
+                <div style="width:48%;height:100%;background:rgba(139,92,246,.8);border-radius:4px"></div>
+              </div>
+              <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(139,92,246,.8)">48%</div>
+            </div>
+          </div>
+          <div style="background:#0D1929;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,.06)">
+            <div style="width:28px;font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.25);text-align:center">5</div>
+            <div style="width:38px;height:38px;border-radius:50%;background:#263D5B;display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.7);flex-shrink:0">PT</div>
+            <div style="flex:1">
+              <div style="font:500 14px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Pablo Torres</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+                <div style="width:22px;height:16px;background:#c60b1e;border-radius:2px;display:flex;align-items:center;justify-content:center;font:500 7px/1 'Barlow Condensed',system-ui;color:white">ESP</div>
+                <span style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">España · UEFA</span>
+              </div>
+            </div>
+            <div style="text-align:center;min-width:50px">
+              <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">20 pron.</div>
+              <div style="font:500 12px/1 'Barlow Condensed',system-ui;color:#00DC82;margin-top:3px">8 exactos</div>
+            </div>
+            <div style="text-align:right;min-width:60px">
+              <div style="font:400 22px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.7)">240</div>
+              <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">PUNTOS</div>
+            </div>
+            <div style="min-width:90px">
+              <div style="background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;height:5px;margin-bottom:4px">
+                <div style="width:43%;height:100%;background:rgba(100,150,220,.8);border-radius:4px"></div>
+              </div>
+              <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(100,150,220,.8)">43%</div>
+            </div>
+          </div>
+          <div style="background:#0D1929;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,.06)">
+            <div style="width:28px;font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.25);text-align:center">6</div>
+            <div style="width:38px;height:38px;border-radius:50%;background:#263D5B;display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.7);flex-shrink:0">AN</div>
+            <div style="flex:1">
+              <div style="font:500 14px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Andrés Nieto</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+                <div style="width:22px;height:16px;background:#006600;border-radius:2px;display:flex;align-items:center;justify-content:center;font:500 7px/1 'Barlow Condensed',system-ui;color:white">BRA</div>
+                <span style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">Brasil · CONMEBOL</span>
+              </div>
+            </div>
+            <div style="text-align:center;min-width:50px">
+              <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">21 pron.</div>
+              <div style="font:500 12px/1 'Barlow Condensed',system-ui;color:#00DC82;margin-top:3px">7 exactos</div>
+            </div>
+            <div style="text-align:right;min-width:60px">
+              <div style="font:400 22px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.7)">218</div>
+              <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">PUNTOS</div>
+            </div>
+            <div style="min-width:90px">
+              <div style="background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;height:5px;margin-bottom:4px">
+                <div style="width:38%;height:100%;background:rgba(0,220,130,.6);border-radius:4px"></div>
+              </div>
+              <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(0,220,130,.7)">38%</div>
+            </div>
+          </div>
+          <div style="background:#0D1929;border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;border:1px solid rgba(255,255,255,.06)">
+            <div style="width:28px;font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.25);text-align:center">7</div>
+            <div style="width:38px;height:38px;border-radius:50%;background:#263D5B;display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.7);flex-shrink:0">RV</div>
+            <div style="flex:1">
+              <div style="font:500 14px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Rosa Vargas</div>
+              <div style="display:flex;align-items:center;gap:6px;margin-top:3px">
+                <div style="width:22px;height:16px;background:#006847;border-radius:2px;display:flex;align-items:center;justify-content:center;font:500 7px/1 'Barlow Condensed',system-ui;color:white">MEX</div>
+                <span style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">México · CONCACAF</span>
+              </div>
+            </div>
+            <div style="text-align:center;min-width:50px">
+              <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">19 pron.</div>
+              <div style="font:500 12px/1 'Barlow Condensed',system-ui;color:#00DC82;margin-top:3px">6 exactos</div>
+            </div>
+            <div style="text-align:right;min-width:60px">
+              <div style="font:400 22px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.7)">196</div>
+              <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">PUNTOS</div>
+            </div>
+            <div style="min-width:90px">
+              <div style="background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;height:5px;margin-bottom:4px">
+                <div style="width:35%;height:100%;background:rgba(100,150,220,.6);border-radius:4px"></div>
+              </div>
+              <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(100,150,220,.7)">35%</div>
+            </div>
+          </div>
+          <div style="text-align:center;padding:14px;font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">Mostrando 7 de 156 participantes</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ EQUIPOS ═══════════════ -->
+<div style="position:absolute;left:80px;top:1720px;width:1280px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(200,230,255,.4);letter-spacing:.1em;text-transform:uppercase">05 — Módulo Equipos · Vista DT</div>
+  <div style="display:flex;height:740px;border-radius:20px;overflow:hidden;box-shadow:0 20px 80px rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.06)">
+    <!-- Sidebar -->
+    <div style="width:200px;min-width:200px;background:#05090F;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.06)">
+      <div style="padding:22px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+        <div style="width:32px;height:32px;background:#0F1929;border-radius:8px;border:1px solid rgba(0,220,130,.25);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg viewBox="0 0 24 24" width="22" height="22"><circle cx="12" cy="12" r="11" fill="white"/><path d="M12 2.5 L14.5 7 L13.5 11 L10.5 11 L9.5 7 Z" fill="#0a1628"/><path d="M14.5 7 L19 8 L20 11.5 L17.5 14.5 L13.5 11 Z" fill="#0a1628" opacity=".65"/><path d="M9.5 7 L5 8 L4 11.5 L6.5 14.5 L10.5 11 Z" fill="#0a1628" opacity=".65"/><path d="M17.5 14.5 L18.5 19 L14.5 21.5 L12 18.5 L13.5 11 Z" fill="#0a1628" opacity=".4"/><path d="M6.5 14.5 L5.5 19 L9.5 21.5 L12 18.5 L10.5 11 Z" fill="#0a1628" opacity=".4"/></svg>
+        </div>
+        <div>
+          <div style="font:500 11px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Guaicaramo</div>
+          <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:#00DC82;margin-top:3px">MUNDIAL 2026</div>
+        </div>
+      </div>
+      <nav style="flex:1;padding:12px 8px;display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="rgba(255,255,255,.2)"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+          <span style="font:400 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">Panel Admin</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:rgba(0,220,130,.12);border:1px solid rgba(0,220,130,.2)">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="#00DC82"><path d="M8 1L2 3.8v4.2c0 3.2 2.4 6 6 7.5C11.6 14 14 11.2 14 8V3.8L8 1z"/></svg>
+          <span style="font:500 13px/1 'Barlow Condensed',system-ui;color:white">Equipos</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.6"><circle cx="8" cy="8" r="7"/><circle cx="8" cy="8" r="3.5"/><circle cx="8" cy="8" r="1" fill="rgba(255,255,255,.2)" stroke="none"/></svg>
+          <span style="font:400 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">Pronósticos</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="rgba(255,255,255,.2)"><rect x="1" y="8" width="3.5" height="7" rx=".5"/><rect x="6" y="5" width="3.5" height="10" rx=".5"/><rect x="11" y="2" width="3.5" height="13" rx=".5"/></svg>
+          <span style="font:400 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">Estadísticas</span>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,.06);margin:8px 4px"></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px">
+          <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5"><path d="M10 8H2M6 5l-3 3 3 3"/><path d="M9 3h4a1 1 0 011 1v8a1 1 0 01-1 1H9"/></svg>
+          <span style="font:400 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">Salir</span>
+        </div>
+      </nav>
+      <!-- DT user card -->
+      <div style="padding:14px 14px 18px;border-top:1px solid rgba(255,255,255,.06)">
+        <div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:12px;padding:13px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px">
+            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#D97706);display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:white;flex-shrink:0">ML</div>
+            <div>
+              <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.9)">María López</div>
+              <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:#F59E0B;margin-top:3px">DT · CONMEBOL</div>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border-radius:8px;padding:9px 11px;display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-bottom:3px">País asignado</div>
+              <div style="font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.9)">Colombia</div>
+            </div>
+            <div style="width:28px;height:20px;background:#FCD116;border-radius:3px;display:flex;align-items:center;justify-content:center;font:500 8px/1 'Barlow Condensed',system-ui;color:#111">COL</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Main Equipos -->
+    <div style="flex:1;background:#080F1C;display:flex;flex-direction:column;overflow:hidden;position:relative">
+      <!-- Scattered soccer ball pattern watermark -->
+      <svg style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:.03;pointer-events:none" viewBox="0 0 800 740" preserveAspectRatio="xMidYMid slice">
+        <circle cx="700" cy="100" r="70" fill="none" stroke="white" stroke-width="2"/>
+        <path d="M700 34 L712 58 L710 68 L690 68 L688 58 Z" fill="white"/>
+        <path d="M712 58 L730 61 L734 70 L726 82 L710 68 Z" fill="white" opacity=".6"/>
+        <path d="M688 58 L670 61 L666 70 L674 82 L690 68 Z" fill="white" opacity=".6"/>
+        <circle cx="120" cy="600" r="55" fill="none" stroke="white" stroke-width="2"/>
+        <path d="M120 549 L130 568 L128 576 L112 576 L110 568 Z" fill="white"/>
+        <path d="M130 568 L144 571 L147 578 L140 588 L128 576 Z" fill="white" opacity=".6"/>
+        <path d="M110 568 L96 571 L93 578 L100 588 L112 576 Z" fill="white" opacity=".6"/>
+        <circle cx="450" cy="400" r="40" fill="none" stroke="white" stroke-width="1.5"/>
+        <path d="M450 362 L457 378 L456 384 L444 384 L443 378 Z" fill="white"/>
+        <path d="M457 378 L468 380 L470 386 L464 393 L456 384 Z" fill="white" opacity=".6"/>
+        <path d="M443 378 L432 380 L430 386 L436 393 L444 384 Z" fill="white" opacity=".6"/>
+      </svg>
+      <!-- Header -->
+      <div style="padding:20px 28px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:8px;font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-bottom:8px">
+          <span>CONMEBOL</span><span style="color:rgba(255,255,255,.15)">›</span><span style="color:rgba(255,255,255,.6)">Colombia</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font:400 26px/1 'Bebas Neue',sans-serif;color:white">Gestión de Equipo</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <div style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:20px">
+              <span style="font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5)">18 / 30</span>
+              <span style="font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">integrantes</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;padding:7px 14px;background:rgba(0,220,130,.1);border:1px solid rgba(0,220,130,.2);border-radius:20px">
+              <div style="width:6px;height:6px;border-radius:50%;background:#00DC82"></div>
+              <span style="font:500 12px/1 'Barlow Condensed',system-ui;color:#00DC82">2 habilitados</span>
+            </div>
+            <div style="padding:9px 16px;background:#00DC82;border-radius:10px;font:500 12px/1 'Barlow Condensed',system-ui;color:#020D18;display:flex;align-items:center;gap:7px;cursor:pointer;box-shadow:0 4px 14px rgba(0,220,130,.3)">
+              <svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="#020D18" stroke-width="2"><path d="M6 1v10M1 6h10"/></svg>
+              Agregar integrante
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1;overflow:auto;padding:22px 28px;display:flex;flex-direction:column;gap:22px">
+        <!-- Pronosticadores habilitados -->
+        <div>
+          <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px">Pronosticadores Habilitados · 2 / 2 cupos</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <!-- Habilitado 1 -->
+            <div style="background:#0D1929;border-radius:16px;overflow:hidden;border:1.5px solid rgba(0,220,130,.3);box-shadow:0 0 24px rgba(0,220,130,.08)">
+              <div style="height:3px;background:linear-gradient(90deg,#00DC82,#00A866)"></div>
+              <div style="padding:18px 20px;display:flex;align-items:center;gap:14px">
+                <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#00DC82,#00A866);display:flex;align-items:center;justify-content:center;font:500 18px/1 'Barlow Condensed',system-ui;color:white;flex-shrink:0;border:2px solid rgba(0,220,130,.4)">CR</div>
+                <div style="flex:1">
+                  <div style="font:500 15px/1.2 'Barlow Condensed',system-ui;color:white">Carlos Ramírez</div>
+                  <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:4px">C.C. 1.018.461.230</div>
+                  <div style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:rgba(0,220,130,.12);border-radius:20px;margin-top:8px;border:1px solid rgba(0,220,130,.2)">
+                    <div style="width:5px;height:5px;border-radius:50%;background:#00DC82"></div>
+                    <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:#00DC82;letter-spacing:.06em;text-transform:uppercase">Habilitado</span>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+                  <div style="text-align:right">
+                    <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">Pronósticos</div>
+                    <div style="font:400 20px/1 'Bebas Neue',sans-serif;color:#00DC82;margin-top:2px">23</div>
+                  </div>
+                  <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:#FF4757;cursor:pointer">Deshabilitar</div>
+                </div>
+              </div>
+            </div>
+            <!-- Habilitado 2 -->
+            <div style="background:#0D1929;border-radius:16px;overflow:hidden;border:1.5px solid rgba(0,220,130,.3);box-shadow:0 0 24px rgba(0,220,130,.08)">
+              <div style="height:3px;background:linear-gradient(90deg,#00DC82,#00A866)"></div>
+              <div style="padding:18px 20px;display:flex;align-items:center;gap:14px">
+                <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#6D28D9);display:flex;align-items:center;justify-content:center;font:500 18px/1 'Barlow Condensed',system-ui;color:white;flex-shrink:0;border:2px solid rgba(139,92,246,.4)">LP</div>
+                <div style="flex:1">
+                  <div style="font:500 15px/1.2 'Barlow Condensed',system-ui;color:white">Laura Pérez</div>
+                  <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:4px">C.C. 1.020.345.678</div>
+                  <div style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:rgba(0,220,130,.12);border-radius:20px;margin-top:8px;border:1px solid rgba(0,220,130,.2)">
+                    <div style="width:5px;height:5px;border-radius:50%;background:#00DC82"></div>
+                    <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:#00DC82;letter-spacing:.06em;text-transform:uppercase">Habilitada</span>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+                  <div style="text-align:right">
+                    <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">Pronósticos</div>
+                    <div style="font:400 20px/1 'Bebas Neue',sans-serif;color:#00DC82;margin-top:2px">23</div>
+                  </div>
+                  <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:#FF4757;cursor:pointer">Deshabilitar</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Todos los integrantes -->
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);letter-spacing:.12em;text-transform:uppercase">Todos los Integrantes · 16 Solo Consulta</div>
+            <!-- Search with internal bar -->
+            <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:9px 14px;display:flex;align-items:center;gap:8px;width:230px">
+              <svg viewBox="0 0 14 14" width="13" height="13" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.4"><circle cx="6" cy="6" r="4.5"/><path d="M9.5 9.5l3 3"/></svg>
+              <span style="font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">Buscar integrante...</span>
+            </div>
+          </div>
+          <!-- Member cards grid -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+            <!-- member card template -->
+            <div style="background:#0D1929;border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+              <input type="checkbox" style="width:15px;height:15px;accent-color:#00DC82;flex-shrink:0">
+              <div style="width:32px;height:32px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);flex-shrink:0">JG</div>
+              <div style="flex:1;min-width:0">
+                <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Jorge García</div>
+                <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-top:3px">Solo consulta</div>
+              </div>
+            </div>
+            <div style="background:#0D1929;border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+              <input type="checkbox" style="width:15px;height:15px;accent-color:#00DC82;flex-shrink:0">
+              <div style="width:32px;height:32px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);flex-shrink:0">AM</div>
+              <div style="flex:1;min-width:0">
+                <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ana Martínez</div>
+                <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-top:3px">Solo consulta</div>
+              </div>
+            </div>
+            <div style="background:#0D1929;border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+              <input type="checkbox" style="width:15px;height:15px;accent-color:#00DC82;flex-shrink:0">
+              <div style="width:32px;height:32px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);flex-shrink:0">RC</div>
+              <div style="flex:1;min-width:0">
+                <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Roberto Castro</div>
+                <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-top:3px">Solo consulta</div>
+              </div>
+            </div>
+            <div style="background:#0D1929;border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+              <input type="checkbox" style="width:15px;height:15px;accent-color:#00DC82;flex-shrink:0">
+              <div style="width:32px;height:32px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);flex-shrink:0">ST</div>
+              <div style="flex:1;min-width:0">
+                <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Sandra Torres</div>
+                <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-top:3px">Solo consulta</div>
+              </div>
+            </div>
+            <div style="background:#0D1929;border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+              <input type="checkbox" style="width:15px;height:15px;accent-color:#00DC82;flex-shrink:0">
+              <div style="width:32px;height:32px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);flex-shrink:0">DM</div>
+              <div style="flex:1;min-width:0">
+                <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Diego Mora</div>
+                <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-top:3px">Solo consulta</div>
+              </div>
+            </div>
+            <div style="background:#0D1929;border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+              <input type="checkbox" style="width:15px;height:15px;accent-color:#00DC82;flex-shrink:0">
+              <div style="width:32px;height:32px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);flex-shrink:0">VP</div>
+              <div style="flex:1;min-width:0">
+                <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Valentina Parra</div>
+                <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-top:3px">Solo consulta</div>
+              </div>
+            </div>
+            <div style="background:#0D1929;border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+              <input type="checkbox" style="width:15px;height:15px;accent-color:#00DC82;flex-shrink:0">
+              <div style="width:32px;height:32px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);flex-shrink:0">CF</div>
+              <div style="flex:1;min-width:0">
+                <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Camilo Fuentes</div>
+                <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-top:3px">Solo consulta</div>
+              </div>
+            </div>
+            <div style="background:#0D1929;border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:10px">
+              <input type="checkbox" style="width:15px;height:15px;accent-color:#00DC82;flex-shrink:0">
+              <div style="width:32px;height:32px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);flex-shrink:0">NR</div>
+              <div style="flex:1;min-width:0">
+                <div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Natalia Ríos</div>
+                <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);margin-top:3px">Solo consulta</div>
+              </div>
+            </div>
+          </div>
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2);text-align:center;margin-top:14px">Mostrando 8 de 16 · Los cupos de habilitación están completos (2/2)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MODAL ASIGNAR DT ═══════════════ -->
+<div style="position:absolute;left:1460px;top:900px;width:680px">
+  <div data-drags-parent="1" style="position:absolute;top:-24px;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(200,230,255,.4);letter-spacing:.1em;text-transform:uppercase">06 — Modal · Asignar DT a Continente</div>
+  <div style="background:#0D1929;border-radius:20px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.1)">
+    <!-- Modal header -->
+    <div style="padding:22px 28px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font:400 22px/1.1 'Bebas Neue',sans-serif;color:white">Asignar DT</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+          <div style="width:8px;height:8px;border-radius:50%;background:#FF4757"></div>
+          <span style="font:400 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.4)">CAF · 9 países · Sin DT asignado</span>
+        </div>
+      </div>
+      <div style="width:32px;height:32px;background:rgba(255,255,255,.08);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.8"><path d="M2 2l10 10M12 2L2 12"/></svg>
+      </div>
+    </div>
+    <!-- Search field -->
+    <div style="padding:20px 28px 0">
+      <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px">Buscar usuario</div>
+      <div style="background:rgba(255,255,255,.06);border:1.5px solid rgba(0,220,130,.4);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 0 16px rgba(0,220,130,.1)">
+        <svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="#00DC82" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M9.5 9.5l3 3"/></svg>
+        <span style="font:400 14px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5)">Buscar por nombre o cédula...</span>
+      </div>
+    </div>
+    <!-- User list with checkboxes -->
+    <div style="padding:16px 28px;display:flex;flex-direction:column;gap:6px;max-height:320px;overflow:auto">
+      <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Usuarios disponibles</div>
+      <!-- User row - selected -->
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(0,220,130,.1);border:1.5px solid rgba(0,220,130,.3);border-radius:10px;cursor:pointer">
+        <input type="checkbox" checked style="width:16px;height:16px;accent-color:#00DC82;flex-shrink:0">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00DC82,#00A866);display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:white;flex-shrink:0">KD</div>
+        <div style="flex:1">
+          <div style="font:500 13px/1.2 'Barlow Condensed',system-ui;color:white">Kofi Diallo</div>
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35);margin-top:3px">C.C. 1.032.567.890 · Disponible</div>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:rgba(0,220,130,.15);border-radius:20px">
+          <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:#00DC82">Seleccionado</span>
+        </div>
+      </div>
+      <!-- User rows - unselected -->
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;cursor:pointer">
+        <input type="checkbox" style="width:16px;height:16px;accent-color:#00DC82;flex-shrink:0">
+        <div style="width:36px;height:36px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);flex-shrink:0">AO</div>
+        <div style="flex:1">
+          <div style="font:500 13px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.7)">Amara Okonkwo</div>
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">C.C. 1.041.234.567 · Disponible</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;cursor:pointer">
+        <input type="checkbox" style="width:16px;height:16px;accent-color:#00DC82;flex-shrink:0">
+        <div style="width:36px;height:36px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5);flex-shrink:0">BM</div>
+        <div style="flex:1">
+          <div style="font:500 13px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.7)">Boubacar Mbaye</div>
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">C.C. 1.038.901.234 · Disponible</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;cursor:pointer;opacity:.5">
+        <input type="checkbox" disabled style="width:16px;height:16px;flex-shrink:0">
+        <div style="width:36px;height:36px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 12px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);flex-shrink:0">FN</div>
+        <div style="flex:1">
+          <div style="font:500 13px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.4)">Fatou Ndiaye</div>
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2);margin-top:3px">C.C. 1.029.456.789 · Ya asignado</div>
+        </div>
+        <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">UEFA</div>
+      </div>
+    </div>
+    <!-- Actions -->
+    <div style="padding:16px 28px 24px;display:flex;gap:10px;border-top:1px solid rgba(255,255,255,.06)">
+      <div style="flex:1;padding:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;text-align:center;font:500 13px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.4);cursor:pointer">Cancelar</div>
+      <div style="flex:2;padding:13px;background:#00DC82;border-radius:10px;text-align:center;font:500 13px/1 'Barlow Condensed',system-ui;color:#020D18;cursor:pointer;letter-spacing:.04em;box-shadow:0 4px 16px rgba(0,220,130,.3)">Confirmar asignación → Kofi Diallo</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SECCIÓN RESPONSIVE · MOBILE
+     ════════════════════════════════════════════ -->
+<div style="position:absolute;left:2280px;top:56px;font:400 15px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.25);letter-spacing:.02em">Diseño Responsive · Mobile</div>
+<div style="position:absolute;left:2280px;top:76px;width:1340px;height:1px;background:rgba(255,255,255,.07)"></div>
+
+<!-- PHONE 1 — LOGIN -->
+<div style="position:absolute;left:2280px;top:90px;width:390px">
+  <div data-drags-parent="1" style="position:absolute;top:-22px;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(200,230,255,.4);letter-spacing:.1em;text-transform:uppercase">M01 — Login</div>
+  <div style="background:#1C1C1E;border-radius:50px;padding:10px;box-shadow:0 0 0 1.5px #3a3a3c,0 30px 80px rgba(0,0,0,.9)">
+    <div style="background:#080F1C;border-radius:42px;overflow:hidden;height:760px;display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:center;padding-top:14px;flex-shrink:0">
+        <div style="width:126px;height:37px;background:#000;border-radius:20px"></div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 32px;position:relative">
+        <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:280px;height:280px;background:radial-gradient(circle,rgba(0,220,130,.14) 0%,transparent 70%);pointer-events:none"></div>
+        <svg style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:.07" viewBox="0 0 460 660" preserveAspectRatio="xMidYMid slice">
+  <rect x="18" y="18" width="424" height="624" fill="none" stroke="white" stroke-width="2"/>
+  <line x1="18" y1="330" x2="442" y2="330" stroke="white" stroke-width="1.5"/>
+  <circle cx="230" cy="330" r="88" fill="none" stroke="white" stroke-width="1.5"/>
+  <circle cx="230" cy="330" r="4" fill="white"/>
+  <rect x="105" y="18" width="250" height="115" fill="none" stroke="white" stroke-width="1.2"/>
+  <rect x="148" y="18" width="164" height="52" fill="none" stroke="white" stroke-width="1.2"/>
+  <circle cx="230" cy="95" r="3.5" fill="white"/>
+  <path d="M165 133 A70 70 0 0 1 295 133" fill="none" stroke="white" stroke-width="1.2"/>
+  <rect x="105" y="527" width="250" height="115" fill="none" stroke="white" stroke-width="1.2"/>
+  <rect x="148" y="590" width="164" height="52" fill="none" stroke="white" stroke-width="1.2"/>
+  <circle cx="230" cy="565" r="3.5" fill="white"/>
+  <path d="M165 527 A70 70 0 0 0 295 527" fill="none" stroke="white" stroke-width="1.2"/>
+  <path d="M18 28 Q28 18 38 28" fill="none" stroke="white" stroke-width="1.2"/>
+  <path d="M422 28 Q432 18 442 28" fill="none" stroke="white" stroke-width="1.2"/>
+  <path d="M18 632 Q28 642 38 632" fill="none" stroke="white" stroke-width="1.2"/>
+  <path d="M422 632 Q432 642 442 632" fill="none" stroke="white" stroke-width="1.2"/>
+  <!-- Floodlight beams from corners -->
+  <line x1="18" y1="18" x2="230" y2="330" stroke="white" stroke-width=".6" opacity=".4"/>
+  <line x1="442" y1="18" x2="230" y2="330" stroke="white" stroke-width=".6" opacity=".4"/>
+  <line x1="18" y1="642" x2="230" y2="330" stroke="white" stroke-width=".6" opacity=".3"/>
+  <line x1="442" y1="642" x2="230" y2="330" stroke="white" stroke-width=".6" opacity=".3"/>
+</svg>
+        <div style="position:relative;text-align:center;width:100%">
+          <div style="width:72px;height:72px;background:#0F1929;border-radius:50%;border:2px solid rgba(0,220,130,.35);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;box-shadow:0 0 24px rgba(0,220,130,.2)">
+            <svg viewBox="0 0 48 48" width="46" height="46"><circle cx="24" cy="24" r="22" fill="white" stroke="#e0e8f0" stroke-width=".8"/><path d="M24 3.5 L29.5 13 L27.5 20 L20.5 20 L18.5 13 Z" fill="#0a1628"/><path d="M29.5 13 L38.5 15 L40.5 21.5 L36 28 L27.5 20 Z" fill="#0a1628" opacity=".68"/><path d="M18.5 13 L9.5 15 L7.5 21.5 L12 28 L20.5 20 Z" fill="#0a1628" opacity=".68"/><path d="M36 28 L38 36.5 L29.5 41 L24 34.5 L27.5 20 Z" fill="#0a1628" opacity=".42"/><path d="M12 28 L10 36.5 L18.5 41 L24 34.5 L20.5 20 Z" fill="#0a1628" opacity=".42"/></svg>
+          </div>
+          <div style="font:400 24px/1.1 'Bebas Neue',sans-serif;color:white">Pronósticos Guaicaramo</div>
+          <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:#00DC82;letter-spacing:.2em;text-transform:uppercase;margin-top:8px;margin-bottom:32px">Mundial 2026 · FIFA</div>
+          <div style="display:flex;flex-direction:column;gap:14px;text-align:left">
+            <div>
+              <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Cédula</div>
+              <div style="background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 16px;font:400 15px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.7)">1.018.461.230</div>
+            </div>
+            <div>
+              <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">PIN</div>
+              <div style="display:flex;gap:8px;justify-content:center">
+                <div style="width:58px;height:58px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 14px rgba(0,220,130,.2)"><div style="width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.9)"></div></div>
+                <div style="width:58px;height:58px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 14px rgba(0,220,130,.2)"><div style="width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.9)"></div></div>
+                <div style="width:58px;height:58px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 14px rgba(0,220,130,.2)"><div style="width:11px;height:11px;border-radius:50%;background:rgba(255,255,255,.9)"></div></div>
+                <div style="width:58px;height:58px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);border-radius:12px"></div>
+              </div>
+              <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2);text-align:center;margin-top:10px">Últimos 4 dígitos de tu cédula</div>
+            </div>
+            <div style="background:linear-gradient(135deg,#00DC82,#00A866);border-radius:14px;padding:16px;text-align:center;font:500 15px/1 'Barlow Condensed',system-ui;color:#020D18;letter-spacing:.05em;box-shadow:0 4px 20px rgba(0,220,130,.35)">Ingresar →</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding-bottom:10px;display:flex;justify-content:center;flex-shrink:0">
+        <div style="width:134px;height:5px;background:rgba(255,255,255,.3);border-radius:3px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHONE 2 — PRONÓSTICOS -->
+<div style="position:absolute;left:2750px;top:90px;width:390px">
+  <div data-drags-parent="1" style="position:absolute;top:-22px;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(200,230,255,.4);letter-spacing:.1em;text-transform:uppercase">M02 — Pronósticos</div>
+  <div style="background:#1C1C1E;border-radius:50px;padding:10px;box-shadow:0 0 0 1.5px #3a3a3c,0 30px 80px rgba(0,0,0,.9)">
+    <div style="background:#080F1C;border-radius:42px;overflow:hidden;height:760px;display:flex;flex-direction:column">
+      <!-- Status bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 22px 0;flex-shrink:0">
+        <div style="font:500 13px/1 'Barlow Condensed',system-ui;color:white">9:41</div>
+        <div style="width:126px;height:37px;background:#000;border-radius:20px"></div>
+        <div style="display:flex;gap:5px;align-items:center">
+          <svg viewBox="0 0 16 12" width="16" height="12" fill="white"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="2.5" width="3" height="9.5" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity=".3"/></svg>
+          <div style="width:24px;height:12px;background:rgba(255,255,255,.25);border-radius:3px;border:1.5px solid rgba(255,255,255,.4);position:relative"><div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:3px;height:6px;background:rgba(255,255,255,.4);border-radius:1px"></div><div style="width:15px;height:100%;background:#00DC82;border-radius:1.5px"></div></div>
+        </div>
+      </div>
+      <!-- Header -->
+      <div style="padding:12px 20px 10px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+        <div>
+          <div style="font:400 22px/1 'Bebas Neue',sans-serif;color:white">Pronósticos</div>
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">Fase de Grupos</div>
+        </div>
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#00DC82,#00A866);display:flex;align-items:center;justify-content:center;font:500 13px/1 'Barlow Condensed',system-ui;color:white">CR</div>
+      </div>
+      <!-- Tabs -->
+      <div style="padding:0 20px 12px;display:flex;gap:7px;overflow:hidden;flex-shrink:0">
+        <div style="padding:7px 16px;background:#00DC82;border-radius:20px;font:500 11px/1 'Barlow Condensed',system-ui;color:#020D18;white-space:nowrap;box-shadow:0 4px 12px rgba(0,220,130,.3)">Grupos</div>
+        <div style="padding:7px 14px;background:rgba(255,255,255,.07);border-radius:20px;font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35);white-space:nowrap">Octavos</div>
+        <div style="padding:7px 14px;background:rgba(255,255,255,.07);border-radius:20px;font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35);white-space:nowrap">Cuartos</div>
+        <div style="padding:7px 14px;background:rgba(255,255,255,.07);border-radius:20px;font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35);white-space:nowrap">Final</div>
+      </div>
+      <!-- Cards -->
+      <div style="flex:1;overflow:hidden;padding:0 16px;display:flex;flex-direction:column;gap:10px">
+        <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);letter-spacing:.12em;text-transform:uppercase">Grupo B</div>
+        <!-- Card guardado -->
+        <div style="background:#0D1929;border-radius:16px;overflow:hidden;border:1px solid rgba(0,220,130,.25);flex-shrink:0">
+          <div style="padding:9px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.05)">
+            <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">12 JUN · 14:00</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;font:500 10px/1 'Barlow Condensed',system-ui;color:#00DC82"><svg viewBox="0 0 10 10" width="9" height="9"><path d="M1.5 5L4 7.5 8.5 2.5" stroke="#00DC82" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>Guardado</span>
+          </div>
+          <div style="display:flex">
+            <div style="flex:1;background:rgba(0,104,71,.3);padding:13px 8px;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="width:36px;height:24px;background:#006847;border-radius:4px;display:flex;align-items:center;justify-content:center;font:500 9px/1 'Barlow Condensed',system-ui;color:white">MEX</div>
+              <span style="font:500 11px/1 'Barlow Condensed',system-ui;color:white">México</span>
+            </div>
+            <div style="width:86px;background:#060D1A;display:flex;align-items:center;justify-content:center;gap:5px">
+              <div style="width:32px;height:32px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:7px;display:flex;align-items:center;justify-content:center;font:400 17px/1 'Bebas Neue',sans-serif;color:#00DC82">2</div>
+              <span style="color:rgba(255,255,255,.25);font:400 13px/1 'Bebas Neue',sans-serif">:</span>
+              <div style="width:32px;height:32px;background:rgba(0,220,130,.1);border:2px solid #00DC82;border-radius:7px;display:flex;align-items:center;justify-content:center;font:400 17px/1 'Bebas Neue',sans-serif;color:#00DC82">1</div>
+            </div>
+            <div style="flex:1;background:rgba(0,40,104,.3);padding:13px 8px;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="width:36px;height:24px;background:#002868;border-radius:4px;display:flex;align-items:center;justify-content:center;font:500 9px/1 'Barlow Condensed',system-ui;color:white">USA</div>
+              <span style="font:500 11px/1 'Barlow Condensed',system-ui;color:white">EE.UU.</span>
+            </div>
+          </div>
+        </div>
+        <!-- Card pendiente -->
+        <div style="background:#0D1929;border-radius:16px;overflow:hidden;border:1px solid rgba(255,214,0,.25);flex-shrink:0">
+          <div style="padding:9px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.05)">
+            <span style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3)">17 JUN · 17:00</span>
+            <span style="display:inline-flex;align-items:center;gap:4px;font:500 10px/1 'Barlow Condensed',system-ui;color:#FFD600"><div style="width:5px;height:5px;border-radius:50%;background:#FFD600"></div>Pendiente</span>
+          </div>
+          <div style="display:flex">
+            <div style="flex:1;background:rgba(191,10,48,.28);padding:13px 8px;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="width:36px;height:24px;background:#BF0A30;border-radius:4px;display:flex;align-items:center;justify-content:center;font:500 9px/1 'Barlow Condensed',system-ui;color:white">CAN</div>
+              <span style="font:500 11px/1 'Barlow Condensed',system-ui;color:white">Canadá</span>
+            </div>
+            <div style="width:86px;background:#060D1A;display:flex;align-items:center;justify-content:center;gap:5px">
+              <div style="width:32px;height:32px;background:rgba(255,214,0,.07);border:2px solid rgba(255,214,0,.35);border-radius:7px;display:flex;align-items:center;justify-content:center;font:400 14px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">–</div>
+              <span style="color:rgba(255,255,255,.2);font:400 13px/1 'Bebas Neue',sans-serif">:</span>
+              <div style="width:32px;height:32px;background:rgba(255,214,0,.07);border:2px solid rgba(255,214,0,.35);border-radius:7px;display:flex;align-items:center;justify-content:center;font:400 14px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.2)">–</div>
+            </div>
+            <div style="flex:1;background:rgba(207,20,43,.28);padding:13px 8px;display:flex;flex-direction:column;align-items:center;gap:6px">
+              <div style="width:36px;height:24px;background:#CF142B;border-radius:4px;display:flex;align-items:center;justify-content:center;font:500 9px/1 'Barlow Condensed',system-ui;color:white">MAR</div>
+              <span style="font:500 11px/1 'Barlow Condensed',system-ui;color:white">Marruecos</span>
+            </div>
+          </div>
+          <div style="padding:10px;background:#00DC82;text-align:center;font:500 12px/1 'Barlow Condensed',system-ui;color:#020D18;cursor:pointer">Guardar →</div>
+        </div>
+        <!-- Mis puntos -->
+        <div style="background:rgba(0,220,130,.06);border:1px solid rgba(0,220,130,.14);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+          <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.35)">Mis puntos actuales</div>
+          <div style="font:400 22px/1 'Bebas Neue',sans-serif;color:#FFD600">342 <span style="font:500 9px/1 'Barlow Condensed',system-ui;color:rgba(255,214,0,.5)">PTS</span></div>
+        </div>
+      </div>
+      <!-- Bottom nav -->
+      <div style="border-top:1px solid rgba(255,255,255,.07);background:#05090F;flex-shrink:0;padding:8px 0 0">
+        <div style="display:flex;justify-content:space-around">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 18px">
+            <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="#00DC82" stroke-width="1.6"><circle cx="10" cy="10" r="9"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="1.5" fill="#00DC82" stroke="none"/></svg>
+            <span style="font:500 9px/1 'Barlow Condensed',system-ui;color:#00DC82">Pronósticos</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 18px">
+            <svg viewBox="0 0 20 20" width="20" height="20" fill="rgba(255,255,255,.22)"><rect x="1" y="10" width="4" height="9" rx=".5"/><rect x="7" y="6" width="4" height="13" rx=".5"/><rect x="13" y="2" width="4" height="17" rx=".5"/></svg>
+            <span style="font:500 9px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25)">Estadísticas</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 18px">
+            <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1.6"><circle cx="10" cy="7" r="4"/><path d="M3 18c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
+            <span style="font:500 9px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.22)">Perfil</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;padding:6px 0 8px">
+          <div style="width:134px;height:5px;background:rgba(255,255,255,.28);border-radius:3px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PHONE 3 — ESTADÍSTICAS -->
+<div style="position:absolute;left:3220px;top:90px;width:390px">
+  <div data-drags-parent="1" style="position:absolute;top:-22px;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(200,230,255,.4);letter-spacing:.1em;text-transform:uppercase">M03 — Estadísticas</div>
+  <div style="background:#1C1C1E;border-radius:50px;padding:10px;box-shadow:0 0 0 1.5px #3a3a3c,0 30px 80px rgba(0,0,0,.9)">
+    <div style="background:#080F1C;border-radius:42px;overflow:hidden;height:760px;display:flex;flex-direction:column">
+      <!-- Status bar -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 22px 0;flex-shrink:0">
+        <div style="font:500 13px/1 'Barlow Condensed',system-ui;color:white">9:41</div>
+        <div style="width:126px;height:37px;background:#000;border-radius:20px"></div>
+        <div style="display:flex;gap:5px;align-items:center">
+          <svg viewBox="0 0 16 12" width="16" height="12" fill="white"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="2.5" width="3" height="9.5" rx="1"/><rect x="9" y="1" width="3" height="11" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity=".3"/></svg>
+          <div style="width:24px;height:12px;background:rgba(255,255,255,.25);border-radius:3px;border:1.5px solid rgba(255,255,255,.4);position:relative"><div style="position:absolute;right:-4px;top:50%;transform:translateY(-50%);width:3px;height:6px;background:rgba(255,255,255,.4);border-radius:1px"></div><div style="width:15px;height:100%;background:#00DC82;border-radius:1.5px"></div></div>
+        </div>
+      </div>
+      <!-- Header -->
+      <div style="padding:12px 20px 10px;flex-shrink:0">
+        <div style="font:400 22px/1 'Bebas Neue',sans-serif;color:white">Estadísticas</div>
+        <div style="font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">Mundial 2026 · Global</div>
+      </div>
+      <!-- My rank highlight card -->
+      <div style="padding:0 16px 12px;flex-shrink:0">
+        <div style="background:rgba(255,214,0,.08);border:1.5px solid rgba(255,214,0,.28);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+          <div style="font:400 28px/1 'Bebas Neue',sans-serif;color:#FFD600;min-width:24px">1</div>
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#00DC82,#00A866);display:flex;align-items:center;justify-content:center;font:500 14px/1 'Barlow Condensed',system-ui;color:white;border:2.5px solid rgba(255,214,0,.5)">CR</div>
+          <div style="flex:1">
+            <div style="font:500 13px/1 'Barlow Condensed',system-ui;color:white">Carlos Ramírez</div>
+            <div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:3px">Colombia · Tú · 68%</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font:400 24px/1 'Bebas Neue',sans-serif;color:#FFD600">342</div>
+            <div style="font:500 9px/1 'Barlow Condensed',system-ui;color:rgba(255,214,0,.5)">PTS</div>
+          </div>
+        </div>
+      </div>
+      <!-- Leaderboard -->
+      <div style="flex:1;overflow:hidden;padding:0 16px;display:flex;flex-direction:column;gap:8px">
+        <div style="font:500 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.25);letter-spacing:.12em;text-transform:uppercase">Clasificación</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#0D1929;border-radius:12px;border:1px solid rgba(255,255,255,.06)">
+          <div style="font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.25);min-width:18px;text-align:center">2</div>
+          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#8B5CF6,#6D28D9);display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:white">LP</div>
+          <div style="flex:1"><div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Laura Pérez</div><div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:2px">Colombia · 56%</div></div>
+          <div style="font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.6)">298</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#0D1929;border-radius:12px;border:1px solid rgba(255,255,255,.06)">
+          <div style="font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.25);min-width:18px;text-align:center">3</div>
+          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3B82F6,#2563EB);display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:white">JS</div>
+          <div style="flex:1"><div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">José Salazar</div><div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:2px">Ecuador · 52%</div></div>
+          <div style="font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.6)">275</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#0D1929;border-radius:12px;border:1px solid rgba(255,255,255,.06)">
+          <div style="font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.25);min-width:18px;text-align:center">4</div>
+          <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#F59E0B,#D97706);display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:white">MR</div>
+          <div style="flex:1"><div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">María Rojas</div><div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:2px">Francia · 48%</div></div>
+          <div style="font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.6)">261</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#0D1929;border-radius:12px;border:1px solid rgba(255,255,255,.06)">
+          <div style="font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.25);min-width:18px;text-align:center">5</div>
+          <div style="width:34px;height:34px;border-radius:50%;background:#172338;display:flex;align-items:center;justify-content:center;font:500 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.5)">PT</div>
+          <div style="flex:1"><div style="font:500 12px/1.2 'Barlow Condensed',system-ui;color:rgba(255,255,255,.85)">Pablo Torres</div><div style="font:400 10px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.3);margin-top:2px">España · 43%</div></div>
+          <div style="font:400 18px/1 'Bebas Neue',sans-serif;color:rgba(255,255,255,.6)">240</div>
+        </div>
+        <div style="text-align:center;font:400 11px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.18)">156 participantes · Actualizado hace 3 min</div>
+      </div>
+      <!-- Bottom nav -->
+      <div style="border-top:1px solid rgba(255,255,255,.07);background:#05090F;flex-shrink:0;padding:8px 0 0">
+        <div style="display:flex;justify-content:space-around">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 18px">
+            <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1.6"><circle cx="10" cy="10" r="9"/><circle cx="10" cy="10" r="5"/><circle cx="10" cy="10" r="1.5" fill="rgba(255,255,255,.22)" stroke="none"/></svg>
+            <span style="font:500 9px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.22)">Pronósticos</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 18px">
+            <svg viewBox="0 0 20 20" width="20" height="20" fill="#00DC82"><rect x="1" y="10" width="4" height="9" rx=".5"/><rect x="7" y="6" width="4" height="13" rx=".5"/><rect x="13" y="2" width="4" height="17" rx=".5"/></svg>
+            <span style="font:500 9px/1 'Barlow Condensed',system-ui;color:#00DC82">Estadísticas</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 18px">
+            <svg viewBox="0 0 20 20" width="20" height="20" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1.6"><circle cx="10" cy="7" r="4"/><path d="M3 18c0-3.9 3.1-7 7-7s7 3.1 7 7"/></svg>
+            <span style="font:500 9px/1 'Barlow Condensed',system-ui;color:rgba(255,255,255,.22)">Perfil</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;padding:6px 0 8px">
+          <div style="width:134px;height:5px;background:rgba(255,255,255,.28);border-radius:3px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

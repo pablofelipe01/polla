@@ -1,8 +1,11 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  experimental: {
-    // Habilitar server-only package enforcement
+  experimental: {},
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "flagcdn.com" },
+    ],
   },
 }
 

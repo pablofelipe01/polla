@@ -1,0 +1,51 @@
+{
+  "REACT-003": {
+    "occurrences": 20,
+    "confidence": 1,
+    "mastered_explicitly": false,
+    "first_seen": "2026-06-30T12:03:29.966Z",
+    "last_seen": "2026-06-30T12:58:40.552Z"
+  },
+  "PERF-001": {
+    "occurrences": 14,
+    "confidence": 1,
+    "mastered_explicitly": false,
+    "first_seen": "2026-06-30T12:03:29.971Z",
+    "last_seen": "2026-06-30T12:57:44.293Z"
+  },
+  "ASYNC-001": {
+    "occurrences": 162,
+    "confidence": 1,
+    "mastered_explicitly": false,
+    "first_seen": "2026-06-30T12:03:29.974Z",
+    "last_seen": "2026-06-30T12:58:40.553Z"
+  },
+  "CC-004": {
+    "occurrences": 34,
+    "confidence": 1,
+    "mastered_explicitly": false,
+    "first_seen": "2026-06-30T12:03:29.980Z",
+    "last_seen": "2026-06-30T12:58:40.555Z"
+  },
+  "CC-001": {
+    "occurrences": 3,
+    "confidence": 1,
+    "mastered_explicitly": false,
+    "first_seen": "2026-06-30T12:03:47.575Z",
+    "last_seen": "2026-06-30T12:57:44.294Z"
+  },
+  "CC-003": {
+    "occurrences": 1,
+    "confidence": 1,
+    "mastered_explicitly": false,
+    "first_seen": "2026-06-30T12:57:44.284Z",
+    "last_seen": "2026-06-30T12:57:44.284Z"
+  },
+  "PERF-002": {
+    "occurrences": 1,
+    "confidence": 1,
+    "mastered_explicitly": false,
+    "first_seen": "2026-06-30T12:57:44.292Z",
+    "last_seen": "2026-06-30T12:57:44.292Z"
+  }
+}

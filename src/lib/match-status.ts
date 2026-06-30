@@ -46,3 +46,33 @@ export function openTimestamp(kickoffUtc: string): number {
   if (!dt.isValid) return 0
   return dt.minus({ hours: OPEN_BEFORE_HOURS }).toMillis()
 }
+
+// ─── Encuentros (nuevo modelo continentes/equipos) ─────────────────────────────
+// Estados: ABIERTO (se puede pronosticar) · CERRADO (pasó la fecha límite) ·
+// FINALIZADO (resultado registrado). El pronóstico se bloquea al iniciar el
+// encuentro o en CierreUtc si se definió una fecha límite previa.
+
+export type EncuentroStatus = "ABIERTO" | "CERRADO" | "FINALIZADO"
+
+/**
+ * Timestamp (ms) en que se bloquean los pronósticos.
+ * Si hay CierreUtc explícito se usa tal cual; si no, 1 hora antes del pitazo.
+ */
+export function deadlineEncuentro(kickoffUtc: string, cierreUtc: string | null): number {
+  if (cierreUtc) {
+    const dt = DateTime.fromISO(cierreUtc, { zone: "utc" })
+    return dt.isValid ? dt.toMillis() : Number.MAX_SAFE_INTEGER
+  }
+  const dt = DateTime.fromISO(kickoffUtc, { zone: "utc" })
+  return dt.isValid ? dt.minus({ hours: 1 }).toMillis() : Number.MAX_SAFE_INTEGER
+}
+
+export function estadoEncuentro(
+  kickoffUtc: string,
+  cierreUtc: string | null,
+  golesLocal: number | null,
+  golesVisitante: number | null
+): EncuentroStatus {
+  if (golesLocal !== null && golesVisitante !== null) return "FINALIZADO"
+  return Date.now() >= deadlineEncuentro(kickoffUtc, cierreUtc) ? "CERRADO" : "ABIERTO"
+}

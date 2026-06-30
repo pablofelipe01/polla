@@ -14,7 +14,7 @@ Este documento define convenciones, arquitectura y reglas de comportamiento para
 | UI | React | 19 |
 | Lenguaje | TypeScript | 5 (strict) |
 | Estilos | TailwindCSS | v4 |
-| Paquetes | pnpm | latest |
+| Paquetes | npm | latest |
 | Runtime | Node.js | 22+ |
 
 ---
@@ -415,12 +415,12 @@ NEXT_PUBLIC_APP_URL=
 
 ## Comandos
 ```bash
-pnpm dev           # Desarrollo (Turbopack)
-pnpm build         # Producción
-pnpm lint          # ESLint
-pnpm type-check    # tsc --noEmit
-pnpm test          # Vitest
-pnpm test:e2e      # Playwright
+npm run dev           # Desarrollo (Turbopack)
+npm run build         # Producción
+npm run lint          # ESLint
+npm run type-check    # tsc --noEmit
+npm test              # Vitest
+npm run test:e2e      # Playwright
 ```
 
 ---
