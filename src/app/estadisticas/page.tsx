@@ -3,7 +3,6 @@ import { calcularEstadisticas } from "@/lib/services/reportes"
 import { calcularRanking } from "@/lib/services/ranking"
 import AppNav from "@/components/AppNav"
 import RankingTabla from "../_components/RankingTabla"
-import AutoRefresh from "../_components/AutoRefresh"
 
 export const dynamic = "force-dynamic"
 
@@ -29,7 +28,6 @@ export default async function EstadisticasPage() {
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
-      <AutoRefresh seconds={30} />
       <AppNav session={session} activo="/estadisticas" />
       <div className="polla-wrap">
         <main style={{ padding: "24px 16px 44px", display: "flex", flexDirection: "column", gap: 26 }}>
