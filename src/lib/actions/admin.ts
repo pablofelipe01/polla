@@ -128,7 +128,7 @@ const ContinenteSchema = z.object({
   CuerpoTecnico: z.string().trim().default(""),
 })
 
-/** IDs de los usuarios elegidos como DT y cuerpo técnico (para promoverlos a Rol=DT). */
+/** IDs de los usuarios elegidos: el DT (Rol=DT) y su cuerpo técnico (Rol=CuerpoTecnico). */
 const VinculoSchema = z.object({
   DTUsuarioId: z.string().trim().default(""),
   CuerpoTecnicoIds: z.string().trim().default(""), // ids separados por salto de línea
@@ -169,14 +169,13 @@ export async function editarContinenteAction(
     DTUsuarioId: fd.get("DTUsuarioId") ?? "",
     CuerpoTecnicoIds: fd.get("CuerpoTecnicoIds") ?? "",
   })
-  const ids = vinculo.success
-    ? [vinculo.data.DTUsuarioId, ...vinculo.data.CuerpoTecnicoIds.split("\n")]
-    : []
+  const dtUsuarioId = vinculo.success ? vinculo.data.DTUsuarioId : ""
+  const cuerpoTecnicoIds = vinculo.success ? vinculo.data.CuerpoTecnicoIds.split("\n") : []
 
   try {
     await editarContinente(id, parsed.data)
-    // Promueve a Rol=DT y asigna el continente a los usuarios elegidos.
-    await vincularCuerpoTecnico(id, ids)
+    // Promueve al DT (Rol=DT) y a su cuerpo técnico (Rol=CuerpoTecnico) y les asigna el continente.
+    await vincularCuerpoTecnico(id, dtUsuarioId, cuerpoTecnicoIds)
     revalidateTag(CACHE_TAGS.usuarios, "max")
     revalidarTodo()
     return { success: true }

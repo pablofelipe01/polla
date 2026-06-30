@@ -34,22 +34,28 @@ export const editarContinente = (id: string, d: Partial<Omit<Continente, "id">>)
 export const eliminarContinente = deleteContinente
 
 /**
- * Vincula a los usuarios indicados (DT y cuerpo técnico) con un continente:
- * les asigna Rol="DT" y su ContinenteId. Así obtienen acceso al módulo Equipos
- * y aterrizan en su continente al iniciar sesión.
+ * Vincula al Director Técnico y a su cuerpo técnico con un continente:
+ * el DT queda con Rol="DT" y los ayudantes con Rol="CuerpoTecnico"; a todos
+ * se les asigna el ContinenteId. Así obtienen acceso al módulo Equipos y
+ * aterrizan en su continente al iniciar sesión.
  *
- * @param continenteId - Continente al que se vinculan
- * @param usuarioIds   - IDs de usuarios a promover a DT (DT + cuerpo técnico)
+ * @param continenteId    - Continente al que se vinculan
+ * @param dtUsuarioId      - Usuario que será Director Técnico (vacío = ninguno)
+ * @param cuerpoTecnicoIds - Usuarios que serán cuerpo técnico (ayudantes)
  */
 export async function vincularCuerpoTecnico(
   continenteId: string,
-  usuarioIds: string[]
+  dtUsuarioId: string,
+  cuerpoTecnicoIds: string[]
 ): Promise<void> {
-  const ids = usuarioIds.filter(Boolean)
-  if (ids.length === 0) return
-  await Promise.all(
-    ids.map((id) => updateUsuario(id, { Rol: "DT", ContinenteId: continenteId }))
-  )
+  const tareas: Promise<unknown>[] = []
+  if (dtUsuarioId) {
+    tareas.push(updateUsuario(dtUsuarioId, { Rol: "DT", ContinenteId: continenteId }))
+  }
+  for (const id of cuerpoTecnicoIds.filter(Boolean)) {
+    tareas.push(updateUsuario(id, { Rol: "CuerpoTecnico", ContinenteId: continenteId }))
+  }
+  await Promise.all(tareas)
 }
 
 // ─── Equipos ─────────────────────────────────────────────────────────────────────

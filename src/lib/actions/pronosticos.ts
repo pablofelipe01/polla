@@ -14,8 +14,10 @@ import {
   listPronosticos,
   listEquipos,
   getEquipo,
+  listUsuariosByEquipoNombre,
   CACHE_TAGS,
   type Pronostico,
+  type Usuario,
 } from "@/lib/clients/airtable"
 
 export interface ActionState {
@@ -152,13 +154,16 @@ export async function getDatosPanel(equipoIdSel?: string): Promise<DatosPanel> {
 }
 
 export interface VistaPronosticos {
+  equipoId: string | null
   equipoNombre: string
+  miembros: Usuario[] // integrantes (plantilla) del equipo del usuario
   encuentros: EncuentroConEstado[]
   pronosticosEquipo: Record<string, Pronostico> // encuentroId → pronóstico oficial del equipo
 }
 
 /**
- * Vista de solo lectura de los pronósticos oficiales del equipo del usuario.
+ * Vista de solo lectura del equipo del usuario: a qué equipo pertenece, sus
+ * integrantes y los pronósticos oficiales registrados por su DT/ayudante.
  * Para roles de consulta (Admin y usuarios regulares) que solo visualizan, sin editar.
  */
 export async function getVistaPronosticos(): Promise<VistaPronosticos> {
@@ -172,6 +177,11 @@ export async function getVistaPronosticos(): Promise<VistaPronosticos> {
     listPronosticos(),
   ])
 
+  // Integrantes (plantilla): solo jugadores (Rol=Usuario), sin DT ni ayudante.
+  const miembros = equipo
+    ? (await listUsuariosByEquipoNombre(equipo.Nombre)).filter((u) => u.Rol === "Usuario")
+    : []
+
   const pronosticosEquipo: Record<string, Pronostico> = {}
   if (equipoId) {
     for (const p of todos) {
@@ -180,7 +190,9 @@ export async function getVistaPronosticos(): Promise<VistaPronosticos> {
   }
 
   return {
+    equipoId,
     equipoNombre: equipo?.Nombre ?? "(sin equipo)",
+    miembros,
     encuentros,
     pronosticosEquipo,
   }

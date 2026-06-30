@@ -228,19 +228,24 @@ export async function asignarAyudanteAction(
   const session = await requireDTPrincipal()
   const continenteId = session.user.continenteId ?? null
 
-  const equipos = await listEquipos()
-  const equipo = equipos.find((e) => e.id === equipoId)
-  if (!equipo) return { error: "Equipo no encontrado" }
-  if (!isAdmin(session) && equipo.ContinenteId !== continenteId) {
-    return { error: "Ese equipo no pertenece a tu continente" }
-  }
+  try {
+    const equipos = await listEquipos()
+    const equipo = equipos.find((e) => e.id === equipoId)
+    if (!equipo) return { error: "Equipo no encontrado" }
+    if (!isAdmin(session) && equipo.ContinenteId !== continenteId) {
+      return { error: "Ese equipo no pertenece a tu continente" }
+    }
 
-  const res = await asignarAyudante(usuarioId, equipoId, equipo.ContinenteId ?? continenteId ?? "")
-  if (!res.ok) return { error: res.error.message }
-  revalidateTag(CACHE_TAGS.usuarios, "max")
-  revalidatePath("/panel")
-  revalidatePath("/admin")
-  return { success: true }
+    const res = await asignarAyudante(usuarioId, equipoId, equipo.ContinenteId ?? continenteId ?? "")
+    if (!res.ok) return { error: res.error.message }
+    revalidateTag(CACHE_TAGS.usuarios, "max")
+    revalidatePath("/panel")
+    revalidatePath("/admin")
+    return { success: true }
+  } catch (e) {
+    logger.error(e, { action: "asignarAyudante", usuarioId, equipoId })
+    return { error: "No se pudo asignar el ayudante. Verifica que el rol exista en la base de datos." }
+  }
 }
 
 /**
