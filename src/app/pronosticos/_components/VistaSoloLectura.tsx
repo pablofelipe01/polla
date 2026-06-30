@@ -34,7 +34,12 @@ export default function VistaSoloLectura({ datos }: { datos: VistaPronosticos })
         </p>
       ) : (
         <>
-          <CabeceraEquipo nombre={datos.equipoNombre} miembros={datos.miembros} propio={propio} />
+          <CabeceraEquipo
+            nombre={datos.equipoNombre}
+            continente={datos.continenteNombre}
+            miembros={datos.miembros}
+            propio={propio}
+          />
 
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             <SectionTitle>Pronósticos de {datos.equipoNombre}</SectionTitle>
@@ -55,10 +60,12 @@ export default function VistaSoloLectura({ datos }: { datos: VistaPronosticos })
 /** Tarjeta con el equipo del usuario y la lista de integrantes (plantilla). */
 function CabeceraEquipo({
   nombre,
+  continente,
   miembros,
   propio,
 }: {
   nombre: string
+  continente: string | null
   miembros: VistaPronosticos["miembros"]
   propio: boolean
 }) {
@@ -67,9 +74,14 @@ function CabeceraEquipo({
       <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", color: "var(--gris)", letterSpacing: ".5px", margin: "0 0 4px" }}>
         {propio ? "Tu equipo" : "Equipo"}
       </p>
-      <div style={{ fontFamily: "var(--font-display)", fontSize: 24, color: "var(--tinta)", lineHeight: 1, marginBottom: 14 }}>
+      <div style={{ fontFamily: "var(--font-display)", fontSize: 24, color: "var(--tinta)", lineHeight: 1, marginBottom: continente ? 6 : 14 }}>
         {nombre}
       </div>
+      {continente && (
+        <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", color: "var(--gris)", letterSpacing: ".4px", marginBottom: 14 }}>
+          {continente}
+        </div>
+      )}
 
       <SectionTitle>Integrantes ({miembros.length})</SectionTitle>
       {miembros.length === 0 ? (

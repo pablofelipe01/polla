@@ -14,6 +14,7 @@ import {
   listPronosticos,
   listEquipos,
   getEquipo,
+  listContinentes,
   listUsuariosByEquipoNombre,
   CACHE_TAGS,
   type Pronostico,
@@ -157,6 +158,7 @@ export interface VistaPronosticos {
   equipos: EquipoOpcion[] // equipos que el espectador puede elegir (Admin: todos; usuario: solo el suyo)
   equipoId: string | null
   equipoNombre: string
+  continenteNombre: string | null // continente al que pertenece el equipo seleccionado
   miembros: Usuario[] // integrantes (plantilla) del equipo seleccionado
   encuentros: EncuentroConEstado[]
   pronosticosEquipo: Record<string, Pronostico> // encuentroId → pronóstico oficial del equipo
@@ -184,11 +186,16 @@ export async function getVistaPronosticos(equipoIdSel?: string): Promise<VistaPr
       : todosEquipos[0]?.id ?? null
     : session.user.equipoId ?? null
 
-  const [encuentros, equipo, todos] = await Promise.all([
+  const [encuentros, equipo, todos, continentes] = await Promise.all([
     obtenerEncuentros(),
     equipoId ? getEquipo(equipoId) : Promise.resolve(null),
     listPronosticos(),
+    listContinentes(),
   ])
+
+  const continenteNombre = equipo?.ContinenteId
+    ? continentes.find((c) => c.id === equipo.ContinenteId)?.Nombre ?? null
+    : null
 
   // Integrantes (plantilla): solo jugadores (Rol=Usuario), sin DT ni ayudante.
   const miembros = equipo
@@ -206,6 +213,7 @@ export async function getVistaPronosticos(equipoIdSel?: string): Promise<VistaPr
     equipos: opciones,
     equipoId,
     equipoNombre: equipo?.Nombre ?? "(sin equipo)",
+    continenteNombre,
     miembros,
     encuentros,
     pronosticosEquipo,
