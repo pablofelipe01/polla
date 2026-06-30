@@ -154,22 +154,35 @@ export async function getDatosPanel(equipoIdSel?: string): Promise<DatosPanel> {
 }
 
 export interface VistaPronosticos {
+  equipos: EquipoOpcion[] // equipos que el espectador puede elegir (Admin: todos; usuario: solo el suyo)
   equipoId: string | null
   equipoNombre: string
-  miembros: Usuario[] // integrantes (plantilla) del equipo del usuario
+  miembros: Usuario[] // integrantes (plantilla) del equipo seleccionado
   encuentros: EncuentroConEstado[]
   pronosticosEquipo: Record<string, Pronostico> // encuentroId → pronóstico oficial del equipo
 }
 
 /**
- * Vista de solo lectura del equipo del usuario: a qué equipo pertenece, sus
- * integrantes y los pronósticos oficiales registrados por su DT/ayudante.
- * Para roles de consulta (Admin y usuarios regulares) que solo visualizan, sin editar.
+ * Vista de solo lectura de los pronósticos oficiales de un equipo.
+ * - Usuario regular: ve su propio equipo (integrantes + pronósticos).
+ * - Admin: puede ver cualquier equipo mediante un selector (no pertenece a ninguno).
+ *
+ * @param equipoIdSel - Equipo elegido en el selector (solo aplica al Admin).
  */
-export async function getVistaPronosticos(): Promise<VistaPronosticos> {
+export async function getVistaPronosticos(equipoIdSel?: string): Promise<VistaPronosticos> {
   const session = await auth()
   if (!session?.user) throw new UnauthorizedError()
-  const equipoId = session.user.equipoId ?? null
+  const admin = isAdmin(session)
+
+  // Admin ve cualquier equipo (selector con todos); el usuario regular solo el suyo.
+  const todosEquipos = admin ? await listEquipos() : []
+  const opciones = todosEquipos.map((e) => ({ id: e.id, nombre: e.Nombre }))
+
+  const equipoId = admin
+    ? equipoIdSel && todosEquipos.some((e) => e.id === equipoIdSel)
+      ? equipoIdSel
+      : todosEquipos[0]?.id ?? null
+    : session.user.equipoId ?? null
 
   const [encuentros, equipo, todos] = await Promise.all([
     obtenerEncuentros(),
@@ -190,6 +203,7 @@ export async function getVistaPronosticos(): Promise<VistaPronosticos> {
   }
 
   return {
+    equipos: opciones,
     equipoId,
     equipoNombre: equipo?.Nombre ?? "(sin equipo)",
     miembros,

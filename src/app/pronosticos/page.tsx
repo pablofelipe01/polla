@@ -25,7 +25,7 @@ export default async function PronosticosPage({
   const { equipo } = await searchParams
   const [datosEdit, datosVista] = await Promise.all([
     puedeEditar ? getDatosPanel(equipo) : Promise.resolve(null),
-    puedeEditar ? Promise.resolve(null) : getVistaPronosticos(),
+    puedeEditar ? Promise.resolve(null) : getVistaPronosticos(equipo),
   ])
 
   return (

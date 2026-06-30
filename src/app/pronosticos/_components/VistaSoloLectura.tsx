@@ -2,6 +2,7 @@ import type { VistaPronosticos } from "@/lib/actions/pronosticos"
 import { MatchBand, TeamHalf, type BandTone } from "@/app/_components/MatchCardParts"
 import Avatar from "@/app/_components/Avatar"
 import { card, SectionTitle } from "@/app/admin/_components/ui"
+import SelectorEquipoVista from "./SelectorEquipoVista"
 
 /** Oculta partidos de fase de grupos ya finalizados; mantiene fase eliminatoria y partidos aún abiertos/cerrados. */
 function esFaseGrupos(fase: string): boolean {
@@ -14,13 +15,8 @@ function esFaseGrupos(fase: string): boolean {
  * DT/ayudante en cada partido (sin poder editarlo).
  */
 export default function VistaSoloLectura({ datos }: { datos: VistaPronosticos }) {
-  if (!datos.equipoId) {
-    return (
-      <p style={{ color: "var(--gris)", fontSize: 14 }}>
-        Aún no perteneces a ningún equipo. Cuando un DT te asigne a uno, verás aquí tu equipo y sus pronósticos.
-      </p>
-    )
-  }
+  // El Admin recibe la lista completa de equipos (selector); el usuario regular solo el suyo.
+  const propio = datos.equipos.length <= 1
 
   const encuentros = datos.encuentros.filter(
     (e) => !(esFaseGrupos(e.Fase) && e.status === "FINALIZADO")
@@ -28,18 +24,30 @@ export default function VistaSoloLectura({ datos }: { datos: VistaPronosticos })
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-      <CabeceraEquipo nombre={datos.equipoNombre} miembros={datos.miembros} />
+      <SelectorEquipoVista equipos={datos.equipos} equipoId={datos.equipoId} />
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        <SectionTitle>Pronósticos de {datos.equipoNombre}</SectionTitle>
-        {encuentros.length === 0 ? (
-          <p style={{ color: "var(--gris)", fontSize: 14 }}>No hay encuentros pendientes.</p>
-        ) : (
-          encuentros.map((e) => (
-            <TarjetaPartido key={e.id} encuentro={e} pronostico={datos.pronosticosEquipo[e.id]} />
-          ))
-        )}
-      </div>
+      {!datos.equipoId ? (
+        <p style={{ color: "var(--gris)", fontSize: 14 }}>
+          {propio
+            ? "Aún no perteneces a ningún equipo. Cuando un DT te asigne a uno, verás aquí tu equipo y sus pronósticos."
+            : "No hay equipos creados todavía."}
+        </p>
+      ) : (
+        <>
+          <CabeceraEquipo nombre={datos.equipoNombre} miembros={datos.miembros} propio={propio} />
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <SectionTitle>Pronósticos de {datos.equipoNombre}</SectionTitle>
+            {encuentros.length === 0 ? (
+              <p style={{ color: "var(--gris)", fontSize: 14 }}>No hay encuentros pendientes.</p>
+            ) : (
+              encuentros.map((e) => (
+                <TarjetaPartido key={e.id} encuentro={e} pronostico={datos.pronosticosEquipo[e.id]} />
+              ))
+            )}
+          </div>
+        </>
+      )}
     </div>
   )
 }
@@ -48,14 +56,16 @@ export default function VistaSoloLectura({ datos }: { datos: VistaPronosticos })
 function CabeceraEquipo({
   nombre,
   miembros,
+  propio,
 }: {
   nombre: string
   miembros: VistaPronosticos["miembros"]
+  propio: boolean
 }) {
   return (
     <div style={card}>
       <p style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", color: "var(--gris)", letterSpacing: ".5px", margin: "0 0 4px" }}>
-        Tu equipo
+        {propio ? "Tu equipo" : "Equipo"}
       </p>
       <div style={{ fontFamily: "var(--font-display)", fontSize: 24, color: "var(--tinta)", lineHeight: 1, marginBottom: 14 }}>
         {nombre}
