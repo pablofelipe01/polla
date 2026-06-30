@@ -86,7 +86,7 @@ const PAISES_ES_POR_CONFEDERACION: Record<string, string[]> = {
     "Líbano", "Omán", "Palestina", "Catar", "Arabia Saudita",
     "Siria", "Emiratos Árabes Unidos", "Yemen",
     // Asia Central
-    "Kazajistán", "Kirguistán", "Tayikistán", "Turkmenistán", "Uzbekistán",
+    "Kirguistán", "Tayikistán", "Turkmenistán", "Uzbekistán",
     // Oceanía (Australia migró de OFC a AFC en 2006)
     "Australia",
   ],
