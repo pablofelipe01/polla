@@ -33,6 +33,9 @@ export default function AdminDashboard({ data }: { data: AdminData }) {
         <a href="/api/admin/export" className="btn-energy" style={{ background: "linear-gradient(120deg, #16a34a, #22c55e)", color: "#fff", padding: "9px 18px", fontSize: 13, textDecoration: "none", boxShadow: "0 6px 18px -8px rgba(22,163,74,.7)" }}>
           📊 Exportar Excel
         </a>
+        <a href="/api/admin/reporte-equipos" className="btn-energy" style={{ background: "linear-gradient(120deg, #0ea5e9, #38bdf8)", color: "#fff", padding: "9px 18px", fontSize: 13, textDecoration: "none", boxShadow: "0 6px 18px -8px rgba(14,165,233,.7)" }}>
+          🏆 Reporte de equipos
+        </a>
         <a href="/api/admin/backup" className="btn-energy" style={{ background: "rgba(255,255,255,.07)", color: "var(--tinta-2)", border: "1px solid var(--linea)", padding: "9px 18px", fontSize: 13, textDecoration: "none" }}>
           ⬇ Respaldo JSON
         </a>
